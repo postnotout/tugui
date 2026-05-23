@@ -25,7 +25,7 @@ export interface GameStorageData {
   clearCount: number;
   lastPlayed: string;
   solvedProblems: Record<number, SolvedRecord>;
-  settings: { soundEnabled: boolean; rsiDefault: boolean };
+  settings: { soundEnabled: boolean; rsiDefault: boolean; volume: number };
   savedSession: SavedSession | null;
 }
 
@@ -36,7 +36,7 @@ const DEFAULT: GameStorageData = {
   clearCount: 0,
   lastPlayed: '',
   solvedProblems: {},
-  settings: { soundEnabled: true, rsiDefault: false },
+  settings: { soundEnabled: true, rsiDefault: false, volume: 0.5 },
   savedSession: null,
 };
 
@@ -44,7 +44,13 @@ function load(): GameStorageData {
   try {
     const raw = localStorage.getItem(KEY);
     if (!raw) return { ...DEFAULT };
-    return { ...DEFAULT, ...JSON.parse(raw) };
+    const parsed = JSON.parse(raw);
+    return {
+      ...DEFAULT,
+      ...parsed,
+      // deep-merge settings so new fields (e.g. volume) get their defaults
+      settings: { ...DEFAULT.settings, ...(parsed.settings ?? {}) },
+    };
   } catch {
     return { ...DEFAULT };
   }

@@ -10,6 +10,7 @@ import { PROBLEM_POOL, difficultyShuffle } from '../data/problems';
 import { generateChart } from '../utils/chartGenerator';
 import { loadChartData } from '../utils/dataLoader';
 import { useGameStorage } from '../hooks/useGameStorage';
+import { useSound } from '../hooks/useSound';
 import type { ChartDataPoint, Problem } from '../types';
 import EvolutionFigure from './EvolutionFigure';
 import { GlossaryText, GlossaryModal } from './GlossaryText';
@@ -24,6 +25,7 @@ interface Props {
 
 export default function ChartQuizGame({ onOpenWrongNote }: Props) {
   const { data: storage, save: saveStorage, reset: resetStorage } = useGameStorage();
+  const play = useSound(storage.settings.soundEnabled, storage.settings.volume);
 
   const [phase, setPhase] = useState<'intro' | 'playing' | 'levelup' | 'gameover' | 'ending'>('intro');
   const [hp, setHp] = useState(3);
@@ -33,6 +35,7 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
   const [runCount, setRunCount] = useState(1);
   const [pendingLevelUp, setPendingLevelUp] = useState(false);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
 
   const [problemQueue, setProblemQueue] = useState<Problem[]>(() => difficultyShuffle(PROBLEM_POOL));
   const [problemIdx, setProblemIdx] = useState(0);
@@ -68,7 +71,6 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
   const minPrice = fullData.length ? Math.min(...fullData.map(d => d.종가)) * 0.97 : 0;
   const maxPrice = fullData.length ? Math.max(...fullData.map(d => d.종가)) * 1.03 : 100;
 
-  // 세션 저장 헬퍼
   const persistSession = (overrides: { problemIdx?: number; hp?: number; points?: number; rank?: number; combo?: number } = {}) => {
     saveStorage({
       savedSession: {
@@ -84,6 +86,7 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
   };
 
   const startGame = () => {
+    play('click');
     const newRunCount = runCount + (phase !== 'intro' ? 1 : 0);
     const queue = difficultyShuffle(PROBLEM_POOL);
     setPhase('playing');
@@ -105,6 +108,7 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
   };
 
   const resumeGame = () => {
+    play('click');
     const s = storage.savedSession!;
     const queue = s.problemQueueIds
       .map(id => PROBLEM_POOL.find(p => p.id === id))
@@ -124,7 +128,6 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
     setSubmitted(true);
     setRevealed(true);
 
-    // 오답 기록 저장
     const existing = storage.solvedProblems[problem.id];
     saveStorage({
       solvedProblems: {
@@ -139,6 +142,7 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
 
     if (correct) {
       const newCombo = combo + 1;
+      play(newCombo >= 3 ? 'combo' : 'correct');
       const base = problem.difficulty === 'hard' ? 35 : problem.difficulty === 'medium' ? 25 : 20;
       const bonus = newCombo >= 3 ? (newCombo - 2) * 5 : 0;
       const gain = base + bonus;
@@ -161,7 +165,10 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
       setLastGain(-1);
       if (newHp <= 0) {
         saveStorage({ savedSession: null });
+        play('gameover');
         setTimeout(() => setPhase('gameover'), 1500);
+      } else {
+        play('incorrect');
       }
     }
   };
@@ -170,9 +177,11 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
     if (pendingLevelUp) {
       if (rank >= MAX_RANK_IDX) {
         saveStorage({ clearCount: storage.clearCount + 1, savedSession: null });
+        play('ending');
         setPhase('ending');
       } else {
         persistSession({ problemIdx: problemIdx + 1 });
+        play('levelup');
         setPhase('levelup');
       }
       return;
@@ -183,6 +192,7 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
   };
 
   const continueAfterLevelup = () => {
+    play('click');
     setPendingLevelUp(false);
     setPhase('playing');
     setProblemIdx(problemIdx + 1);
@@ -192,6 +202,7 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
   const retry = () => { startGame(); };
 
   const handleReset = () => {
+    play('click');
     resetStorage();
     setShowResetConfirm(false);
     setPhase('intro');
@@ -199,6 +210,61 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
     setProblemQueue(difficultyShuffle(PROBLEM_POOL));
     setProblemIdx(0);
   };
+
+  // ─── Settings modal (shared between intro and playing phases) ───────────────
+  const settingsModal = showSettings ? (
+    <div
+      onClick={() => setShowSettings(false)}
+      style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.75)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 2000, padding: 20 }}
+    >
+      <div
+        onClick={e => e.stopPropagation()}
+        style={{ maxWidth: 280, width: '100%', background: COLORS.bgPanel, border: `3px solid ${COLORS.border}`, boxShadow: `4px 4px 0 0 ${COLORS.border}`, padding: '22px 20px', fontFamily: KOREAN_FONT }}
+      >
+        <div style={{ textAlign: 'center', fontSize: 13, fontWeight: 700, color: COLORS.textBright, fontFamily: TITLE_FONT, letterSpacing: '0.3em', marginBottom: 20 }}>
+          ⚙ 설 정
+        </div>
+
+        {/* Sound on/off */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+          <span style={{ fontSize: 13, color: COLORS.text }}>🔊 효과음</span>
+          <button
+            onClick={() => {
+              const next = !storage.settings.soundEnabled;
+              saveStorage({ settings: { ...storage.settings, soundEnabled: next } });
+              if (next) play('click');
+            }}
+            style={{
+              padding: '4px 16px', fontSize: 12, fontWeight: 700,
+              background: storage.settings.soundEnabled ? COLORS.green : COLORS.bgDeep,
+              color: storage.settings.soundEnabled ? '#fff' : COLORS.textDim,
+              border: `2px solid ${storage.settings.soundEnabled ? COLORS.green : COLORS.border}`,
+              boxShadow: storage.settings.soundEnabled ? `2px 2px 0 0 ${COLORS.green}` : 'none',
+              cursor: 'pointer', letterSpacing: '0.15em', fontFamily: TITLE_FONT,
+            }}
+          >{storage.settings.soundEnabled ? 'ON' : 'OFF'}</button>
+        </div>
+
+        {/* Volume slider */}
+        <div style={{ marginBottom: 22 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
+            <span style={{ fontSize: 13, color: COLORS.text }}>음량</span>
+            <span style={{ fontSize: 12, color: COLORS.textDim, fontFamily: TITLE_FONT, fontWeight: 700 }}>
+              {Math.round(storage.settings.volume * 100)}%
+            </span>
+          </div>
+          <input
+            type="range" min="0" max="1" step="0.05"
+            value={storage.settings.volume}
+            onChange={e => saveStorage({ settings: { ...storage.settings, volume: parseFloat(e.target.value) } })}
+            style={{ width: '100%', accentColor: COLORS.border, cursor: 'pointer' }}
+          />
+        </div>
+
+        <GlowBtn onClick={() => { play('click'); setShowSettings(false); }}>닫기</GlowBtn>
+      </div>
+    </div>
+  ) : null;
 
   // ─── Intro ─────────────────────────────────────────────────────────────────
   if (phase === 'intro') {
@@ -217,6 +283,18 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
         }}>
           <div style={{ position: 'absolute', top: 10, left: 0, right: 0, borderTop: `2px solid ${COLORS.red}` }}/>
           <div style={{ position: 'absolute', top: 14, left: 0, right: 0, borderTop: `1px solid ${COLORS.blue}` }}/>
+
+          {/* Gear icon */}
+          <button
+            onClick={() => { play('click'); setShowSettings(true); }}
+            title="설정"
+            style={{
+              position: 'absolute', top: 4, right: 6,
+              background: 'none', border: 'none',
+              fontSize: 15, cursor: 'pointer', color: COLORS.textDim, padding: '2px 4px',
+              lineHeight: 1,
+            }}
+          >⚙</button>
 
           <div style={{ textAlign: 'center', marginBottom: 6, marginTop: 6, fontSize: 9, color: COLORS.textDim, letterSpacing: '0.25em' }}>
             CHART · TRADING · LEARNING
@@ -269,7 +347,6 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
             <div style={{ borderTop: `2px solid ${COLORS.border}`, marginTop: 2 }}/>
           </div>
 
-          {/* 규칙 */}
           <div style={{ fontSize: 11, color: COLORS.text, lineHeight: 1.7, marginBottom: 10, padding: '0 2px' }}>
             <div style={{ fontSize: 10, color: COLORS.red, fontWeight: 700, marginBottom: 3, letterSpacing: '0.15em' }}>● 학습 규칙</div>
             <div>① HP 3 · 오답 1칸 차감 · 0이면 재시작</div>
@@ -305,7 +382,6 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
             </div>
           )}
 
-          {/* 버튼들 */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
             {hasSave && (
               <button
@@ -319,9 +395,9 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
                   fontSize: 13, fontWeight: 700, letterSpacing: '0.2em',
                   cursor: 'pointer',
                 }}
-                onMouseDown={(e) => { e.currentTarget.style.transform = 'translate(3px,3px)'; e.currentTarget.style.boxShadow = 'none'; }}
-                onMouseUp={(e) => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = `3px 3px 0 0 ${COLORS.border}`; }}
-                onMouseLeave={(e) => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = `3px 3px 0 0 ${COLORS.border}`; }}
+                onMouseDown={e => { e.currentTarget.style.transform = 'translate(3px,3px)'; e.currentTarget.style.boxShadow = 'none'; }}
+                onMouseUp={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = `3px 3px 0 0 ${COLORS.border}`; }}
+                onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = `3px 3px 0 0 ${COLORS.border}`; }}
               >
                 ▷ 이어하기 ({storage.savedSession!.points}점 · HP {storage.savedSession!.hp})
               </button>
@@ -337,17 +413,16 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
                 fontSize: 14, fontWeight: 700, letterSpacing: '0.25em',
                 cursor: 'pointer',
               }}
-              onMouseDown={(e) => { e.currentTarget.style.transform = 'translate(3px,3px)'; e.currentTarget.style.boxShadow = 'none'; }}
-              onMouseUp={(e) => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = `3px 3px 0 0 ${COLORS.border}`; }}
-              onMouseLeave={(e) => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = `3px 3px 0 0 ${COLORS.border}`; }}
+              onMouseDown={e => { e.currentTarget.style.transform = 'translate(3px,3px)'; e.currentTarget.style.boxShadow = 'none'; }}
+              onMouseUp={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = `3px 3px 0 0 ${COLORS.border}`; }}
+              onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = `3px 3px 0 0 ${COLORS.border}`; }}
             >
               {hasSave ? '새 게임 시작' : '학 습 시 작'}
             </button>
 
-            {/* 오답노트 + 초기화 */}
             <div style={{ display: 'flex', gap: 6 }}>
               <button
-                onClick={onOpenWrongNote}
+                onClick={() => { play('click'); onOpenWrongNote(); }}
                 style={{
                   flex: 1, padding: '8px 4px',
                   background: COLORS.bgPanel, color: COLORS.red,
@@ -359,7 +434,7 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
                 }}
               >✗ 오답노트</button>
               <button
-                onClick={() => setShowResetConfirm(true)}
+                onClick={() => { play('click'); setShowResetConfirm(true); }}
                 style={{
                   flex: 1, padding: '8px 4px',
                   background: COLORS.bgPanel, color: COLORS.textDim,
@@ -387,11 +462,13 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
               </div>
               <div style={{ display: 'flex', gap: 8 }}>
                 <GlowBtn onClick={handleReset} color={COLORS.red} style={{ fontSize: 13 }}>초기화</GlowBtn>
-                <GlowBtn onClick={() => setShowResetConfirm(false)} style={{ fontSize: 13 }}>취소</GlowBtn>
+                <GlowBtn onClick={() => { play('click'); setShowResetConfirm(false); }} style={{ fontSize: 13 }}>취소</GlowBtn>
               </div>
             </div>
           </div>
         )}
+
+        {settingsModal}
         <style>{GLOBAL_STYLES}</style>
       </Screen>
     );
@@ -533,9 +610,14 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
               )}
             </div>
             <button
-              onClick={() => setPhase('intro')}
+              onClick={() => { play('click'); setPhase('intro'); }}
               style={{ padding: '2px 7px', fontSize: 10, background: 'none', border: `1px solid ${COLORS.borderDark}`, cursor: 'pointer', fontFamily: TITLE_FONT, color: COLORS.textDim, letterSpacing: '0.05em', flexShrink: 0 }}
             >메뉴</button>
+            <button
+              onClick={() => { play('click'); setShowSettings(true); }}
+              title="설정"
+              style={{ padding: '2px 6px', fontSize: 12, background: 'none', border: `1px solid ${COLORS.borderDark}`, cursor: 'pointer', color: COLORS.textDim, flexShrink: 0, lineHeight: 1 }}
+            >⚙</button>
           </div>
           <div style={{ height: 4, background: COLORS.bgDeep, border: `1px solid ${COLORS.border}` }}>
             <div style={{ height: '100%', width: `${progressPct}%`, background: COLORS.border, transition: 'width 0.5s' }}/>
@@ -773,6 +855,7 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
         )}
       </div>
 
+      {settingsModal}
       <style>{GLOBAL_STYLES}</style>
       <GlossaryModal term={activeTerm} onClose={() => setActiveTerm(null)} />
     </div>
