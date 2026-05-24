@@ -7,7 +7,7 @@ export const RANKS: Rank[] = [
   { lv: 4, emoji: '🧑', name: '직장인 개미',   desc: '평범한 투자자' },
   { lv: 5, emoji: '💼', name: '프로 트레이더', desc: '리스크 관리를 안다' },
   { lv: 6, emoji: '🎩', name: '펀드매니저',    desc: '매크로를 같이 본다' },
-  { lv: 7, emoji: '👴', name: '워렌 부페',     desc: '시간이 친구' },
+  { lv: 7, emoji: '👴', name: '워렌 뷔페',     desc: '시간이 친구' },
 ];
 
 export const LEVEL_UP_POINTS = 100;

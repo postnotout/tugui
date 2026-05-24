@@ -21,6 +21,14 @@ const TICKER_FILE: Record<string, string> = {
   'NVDA':      'NVDA',
   'BTC-USD':   'BTC_USD',
   '^GSPC':     'GSPC',
+  // 확장 데이터
+  'GSPC2007':  'GSPC_2007',   // 2008 금융위기
+  'KS11':      'KS11',        // IMF 외환위기
+  'SSE':       'SSE',         // 중국 상하이
+  'IXIC':      'IXIC',        // 나스닥 닷컴버블
+  'N225':      'N225',        // 니케이 버블
+  'GME':       'GME',         // 게임스톱
+  'SEEGENE':   'SEEGENE',     // 씨젠 K방역
 };
 
 async function fetchCSV(ticker: string): Promise<RawRow[]> {

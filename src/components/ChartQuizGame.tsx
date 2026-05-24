@@ -29,12 +29,8 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
   const { data: storage, save: saveStorage, reset: resetStorage } = useGameStorage();
   const play = useSound(storage.settings.soundEnabled, storage.settings.volume);
 
-  const [phase, setPhase] = useState<'intro' | 'playing' | 'levelup' | 'gameover' | 'ending'>(
-    () => localStorage.getItem('tutorialCompleted') ? 'intro' : 'playing'
-  );
-  const [tutorialStep, setTutorialStep] = useState<number | null>(
-    () => localStorage.getItem('tutorialCompleted') ? null : 0
-  );
+  const [phase, setPhase] = useState<'intro' | 'playing' | 'levelup' | 'gameover' | 'ending'>('intro');
+  const [tutorialStep, setTutorialStep] = useState<number | null>(null);
   const [hp, setHp] = useState(3);
   const [points, setPoints] = useState(0);
   const [rank, setRank] = useState(0);
@@ -44,9 +40,7 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
 
-  const [problemQueue, setProblemQueue] = useState<Problem[]>(() =>
-    localStorage.getItem('tutorialCompleted') ? difficultyShuffle(PROBLEM_POOL) : [TUTORIAL_PROBLEM]
-  );
+  const [problemQueue, setProblemQueue] = useState<Problem[]>(() => difficultyShuffle(PROBLEM_POOL));
   const [problemIdx, setProblemIdx] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
   const [submitted, setSubmitted] = useState(false);
@@ -367,31 +361,32 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
             onClick={() => { play('click'); setShowSettings(true); }}
             title="설정"
             style={{
-              position: 'absolute', top: 4, right: 6,
-              background: 'none', border: 'none',
-              fontSize: 15, cursor: 'pointer', color: COLORS.textDim, padding: '2px 4px',
-              lineHeight: 1,
+              position: 'absolute', top: 20, right: 8,
+              background: COLORS.bgDeep, border: `1px solid ${COLORS.border}`,
+              borderRadius: 4,
+              fontSize: 16, cursor: 'pointer', color: COLORS.textBright, padding: '4px 7px',
+              lineHeight: 1, boxShadow: `1px 1px 0 0 ${COLORS.borderDark}`,
             }}
           >⚙</button>
 
-          <div style={{ textAlign: 'center', marginBottom: 6, marginTop: 6, fontSize: 9, color: COLORS.textDim, letterSpacing: '0.25em' }}>
-            CHART · TRADING · LEARNING
+          <div style={{ textAlign: 'center', marginBottom: 6, marginTop: 22, fontSize: 9, color: COLORS.textDim, letterSpacing: '0.25em' }}>
+            ANALYZING · BUYING · PRAYING
           </div>
           <div style={{ textAlign: 'center', marginBottom: 4, fontSize: 12, color: COLORS.red, fontWeight: 600, letterSpacing: '0.15em' }}>
             ～ 이 론 편 ～
           </div>
 
           <div style={{ position: 'relative', marginBottom: 6 }}>
-            <div style={{ textAlign: 'center', fontSize: 44, fontWeight: 900, color: COLORS.textBright, letterSpacing: '0.08em', lineHeight: 1.1, textShadow: `1px 1px 0 ${COLORS.bgDeep}` }}>
+            <div style={{ textAlign: 'center', fontSize: 44, fontWeight: 900, color: COLORS.textBright, letterSpacing: '0.38em', lineHeight: 1.1, textShadow: `1px 1px 0 ${COLORS.bgDeep}` }}>
               투기의<br/>정석
             </div>
-            <div style={{ position: 'absolute', right: 0, bottom: -2, textAlign: 'right' }}>
+            <div style={{ position: 'absolute', right: 0, bottom: -28, textAlign: 'right' }}>
               <div style={{ fontSize: 8, color: COLORS.textDim, letterSpacing: '0.25em' }}>저자</div>
               <div style={{ fontSize: 11, color: COLORS.textBright, fontWeight: 700, letterSpacing: '0.15em' }}>마자유</div>
             </div>
           </div>
 
-          <div style={{ marginBottom: 8, marginTop: 12 }}>
+          <div style={{ marginBottom: 8, marginTop: 72 }}>
             <div style={{ borderTop: `2px solid ${COLORS.border}` }}/>
             <div style={{ borderTop: `1px solid ${COLORS.red}`, marginTop: 2 }}/>
           </div>
@@ -481,12 +476,18 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
               </button>
             )}
             <button
-              onClick={startGame}
+              onClick={() => {
+                if (!hasSave && !localStorage.getItem('tutorialCompleted')) {
+                  startTutorialGame();
+                } else {
+                  startGame();
+                }
+              }}
               style={{
                 width: '100%', padding: '10px',
                 background: COLORS.bgPanel, color: COLORS.textBright,
-                border: `2px solid ${COLORS.border}`,
-                boxShadow: `3px 3px 0 0 ${COLORS.border}`,
+                border: `2px solid #4a8c5c`,
+                boxShadow: `3px 3px 0 0 #2e5c3a`,
                 fontFamily: '"Noto Serif KR", serif',
                 fontSize: 14, fontWeight: 700, letterSpacing: '0.25em',
                 cursor: 'pointer',
@@ -515,8 +516,8 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
                 onClick={() => { play('click'); setShowResetConfirm(true); }}
                 style={{
                   flex: 1, padding: '8px 4px',
-                  background: COLORS.bgPanel, color: COLORS.textDim,
-                  border: `1px solid ${COLORS.borderDark}`,
+                  background: COLORS.bgPanel, color: COLORS.text,
+                  border: `1px solid ${COLORS.border}`,
                   fontFamily: '"Noto Serif KR", serif',
                   fontSize: 11, letterSpacing: '0.05em',
                   cursor: 'pointer',
