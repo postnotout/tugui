@@ -55,7 +55,7 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
     if (phase !== 'playing') return;
     let cancelled = false;
     setChartLoading(true);
-    loadChartData(problem.ticker, problem.startDate, 120)
+    loadChartData(problem.ticker, problem.startDate, problem.chartDays ?? 120)
       .then(data => { if (!cancelled) { setChartData(data); setChartLoading(false); } })
       .catch(() => {
         if (!cancelled) {

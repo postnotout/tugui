@@ -59,7 +59,7 @@ export default function OffenseNote({ onClose }: Props) {
     let cancelled = false;
     setChartLoading(true);
     setChartData([]);
-    loadChartData(currentProblem.ticker, currentProblem.startDate, 120)
+    loadChartData(currentProblem.ticker, currentProblem.startDate, currentProblem.chartDays ?? 120)
       .then(data => { if (!cancelled) { setChartData(data); setChartLoading(false); } })
       .catch(() => {
         if (!cancelled) {

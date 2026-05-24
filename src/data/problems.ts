@@ -29,14 +29,14 @@ export const PROBLEM_POOL: Problem[] = [
     },
   },
   {
-    id: 2, market: 'KOSPI', ticker: '051910.KS', pattern: 'uptrend', revealDay: 60, difficulty: 'easy',
+    id: 2, market: 'KOSPI', ticker: '051910.KS', pattern: 'uptrend', revealDay: 35, chartDays: 150, difficulty: 'easy',
     startDate: '2020-11-01',
-    question: '강한 상승 추세 중간. 이 종목은 이후 어떻게 됐을까?',
+    question: '강한 상승 추세 초입. 이 종목은 이후 어떻게 됐을까?',
     macroHints: [
-      { label: '유가 (WTI)', value: '$85', trend: '6개월 +30%', tone: 'positive' },
-      { label: '중국 화학 수요', value: '회복 중', trend: '재고 소진', tone: 'positive' },
-      { label: '한국 수출', value: '전년대비 +12%', trend: '화학 견조', tone: 'positive' },
-      { label: '배터리 자회사', value: 'LG에너지솔루션', trend: '상장 기대감', tone: 'positive' },
+      { label: '유가 (WTI)', value: '$41', trend: '코로나 저점 회복세', tone: 'positive' },
+      { label: '2차전지 테마', value: '폭발적 관심', trend: 'EV 전환 가속화', tone: 'positive' },
+      { label: '한국 기준금리', value: '0.50%', trend: '초저금리 유지', tone: 'positive' },
+      { label: '배터리 자회사', value: 'LG에너지솔루션', trend: '분할 상장 추진', tone: 'positive' },
     ],
     choices: [
       '상승 추세 지속',
@@ -56,9 +56,9 @@ export const PROBLEM_POOL: Problem[] = [
     },
   },
   {
-    id: 3, market: 'KOSPI', ticker: '000660.KS', pattern: 'parabolic', revealDay: 100, difficulty: 'easy',
-    startDate: '2017-01-01',
-    question: '강한 상승이 1년 이상 이어진 후 가속 구간. 이 종목은 이후 어떻게 됐을까?',
+    id: 3, market: 'KOSPI', ticker: '000660.KS', pattern: 'parabolic', revealDay: 85, chartDays: 270, difficulty: 'easy',
+    startDate: '2018-01-02',
+    question: '강한 상승이 수개월 이어진 후 포물선 가속 구간. 이 종목은 이후 어떻게 됐을까?',
     macroHints: [
       { label: 'DRAM 가격', value: '연간 +50%', trend: '슈퍼사이클 정점', tone: 'positive' },
       { label: '한국 수출', value: '사상최대', trend: '반도체 견인', tone: 'positive' },
@@ -83,14 +83,14 @@ export const PROBLEM_POOL: Problem[] = [
     },
   },
   {
-    id: 4, market: 'NASDAQ', ticker: 'NVDA', pattern: 'cup', revealDay: 95, difficulty: 'medium',
-    startDate: '2023-01-01',
-    question: '컵 패턴 형성 + 강한 매크로. 이 종목은 이후 어떻게 됐을까?',
+    id: 4, market: 'NASDAQ', ticker: 'NVDA', pattern: 'cup', revealDay: 80, chartDays: 175, difficulty: 'medium',
+    startDate: '2022-10-03',
+    question: '약세장 저점 부근에서 컵 패턴 형성 중. 이 종목은 이후 어떻게 됐을까?',
     macroHints: [
-      { label: '연준 정책', value: '금리 인하 기대', trend: '인하 사이클 진입', tone: 'positive' },
-      { label: 'AI 자본지출', value: '사상 최대', trend: '하이퍼스케일러 투자', tone: 'positive' },
-      { label: '실적 가이던스', value: '연속 상향', trend: '데이터센터 매출 가속', tone: 'positive' },
-      { label: '나스닥 모멘텀', value: '강세', trend: '신고가 행진', tone: 'positive' },
+      { label: '연준 정책', value: '4.00%', trend: '75bp 연속 인상', tone: 'negative' },
+      { label: 'AI 인프라', value: 'ChatGPT 출시 예정', trend: '데이터센터 수요 태동', tone: 'positive' },
+      { label: 'NVDA 데이터센터', value: '+61% 성장', trend: '게임 부진 상쇄', tone: 'positive' },
+      { label: '나스닥', value: '연초대비 -33%', trend: '기술주 약세장', tone: 'negative' },
     ],
     choices: [
       '대세 상승 (장기 우상향)',
@@ -110,7 +110,7 @@ export const PROBLEM_POOL: Problem[] = [
     },
   },
   {
-    id: 5, market: 'NASDAQ', ticker: 'TSLA', pattern: 'doubletop', revealDay: 75, difficulty: 'medium',
+    id: 5, market: 'NASDAQ', ticker: 'TSLA', pattern: 'doubletop', revealDay: 75, chartDays: 300, difficulty: 'medium',
     startDate: '2021-11-01',
     question: '고점 부근에서 두 번째 봉우리 형성. 이 종목은 이후 어떻게 됐을까?',
     macroHints: [
@@ -137,7 +137,7 @@ export const PROBLEM_POOL: Problem[] = [
     },
   },
   {
-    id: 6, market: 'KOSPI', ticker: '011170.KS', pattern: 'breakout', revealDay: 78, difficulty: 'medium',
+    id: 6, market: 'KOSPI', ticker: '011170.KS', pattern: 'breakout', revealDay: 78, chartDays: 220, difficulty: 'medium',
     startDate: '2021-09-01',
     question: '박스권 돌파 시도. 차트는 우호적이지만 매크로는 혼재. 이 종목은 이후?',
     macroHints: [
@@ -191,7 +191,7 @@ export const PROBLEM_POOL: Problem[] = [
     },
   },
   {
-    id: 8, market: 'CRYPTO', ticker: 'BTC-USD', pattern: 'reversal', revealDay: 82, difficulty: 'hard',
+    id: 8, market: 'CRYPTO', ticker: 'BTC-USD', pattern: 'reversal', revealDay: 82, chartDays: 160, difficulty: 'hard',
     startDate: '2022-05-01',
     question: '큰 하락 후 단기 반등 중. 매크로는 시스템 리스크 진행 중. 이후 흐름은?',
     macroHints: [

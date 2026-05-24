@@ -32,6 +32,7 @@ export interface Problem {
   ticker: string;
   pattern: string;
   revealDay: number;
+  chartDays?: number;
   difficulty: 'easy' | 'medium' | 'hard';
   startDate: string;
   question: string;
