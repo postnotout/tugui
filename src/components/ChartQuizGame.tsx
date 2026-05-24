@@ -14,6 +14,8 @@ import { useSound } from '../hooks/useSound';
 import type { ChartDataPoint, Problem } from '../types';
 import EvolutionFigure from './EvolutionFigure';
 import { GlossaryText, GlossaryModal } from './GlossaryText';
+import Tutorial from './Tutorial';
+import { TUTORIAL_PROBLEM } from '../data/tutorialProblem';
 import {
   GlowBox, GlowBtn, LegendItem, Screen, FontLoader,
   toggleBtn, TITLE_FONT, KOREAN_FONT, GLOBAL_STYLES,
@@ -27,7 +29,12 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
   const { data: storage, save: saveStorage, reset: resetStorage } = useGameStorage();
   const play = useSound(storage.settings.soundEnabled, storage.settings.volume);
 
-  const [phase, setPhase] = useState<'intro' | 'playing' | 'levelup' | 'gameover' | 'ending'>('intro');
+  const [phase, setPhase] = useState<'intro' | 'playing' | 'levelup' | 'gameover' | 'ending'>(
+    () => localStorage.getItem('tutorialCompleted') ? 'intro' : 'playing'
+  );
+  const [tutorialStep, setTutorialStep] = useState<number | null>(
+    () => localStorage.getItem('tutorialCompleted') ? null : 0
+  );
   const [hp, setHp] = useState(3);
   const [points, setPoints] = useState(0);
   const [rank, setRank] = useState(0);
@@ -37,7 +44,9 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
 
-  const [problemQueue, setProblemQueue] = useState<Problem[]>(() => difficultyShuffle(PROBLEM_POOL));
+  const [problemQueue, setProblemQueue] = useState<Problem[]>(() =>
+    localStorage.getItem('tutorialCompleted') ? difficultyShuffle(PROBLEM_POOL) : [TUTORIAL_PROBLEM]
+  );
   const [problemIdx, setProblemIdx] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
   const [submitted, setSubmitted] = useState(false);
@@ -128,6 +137,13 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
     setSubmitted(true);
     setRevealed(true);
 
+    // ── Tutorial problem: no HP/score/storage effects ──────────────────────
+    if (problem.isTutorial) {
+      play(correct ? 'correct' : 'incorrect');
+      setLastGain(0);
+      return;
+    }
+
     const existing = storage.solvedProblems[problem.id];
     saveStorage({
       solvedProblems: {
@@ -174,6 +190,19 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
   };
 
   const handleNext = () => {
+    // ── Tutorial complete: save flag → go to intro ─────────────────────────
+    if (problem.isTutorial) {
+      play('click');
+      localStorage.setItem('tutorialCompleted', 'true');
+      setTutorialStep(null);
+      setPhase('intro');
+      setHp(3); setPoints(0); setRank(0); setCombo(0);
+      setProblemQueue(difficultyShuffle(PROBLEM_POOL));
+      setProblemIdx(0);
+      setSelected(null); setSubmitted(false); setRevealed(false); setLastGain(0);
+      return;
+    }
+
     if (pendingLevelUp) {
       if (rank >= MAX_RANK_IDX) {
         saveStorage({ clearCount: storage.clearCount + 1, savedSession: null });
@@ -200,6 +229,41 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
   };
 
   const retry = () => { startGame(); };
+
+  // ─── Tutorial controls ────────────────────────────────────────────────────
+  const startTutorialGame = () => {
+    play('click');
+    localStorage.removeItem('tutorialCompleted');
+    setTutorialStep(0);
+    setPhase('playing');
+    setProblemQueue([TUTORIAL_PROBLEM]);
+    setProblemIdx(0);
+    setSelected(null); setSubmitted(false); setRevealed(false); setLastGain(0);
+    setHp(3); setPoints(0); setRank(0); setCombo(0); setPendingLevelUp(false);
+    setShowSettings(false);
+  };
+
+  const advanceTutorialStep = () => {
+    if (tutorialStep === null) return;
+    play('tick');
+    if (tutorialStep < 4) {
+      setTutorialStep(tutorialStep + 1);
+    } else {
+      // Last step done — dismiss overlay so user can interact
+      setTutorialStep(null);
+    }
+  };
+
+  const skipTutorial = () => {
+    play('click');
+    localStorage.setItem('tutorialCompleted', 'true');
+    setTutorialStep(null);
+    setPhase('intro');
+    setHp(3); setPoints(0); setRank(0); setCombo(0);
+    setProblemQueue(difficultyShuffle(PROBLEM_POOL));
+    setProblemIdx(0);
+    setSelected(null); setSubmitted(false); setRevealed(false);
+  };
 
   const handleReset = () => {
     play('click');
@@ -259,6 +323,20 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
             onChange={e => saveStorage({ settings: { ...storage.settings, volume: parseFloat(e.target.value) } })}
             style={{ width: '100%', accentColor: COLORS.border, cursor: 'pointer' }}
           />
+        </div>
+
+        {/* Tutorial replay */}
+        <div style={{ borderTop: `1px solid ${COLORS.borderDark}`, paddingTop: 14, marginBottom: 14 }}>
+          <button
+            onClick={startTutorialGame}
+            style={{
+              width: '100%', padding: '8px 0',
+              background: COLORS.bgDeep, color: COLORS.textBright,
+              border: `1px solid ${COLORS.border}`,
+              fontFamily: KOREAN_FONT, fontSize: 12, fontWeight: 700,
+              letterSpacing: '0.1em', cursor: 'pointer',
+            }}
+          >🎓 튜토리얼 다시 보기</button>
         </div>
 
         <GlowBtn onClick={() => { play('click'); setShowSettings(false); }}>닫기</GlowBtn>
@@ -630,6 +708,9 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
         <div style={{ display: 'flex', gap: 4, marginBottom: 4, flexWrap: 'wrap', fontSize: 10, fontFamily: TITLE_FONT, alignItems: 'center' }}>
           <span style={{ padding: '3px 8px', background: COLORS.bgPanel, color: COLORS.textBright, border: `1px solid ${COLORS.border}`, letterSpacing: '0.1em', fontWeight: 700 }}>{problem.market}</span>
           <span style={{ padding: '3px 8px', background: problem.difficulty === 'hard' ? COLORS.red : problem.difficulty === 'medium' ? COLORS.orange : COLORS.green, color: '#fff', letterSpacing: '0.1em', textTransform: 'uppercase', fontWeight: 700 }}>{problem.difficulty}</span>
+          {problem.isTutorial && (
+            <span style={{ padding: '3px 8px', background: COLORS.gold, color: '#fff', letterSpacing: '0.12em', fontWeight: 700, fontSize: 10, fontFamily: TITLE_FONT }}>✦ 연습</span>
+          )}
           <div style={{ marginLeft: 'auto', display: 'flex', gap: 3 }}>
             <button onClick={() => setShowRSI(!showRSI)} style={toggleBtn(showRSI, COLORS.red)}>
               {showRSI ? '✓ RSI' : '+ RSI 보기'}
@@ -638,8 +719,8 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
         </div>
 
         {/* 차트 */}
-        <GlowBox color={COLORS.border} bg={COLORS.bgChart} style={{ padding: '6px 6px 2px', marginBottom: 6 }}>
-          <div style={{ display: 'flex', gap: 10, marginBottom: 4, paddingLeft: 4, fontSize: 9, fontFamily: TITLE_FONT, fontWeight: 700, letterSpacing: '0.02em', flexWrap: 'wrap' }}>
+        <GlowBox id="tut-chart" color={COLORS.border} bg={COLORS.bgChart} style={{ padding: '6px 6px 2px', marginBottom: 6 }}>
+          <div id="tut-legend" style={{ display: 'flex', gap: 10, marginBottom: 4, paddingLeft: 4, fontSize: 9, fontFamily: TITLE_FONT, fontWeight: 700, letterSpacing: '0.02em', flexWrap: 'wrap' }}>
             <LegendItem color={COLORS.blueBright} label="종가" />
             <LegendItem color={COLORS.yellow} label="MA5" dashed />
             <LegendItem color={COLORS.purple} label="MA20" dashed />
@@ -674,26 +755,28 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
             </ComposedChart>
           </ResponsiveContainer>
 
-          <div style={{ fontSize: 9, fontFamily: TITLE_FONT, color: COLORS.blueBright, letterSpacing: '0.1em', paddingLeft: 4, marginTop: 3, marginBottom: 1, fontWeight: 700 }}>거래량</div>
-          <ResponsiveContainer width="100%" height={50}>
-            <ComposedChart data={visibleData} margin={{ top: 0, right: 8, left: 0, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="2 4" stroke={COLORS.textMute} vertical={false} opacity={0.2}/>
-              <XAxis dataKey="day" tick={false} axisLine={{ stroke: COLORS.borderDark }}/>
-              <YAxis tick={{ fontSize: 9, fill: COLORS.textDim, fontFamily: 'monospace' }} tickLine={false} width={42}
-                tickFormatter={(v) => v >= 1000000 ? `${(v / 1000000).toFixed(1)}M` : `${(v / 1000).toFixed(0)}K`}
-                axisLine={{ stroke: COLORS.borderDark }}/>
-              <Tooltip contentStyle={{ background: COLORS.bgDeep, border: `2px solid ${COLORS.blue}`, fontSize: 11, fontFamily: 'monospace', color: COLORS.text }}
-                formatter={(v) => [Number(v).toLocaleString(), '거래량']}
-                labelFormatter={(d) => { const item = fullData[d as number]; return item ? item.date : ''; }}/>
-              {revealed && <ReferenceLine x={problem.revealDay} stroke={COLORS.gold} strokeDasharray="4 4"/>}
-              <Bar dataKey="거래량">
-                {visibleData.map((d, i) => {
-                  const prev = i > 0 ? visibleData[i - 1].종가 : d.종가;
-                  return <Cell key={i} fill={d.종가 >= prev ? COLORS.green : COLORS.red} fillOpacity={0.7}/>;
-                })}
-              </Bar>
-            </ComposedChart>
-          </ResponsiveContainer>
+          <div id="tut-volume">
+            <div style={{ fontSize: 9, fontFamily: TITLE_FONT, color: COLORS.blueBright, letterSpacing: '0.1em', paddingLeft: 4, marginTop: 3, marginBottom: 1, fontWeight: 700 }}>거래량</div>
+            <ResponsiveContainer width="100%" height={50}>
+              <ComposedChart data={visibleData} margin={{ top: 0, right: 8, left: 0, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="2 4" stroke={COLORS.textMute} vertical={false} opacity={0.2}/>
+                <XAxis dataKey="day" tick={false} axisLine={{ stroke: COLORS.borderDark }}/>
+                <YAxis tick={{ fontSize: 9, fill: COLORS.textDim, fontFamily: 'monospace' }} tickLine={false} width={42}
+                  tickFormatter={(v) => v >= 1000000 ? `${(v / 1000000).toFixed(1)}M` : `${(v / 1000).toFixed(0)}K`}
+                  axisLine={{ stroke: COLORS.borderDark }}/>
+                <Tooltip contentStyle={{ background: COLORS.bgDeep, border: `2px solid ${COLORS.blue}`, fontSize: 11, fontFamily: 'monospace', color: COLORS.text }}
+                  formatter={(v) => [Number(v).toLocaleString(), '거래량']}
+                  labelFormatter={(d) => { const item = fullData[d as number]; return item ? item.date : ''; }}/>
+                {revealed && <ReferenceLine x={problem.revealDay} stroke={COLORS.gold} strokeDasharray="4 4"/>}
+                <Bar dataKey="거래량">
+                  {visibleData.map((d, i) => {
+                    const prev = i > 0 ? visibleData[i - 1].종가 : d.종가;
+                    return <Cell key={i} fill={d.종가 >= prev ? COLORS.green : COLORS.red} fillOpacity={0.7}/>;
+                  })}
+                </Bar>
+              </ComposedChart>
+            </ResponsiveContainer>
+          </div>
 
           {showRSI && (
             <>
@@ -723,7 +806,7 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
           const toneLabel = overallTone === 'positive' ? '우호적' : overallTone === 'negative' ? '부정적' : '혼재';
           const toneColor = overallTone === 'positive' ? COLORS.green : overallTone === 'negative' ? COLORS.red : COLORS.textDim;
           return (
-            <div style={{ marginBottom: 6 }}>
+            <div id="tut-macro" style={{ marginBottom: 6 }}>
               <button onClick={() => setShowMacroDetail(!showMacroDetail)} style={{ width: '100%', background: COLORS.bgPanel, border: `2px solid ${COLORS.border}`, boxShadow: `2px 2px 0 0 ${COLORS.border}`, padding: '5px 10px', fontFamily: TITLE_FONT, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, flex: 1, minWidth: 0 }}>
                   <span style={{ fontSize: 11, color: COLORS.textDim, letterSpacing: '0.15em', fontWeight: 700 }}>매크로</span>
@@ -764,7 +847,7 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
         </div>
 
         {/* 보기 */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 4, marginBottom: 8 }}>
+        <div id="tut-choices" style={{ display: 'flex', flexDirection: 'column', gap: 4, marginBottom: 8 }}>
           {problem.choices.map((c, i) => {
             const isSel = selected === i;
             const isAns = submitted && i === problem.answer;
@@ -846,7 +929,7 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
 
         {submitted ? (
           <GlowBtn onClick={handleNext} color={pendingLevelUp ? COLORS.goldBright : COLORS.greenBright}>
-            {pendingLevelUp ? '★ 다음 (LEVEL UP!) ▶' : '다음 문제 ▶'}
+            {problem.isTutorial ? '학습 시작하기 ▶' : pendingLevelUp ? '★ 다음 (LEVEL UP!) ▶' : '다음 문제 ▶'}
           </GlowBtn>
         ) : (
           <GlowBtn onClick={handleSubmit} disabled={selected === null} color={COLORS.goldBright}>
@@ -858,6 +941,15 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
       {settingsModal}
       <style>{GLOBAL_STYLES}</style>
       <GlossaryModal term={activeTerm} onClose={() => setActiveTerm(null)} />
+
+      {/* Tutorial overlay — rendered on top of everything when active */}
+      {tutorialStep !== null && (
+        <Tutorial
+          step={tutorialStep}
+          onNext={advanceTutorialStep}
+          onSkip={skipTutorial}
+        />
+      )}
     </div>
   );
 }

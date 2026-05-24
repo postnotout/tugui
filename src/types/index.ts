@@ -28,6 +28,7 @@ export interface RevealInfo {
 
 export interface Problem {
   id: number;
+  isTutorial?: boolean;
   market: string;
   ticker: string;
   pattern: string;
