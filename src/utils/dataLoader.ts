@@ -21,7 +21,7 @@ const TICKER_FILE: Record<string, string> = {
   'NVDA':      'NVDA',
   'BTC-USD':   'BTC_USD',
   '^GSPC':     'GSPC',
-  // 확장 데이터
+  // 확장 데이터 (역사적 사건)
   'GSPC2007':  'GSPC_2007',   // 2008 금융위기
   'KS11':      'KS11',        // IMF 외환위기
   'SSE':       'SSE',         // 중국 상하이
@@ -29,6 +29,16 @@ const TICKER_FILE: Record<string, string> = {
   'N225':      'N225',        // 니케이 버블
   'GME':       'GME',         // 게임스톱
   'SEEGENE':   'SEEGENE',     // 씨젠 K방역
+  // 확장 데이터 (현대 종목)
+  'META':      'META',        // 메타
+  '035720.KS': '035720.KS',  // 카카오
+  '035420.KS': '035420.KS',  // 네이버
+  '005380.KS': '005380.KS',  // 현대차
+  'AAPL':      'AAPL',        // 애플
+  'AMD':       'AMD',         // AMD
+  'GLD':       'GLD',         // 금 ETF
+  '086520.KQ': '086520.KQ',  // 에코프로
+  '068270.KS': '068270.KS',  // 셀트리온
 };
 
 async function fetchCSV(ticker: string): Promise<RawRow[]> {
