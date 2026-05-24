@@ -191,7 +191,7 @@ export const PROBLEM_POOL: Problem[] = [
     },
   },
   {
-    id: 8, market: 'CRYPTO', ticker: 'BTC-USD', pattern: 'reversal', revealDay: 82, chartDays: 160, difficulty: 'hard',
+    id: 8, market: 'CRYPTO', ticker: 'BTC-USD', pattern: 'reversal', revealDay: 82, chartDays: 205, difficulty: 'hard',
     startDate: '2022-05-01',
     question: '큰 하락 후 단기 반등 중. 매크로는 시스템 리스크 진행 중. 이후 흐름은?',
     macroHints: [
