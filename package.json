@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "validate": "node scripts/validate-problems.cjs",
+    "generate": "node scripts/generate-problems.cjs && npm run validate"
   },
   "dependencies": {
     "@capacitor/cli": "^8.3.4",

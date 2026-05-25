@@ -257,19 +257,26 @@ function detectPattern(closes, revealDay) {
   const cur = closes[revealDay - 1];
   const p20 = closes[Math.max(0, revealDay - 20)];
   const p40 = closes[Math.max(0, revealDay - 40)];
+  const p60 = closes[Math.max(0, revealDay - 60)];
   if (!cur || !p20 || !p40) return 'sideways';
 
-  const chg20 = (cur - p20) / p20;  // 최근 20일 등락
-  const chg40 = (cur - p40) / p40;  // 최근 40일 등락
+  const chg20 = (cur - p20) / p20;
+  const chg40 = (cur - p40) / p40;
+  const chg60 = p60 ? (cur - p60) / p60 : chg40;
 
+  // 포물선 상승: 20일 내 폭발적 상승 + 40~60일도 강한 상승 (가속 구조)
+  if (chg20 > 0.18 && chg40 > 0.25) return 'parabolic';
+  // 이중 천장: 40~60일 강세 → 최근 20일 하락 반전 (고점 후 약세 전환)
+  if (chg60 > 0.10 && chg20 < -0.04 && chg40 < chg60 * 0.6) return 'doubletop';
+  // 지지선 붕괴(breakdown): 단기·중기 급락으로 지지선 이탈
+  if (chg20 < -0.10 && chg40 < -0.18) return 'breakdown';
   // 추세적 상승: 단기·중기 모두 양수이며, 중기 상승이 단기보다 커야 함
-  //   (chg40 > chg20*1.2: 상승이 20일 이전부터 이어진 경우만 uptrend로 인정)
   if (chg20 > 0.04 && chg40 > 0.12 && chg40 > chg20 * 1.2) return 'uptrend';
   // 추세적 하락: 단기·중기 모두 음(-)
   if (chg20 < -0.04 && chg40 < -0.12) return 'downtrend';
   // 최근 급등: 하락 추세 중이면 reversal(반등), 아니면 breakout
   if (chg20 > 0.08) return chg40 < -0.05 ? 'reversal' : 'breakout';
-  // 최근 급락 (← 급등 후 급락 케이스가 여기로 올바르게 분류)
+  // 최근 급락
   if (chg20 < -0.08) return 'reversal';
   // 중기 방향성만 존재
   if (chg40 > 0.10) return 'breakout';
@@ -342,6 +349,28 @@ const TEMPLATES = {
     (_n, m) => `거래량이 감소하며 박스권 수렴이 지속되고 있다. ${m}개월 후 결과로 옳은 것은?`,
     (_n, m) => `박스권 안에서 매수·매도 균형이 유지되고 있다. ${m}개월 후 주가의 전개로 알맞은 것은?`,
   ],
+  doubletop: [
+    (_n, m) => `큰 상승 이후 고점 부근에서 두 번의 정상을 형성하고 있다. ${m}개월 후 주가의 변화로 옳은 것은?`,
+    (_n, m) => `전 고점을 재차 시험하였지만 돌파하지 못하고 있다. ${m}개월 후 결과로 알맞은 것은?`,
+    (_n, m) => `고점에서 재차 저항에 막혀 쌍봉 패턴이 나타나고 있다. ${m}개월 후 주가의 전개로 옳은 것은?`,
+    (_n, m) => `강한 상승 후 고점을 두 번 시험했지만 돌파에 실패하고 있다. ${m}개월 후 결과로 적절한 것은?`,
+    (_n, m) => `상승세가 고점에서 두 번 막히며 매수세가 소진되는 모습이다. ${m}개월 후 주가의 흐름으로 옳은 것은?`,
+    (_n, m) => `고점 부근에서 고가가 반응하지 않으며 상승 모멘텀이 약해지고 있다. ${m}개월 후 결과로 알맞은 것은?`,
+  ],
+  breakdown: [
+    (_n, m) => `주요 지지선을 하향 이탈하며 하락이 가속되고 있다. ${m}개월 후 주가의 변화로 옳은 것은?`,
+    (_n, m) => `장기 지지대가 붕괴되며 강한 매도세가 유입되고 있다. ${m}개월 후 결과로 알맞은 것은?`,
+    (_n, m) => `핵심 지지선을 이탈하는 장대 음봉이 출현하였다. ${m}개월 후 주가의 전개로 옳은 것은?`,
+    (_n, m) => `이동평균선을 모두 하향 이탈하며 역배열이 완성되고 있다. ${m}개월 후 결과로 적절한 것은?`,
+    (_n, m) => `지지 구간이 붕괴되며 매도 물량이 쏟아지고 있다. ${m}개월 후 주가의 흐름으로 옳은 것은?`,
+  ],
+  parabolic: [
+    (_n, m) => `단기간에 급격한 포물선 상승이 나타나고 있다. ${m}개월 후 주가의 변화로 옳은 것은?`,
+    (_n, m) => `가파른 가속 상승이 이어지며 단기 고점 우려가 높아지고 있다. ${m}개월 후 결과로 알맞은 것은?`,
+    (_n, m) => `기하급수적인 상승 속도로 과열 신호가 나타나고 있다. ${m}개월 후 주가의 전개로 옳은 것은?`,
+    (_n, m) => `단기 급등으로 이격도가 크게 벌어지며 추세가 가파르다. ${m}개월 후 결과로 적절한 것은?`,
+    (_n, m) => `연속 급등으로 단기 과매수 신호가 강하게 나타나고 있다. ${m}개월 후 주가의 흐름으로 옳은 것은?`,
+  ],
 };
 
 function pickQ(pattern, name, months) {
@@ -378,6 +407,9 @@ const LESSON_MAP = {
     reversal:  '바닥에서의 강한 반등은 사이클 전환 초입을 알리는 신호다. 첫 반등보다 두 번째 저점 확인이 더 중요하며, 전 저점을 하회하지 않으면 매수세가 살아있다는 뜻이다.',
     downtrend: '하락 추세 중 역발상 반등은 드물지만, 매크로 개선 신호와 동반할 때 성공률이 높아진다. 손절선 없이 진입하면 단기 반등도 손실로 이어질 수 있다.',
     sideways:  '오랜 박스권 돌파 후 급등은 억눌렸던 매수 에너지가 한꺼번에 풀리는 패턴이다. 박스권 기간이 길수록 돌파 후 상승 지속력이 강한 경향이 있다.',
+    doubletop: '쌍봉에서 강하게 반등했다면 고점 저항이 없는 새 국면이다. 전 고점 돌파는 다음 단계의 시작이다.',
+    breakdown: '지지선 붕괴 후 강한 반등은 드물지만, 매크로가 개선될 때 V자 회복으로 이어지기도 한다.',
+    parabolic: '포물선 상승은 모멘텀이 극도로 강할 때 나타난다. 지속력은 짧지만 방향이 맞으면 단기 수익이 크다.',
   },
   1: {
     uptrend:   '추세는 유지됐지만 기대만큼 크지 않았다. 추세 추종은 정확한 목표가보다 손절선 관리가 수익을 결정한다.',
@@ -385,6 +417,9 @@ const LESSON_MAP = {
     reversal:  '반등에 성공했지만 완전한 추세 전환까지는 더 시간이 필요했다. 바닥 매수는 분할로 접근하고, 추세 전환 확인 후 비중을 늘리는 것이 안전하다.',
     downtrend: '하락 후 반전 성공. 패닉 구간에서 버텼거나 매수했다면 수익이 났다. 하지만 반전 초기에는 항상 재하락 가능성을 열어두고 손절선을 미리 정해야 한다.',
     sideways:  '박스권 상단 돌파 후 천천히 상승했다. 박스권 탈출에는 인내가 필요하며, 충분한 에너지 축적 후의 돌파가 더 오래 이어진다.',
+    doubletop: '쌍봉 패턴에서 예상을 뒤집고 완만히 상승했다. 매크로 호재가 패턴을 무력화했다.',
+    breakdown: '붕괴 이후 저점 매수세가 유입되며 점진적으로 회복했다.',
+    parabolic: '급등 이후에도 상승 동력이 남아 있었다. 추세가 이어지는 동안 이른 차익실현은 기회 손실이다.',
   },
   2: {
     uptrend:   '상승 추세에서 숨 고르기가 나타났다. 추세 자체는 살아있지만 단기 모멘텀이 소진됐다. 눌림목을 추가 매수 기회로 볼지, 추세 종료 신호로 볼지가 핵심 판단이다.',
@@ -392,6 +427,9 @@ const LESSON_MAP = {
     reversal:  '반등 후 재차 지지부진했다. 진짜 추세 전환과 데드캣 반등은 두 번째 저점 확인으로 구분할 수 있다. 손절선 없는 바닥 매수는 가장 흔한 실수다.',
     downtrend: '하락이 일시 멈췄지만 추세 전환까지는 더 시간이 필요했다. 하락 추세에서 횡보는 이탈 전 최후의 경고일 수 있다.',
     sideways:  '박스권이 계속됐다. 기다림에 지쳐 손절한 투자자들이 가장 많이 나오는 구간이다. 방향성이 결정될 때까지 포지션 사이즈를 줄이는 것이 정답이다.',
+    doubletop: '쌍봉 경고에도 불구하고 횡보로 에너지를 소화했다. 방향 결정이 지연되는 구간이다.',
+    breakdown: '붕괴 이후 추가 매도세와 저점 매수세가 균형을 이루며 횡보가 이어졌다.',
+    parabolic: '급등 이후 속도 조절 구간으로 진입했다. 이격 해소 후 추세 방향이 재결정된다.',
   },
   3: {
     uptrend:   '올랐던 주식이 결국 꺾였다. 추세 종료 신호는 대개 거래량 이상과 고점 불경신으로 나타난다. 상승장에서 익숙해진 매수 본능이 가장 위험한 순간이다.',
@@ -399,6 +437,9 @@ const LESSON_MAP = {
     reversal:  '바닥인 줄 알고 들어갔다가 더 빠졌다. 첫 반등이 항상 바닥은 아니다. 전 저점을 하회하면 즉시 손절하는 원칙이 손실을 최소화한다.',
     downtrend: '하락 추세가 가속됐다. 약세장에서 "싸 보인다"는 감각은 항상 틀린다. 추세 전환 신호가 나올 때까지 관망이 최선이다.',
     sideways:  '박스 하단을 이탈하며 하락이 가속됐다. 오랜 횡보 후 이탈은 에너지가 아래로 풀리는 것이다. 지지선 붕괴 시 즉각적인 대응이 핵심이다.',
+    doubletop: '쌍봉 패턴이 현실화됐다. 고점에서 호재에 반응이 없었다면 매수세 소진이다.',
+    breakdown: '지지선 붕괴 이후 추가 하락이 이어졌다. 붕괴는 끝이 아닌 시작이다.',
+    parabolic: '포물선 끝에서 급격한 조정이 나타났다. 어떤 추세도 영원히 지속될 수 없다.',
   },
 };
 
@@ -464,21 +505,33 @@ const EXPLANATION_CONTEXT = {
   '0_reversal':  '바닥에서 강한 수급이 유입되며 추세가 빠르게 반전됐다.',
   '0_downtrend': '예상을 뒤집는 매수세가 유입되며 추세가 급반전했다.',
   '0_sideways':  '에너지 축적 이후 방향이 결정되자 빠르게 상승이 진행됐다.',
+  '0_doubletop': '고점 저항을 돌파하며 쌍봉 패턴이 무력화됐다.',
+  '0_breakdown': '붕괴 직후 강한 매수세가 유입되며 V자 반등이 나타났다.',
+  '0_parabolic': '포물선 가속이 멈추지 않으며 추가 급등이 이어졌다.',
   '1_breakout':  '돌파 이후 전 저항선이 지지선으로 전환되며 점진적 상승이 이어졌다.',
   '1_uptrend':   '추세는 유지됐지만 단기 과매수에 따른 속도 조절이 나타났다.',
   '1_reversal':  '반등에 성공했지만 완전한 추세 전환까지는 시간이 더 필요했다.',
   '1_downtrend': '매도 압력이 줄어들며 저점 매수 세력이 점차 우위를 점했다.',
   '1_sideways':  '박스권 상단 돌파 이후 이전 저항이 지지로 바뀌며 완만히 올랐다.',
+  '1_doubletop': '쌍봉 우려에도 불구하고 점진적 상승이 이어졌다.',
+  '1_breakdown': '붕괴 이후 저점 매수가 유입되며 완만한 회복세가 나타났다.',
+  '1_parabolic': '급등 이후에도 추세가 지속되며 상승이 이어졌다.',
   '2_breakout':  '거래량 없는 돌파는 페이크아웃으로 끝나며 다시 박스권으로 회귀했다.',
   '2_uptrend':   '단기 모멘텀이 소진되며 관망세가 늘어 방향성이 약해졌다.',
   '2_reversal':  '반등 시도가 이어졌지만 매도 매물이 쌓여 방향을 결정짓지 못했다.',
   '2_downtrend': '하락 속도가 줄었지만 매수 주체가 충분하지 않아 추세 전환까지는 이르지 못했다.',
   '2_sideways':  '특별한 촉매 없이 박스권이 그대로 유지됐다.',
+  '2_doubletop': '고점 경계에서 매수·매도 균형으로 방향성이 없었다.',
+  '2_breakdown': '붕괴 이후 반등과 재하락이 반복되며 방향을 정하지 못했다.',
+  '2_parabolic': '급등 후 이격 해소 과정에서 박스권 횡보가 이어졌다.',
   '3_breakout':  '거래량과 수급이 뒷받침되지 않은 돌파였고, 결국 되돌림이 나타났다.',
   '3_uptrend':   '상승 피로가 누적된 상태에서 매도 세력이 우위를 점하며 추세가 꺾였다.',
   '3_reversal':  '반등이 실패하며 추가 하락이 나타났다. 바닥 확인 전 섣부른 매수의 위험을 보여준다.',
   '3_downtrend': '매도 압력이 지속되며 하락이 가속됐다.',
   '3_sideways':  '지지선이 붕괴되며 하락 에너지가 한꺼번에 쏟아졌다.',
+  '3_doubletop': '쌍봉 패턴이 완성되며 네크라인 이탈 후 하락이 가속됐다.',
+  '3_breakdown': '붕괴 후 추가 매도세가 유입되며 하락이 지속됐다.',
+  '3_parabolic': '포물선 상승이 급격히 꺾이며 과열 해소 하락이 나타났다.',
 };
 
 function makeExplanation(ans, pctStr, months, pattern) {
@@ -514,49 +567,6 @@ function makeExplanation(ans, pctStr, months, pattern) {
   return ctx ? `${first} ${ctx}` : first;
 }
 
-function makeOdds(ans, pattern, hints) {
-  const tone = macroTone(hints);
-  if ((ans === 0 || ans === 1) && tone === 'negative') {
-    return '매크로는 불리했지만 가격이 버텼다. 이런 충돌 구간은 수급 확인이 핵심이다.';
-  }
-  if (ans === 3 && tone === 'positive') {
-    return '겉보기 호재보다 가격 붕괴가 더 강한 신호였다. 호재가 항상 상승을 보장하지 않는다.';
-  }
-
-  const odds = {
-    uptrend: [
-      '강세 추세가 계속될 확률은 55~65%. 매크로가 동행할수록 확률이 오른다.',
-      '추세 유지 확률은 있지만, 기대 대비 상승폭이 작을 가능성도 40% 정도.',
-      '강세 후 숨 고르기 확률 30~40%. 고점 매수자들의 물량이 부담이 될 수 있다.',
-      '강세가 꺾이는 경우는 드물지만, 일어나면 급격히 빠지는 경향이 있다.',
-    ],
-    downtrend: [
-      '하락 추세 반전 성공률은 30~40%. 지지선과 거래량을 같이 봐야 한다.',
-      '하락세가 멈추고 소폭 반등할 확률 약 40%. 하지만 추세 전환은 아닐 수 있다.',
-      '하락이 일시 멈추는 경우도 있지만 다시 빠질 가능성이 더 높은 구간이다.',
-      '하락 추세 가속 확률이 50~60%. 약세장에서 매수는 항상 위험하다.',
-    ],
-    breakout: [
-      '거래량 동반 돌파 성공률은 50~60%. 매크로가 맞아떨어지면 더 높아진다.',
-      '돌파 후 상승 확률은 약 50%. 하지만 속도는 예측하기 어렵다.',
-      '가짜 돌파(페이크아웃) 확률이 40~50%. 돌파 후 눌림목을 기다리는 전략이 유리하다.',
-      '돌파 실패 후 되돌림 확률 약 45%. 박스 상단 저항이 강할수록 조심해야 한다.',
-    ],
-    reversal: [
-      '과매도 반등 성공률은 45~55%. 지지선과 거래량이 반등의 질을 결정한다.',
-      '반등 후 추가 상승까지 이어지는 경우는 약 40%. 진짜 전환인지 확인이 필요하다.',
-      '단기 반등 후 재하락 확률 약 45%. 섣불리 매수하면 더 빠질 수도 있다.',
-      '반등 실패 후 추가 하락 확률 35~45%. 손절선 없이 들어가면 위험하다.',
-    ],
-    sideways: [
-      '박스권 상향 돌파 확률은 약 50%. 방향을 알 수 없는 구간이라 손절선이 중요하다.',
-      '상단 돌파 성공 확률은 35~45%. 매크로 호재가 촉매가 될 수 있다.',
-      '횡보 지속 확률 40~50%. 특별한 촉매 없이 돌파하기 어려운 구간이다.',
-      '하단 이탈 후 하락 확률 약 35%. 지지선 붕괴 시 빠른 대응이 중요하다.',
-    ],
-  };
-  return (odds[pattern] || odds.sideways)[ans];
-}
 
 // ---------- CSV 파싱 ----------
 function parseCSV(filepath) {
@@ -583,9 +593,14 @@ function toKoMonth(d) {
   return `${y}년 ${m}월`;
 }
 
+// ---------- 분포 목표 (GEN 전체) ----------
+// HC 51개: 급등15, 상승11, 횡보14, 하락11
+// 합산 목표: 급등≤15%, 상승25-30%, 횡보35-40%, 하락20-25%
+// GEN 목표: 급등17, 상승47, 횡보65, 하락37 = 166개
+const DIST_TARGET = { 0: 17, 1: 47, 2: 65, 3: 37 };
+
 // ---------- 메인 ----------
-let nextId = 56;
-const allProblems = [];
+const candidates = [];
 
 for (const [ticker, meta] of Object.entries(TICKER_META)) {
   const csvPath = path.join(DATA_DIR, `${meta.file}.csv`);
@@ -598,12 +613,10 @@ for (const [ticker, meta] of Object.entries(TICKER_META)) {
   const usable   = rows.length - CHART_DAYS;
   const step     = Math.max(MIN_STEP, Math.floor(usable / MAX_PER_TICKER));
 
-  const generated = [];
+  let tickerCount = 0;
 
   for (let si = 0; si < usable; si += step) {
     const startDate = rows[si].date;
-
-    // 이미 다루는 구간이면 스킵
     if (overlaps(startDate, existing)) continue;
 
     const closes = rows.slice(si, si + CHART_DAYS).map(r => r.close);
@@ -614,22 +627,14 @@ for (const [ticker, meta] of Object.entries(TICKER_META)) {
     const endClose    = closes[CHART_DAYS - 1];
     const pct         = (endClose - revealClose) / revealClose;
 
-    // 횡보 문제는 20%만 포함 (나머지는 너무 평범)
-    if (Math.abs(pct) < MIN_CHANGE && Math.random() > 0.20) continue;
-
     const pattern = detectPattern(closes, REVEAL_DAY);
-    // 횡보 패턴은 추가로 40%만 포함 (과잉 방지)
-    if (pattern === 'sideways' && Math.random() > 0.40) continue;
-
-    const months  = Math.round(AFTER_DAYS / 21) || 3;
+    const months  = Math.round(AFTER_DAYS / 21) || 1;
     const answer  = toAnswer(pct);
     const pctStr  = (pct >= 0 ? '+' : '') + (pct * 100).toFixed(0) + '%';
     const endDate = rows[si + CHART_DAYS - 1].date;
-
     const macroHints = getMacroHints(startDate);
 
-    generated.push({
-      id:          nextId++,
+    candidates.push({
       market:      meta.market,
       ticker,
       pattern,
@@ -641,24 +646,54 @@ for (const [ticker, meta] of Object.entries(TICKER_META)) {
       macroHints,
       choices:     getChoices(pattern),
       answer,
-      odds:        makeOdds(answer, pattern, macroHints),
       explanation: makeExplanation(answer, pctStr, months, pattern),
       reveal: {
         title:  `${meta.name} (${ticker})`,
         market: `${meta.market} · ${meta.sector}`,
         period: `${toKoMonth(startDate)} ~ ${toKoMonth(endDate)}`,
-        result: `${months}개월 ${answerLabel(answer)} (${pctStr}).`,
+        result: `1개월 후 ${answerLabel(answer)} (${pctStr}).`,
         macro:  macroHints.map(h => `${h.label} ${h.value}`).join(', ') + '.',
         lesson: makeLesson(answer, pattern, macroHints),
       },
     });
 
-    if (generated.length >= MAX_PER_TICKER) break;
+    tickerCount++;
+    if (tickerCount >= MAX_PER_TICKER) break;
   }
 
-  allProblems.push(...generated);
-  console.log(`${ticker}: ${generated.length}개 생성`);
+  console.log(`${ticker}: ${tickerCount}개 후보`);
 }
+
+// ---------- 분포 제어 (답 카테고리별 목표 수만큼 추출) ----------
+const byAnswer = { 0: [], 1: [], 2: [], 3: [] };
+for (const c of candidates) byAnswer[c.answer].push(c);
+
+// 각 카테고리를 랜덤 셔플 후 목표 수만큼 선택
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+const selected = [];
+for (const ans of [0, 1, 2, 3]) {
+  const pool = shuffle(byAnswer[ans]);
+  const take = Math.min(DIST_TARGET[ans], pool.length);
+  selected.push(...pool.slice(0, take));
+  console.log(`  답=${ans}(${['급등','상승','횡보','하락'][ans]}): 후보 ${pool.length}개 → ${take}개 선택`);
+}
+
+// ID 배정 (날짜순 정렬)
+selected.sort((a, b) => {
+  if (a.ticker < b.ticker) return -1;
+  if (a.ticker > b.ticker) return 1;
+  return a.startDate < b.startDate ? -1 : 1;
+});
+
+let nextId = 56;
+const allProblems = selected.map(p => ({ id: nextId++, ...p }));
 
 // ---------- 패턴별 choices ----------
 function getChoices(pattern) {
@@ -690,6 +725,27 @@ function getChoices(pattern) {
         '하락이 멈추고 반등하여 회복한다',
         '하락이 감속되어 바닥을 다진다',
         '하락이 가속화되어 추가 급락한다',
+      ];
+    case 'doubletop':
+      return [
+        '고점 저항을 돌파하여 강하게 상승한다',
+        '매수세가 유입되어 점진적으로 상승한다',
+        '쌍봉 부근에서 방향성 없이 횡보한다',
+        '쌍봉 패턴이 완성되어 하락한다',
+      ];
+    case 'breakdown':
+      return [
+        '강한 저점 매수세로 빠르게 급반등한다',
+        '붕괴 이후 점진적으로 회복한다',
+        '붕괴 이후 방향성 없이 횡보한다',
+        '붕괴 이후 추가 하락이 이어진다',
+      ];
+    case 'parabolic':
+      return [
+        '포물선 상승이 계속되어 추가 급등한다',
+        '상승 모멘텀이 유지되며 완만히 오른다',
+        '급등 이후 이격 해소로 횡보한다',
+        '포물선 상승이 꺾이며 급격히 하락한다',
       ];
     case 'sideways':
     default:
@@ -724,7 +780,6 @@ ${mh},
 ${ch},
     ],
     answer: ${p.answer},
-    odds: '${esc(p.odds)}',
     explanation: '${esc(p.explanation)}',
     reveal: {
 ${strProp('title', p.reveal.title)},
@@ -749,3 +804,12 @@ ${allProblems.map(serializeProblem).join(',\n')}
 
 fs.writeFileSync(OUTPUT, ts, 'utf8');
 console.log(`\n✅ 총 ${allProblems.length}개 문제 생성 → ${OUTPUT}`);
+
+// 생성 후 자동 검증
+const { execSync } = require('child_process');
+try {
+  execSync('node ' + path.join(__dirname, 'validate-problems.cjs'), { stdio: 'inherit' });
+} catch (e) {
+  console.error('\n⚠️  생성 후 검증 실패 — 위 이슈를 확인하세요.');
+  process.exit(1);
+}

@@ -41,7 +41,6 @@ export interface Problem {
   macroHints: MacroHint[];
   choices: string[];
   answer: number;
-  odds: string;
   explanation: string;
   reveal: RevealInfo;
 }
