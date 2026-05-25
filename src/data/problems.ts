@@ -550,7 +550,7 @@ export const PROBLEM_POOL: Problem[] = [
 
   {
     id: 20, market: 'NYSE', ticker: '^GSPC', pattern: 'vshape',
-    revealDay: 45, chartDays: 200, difficulty: 'medium',
+    revealDay: 46, chartDays: 200, difficulty: 'medium',
     startDate: '2018-10-01',
     question: 'S&P 500이 무역전쟁 + 연준 긴축으로 빠르게 무너지고 있습니다. 12월 크리스마스 이브에 연저점. 차트 종료 후 7개월 내 S&P 500은?',
     macroHints: [
