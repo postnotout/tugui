@@ -957,64 +957,45 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
           })}
         </div>
 
-        {/* 점수 변동 */}
-        {submitted && lastGain !== 0 && (
-          <div style={{ textAlign: 'center', marginBottom: 12, fontSize: 22, fontWeight: 700, color: lastGain > 0 ? COLORS.greenBright : COLORS.redBright, fontFamily: TITLE_FONT, animation: 'bounce 0.4s' }}>
-            {lastGain > 0 ? `+${lastGain} POINTS!` : '-1 ♥'}
-            {combo >= 3 && lastGain > 0 && <span style={{ fontSize: 14, color: COLORS.pink, marginLeft: 12 }}>🔥 x{combo}</span>}
-          </div>
-        )}
-
-        {/* 해설 */}
+        {/* 해설 + 종목 공개 통합 박스 */}
         {submitted && (
           <GlowBox color={isCorrect ? COLORS.greenBright : COLORS.redBright} bg={COLORS.bgPanel} style={{ padding: '14px 16px', marginBottom: 10 }}>
-            <div style={{ fontSize: 12, fontFamily: TITLE_FONT, letterSpacing: '0.15em', color: isCorrect ? COLORS.greenBright : COLORS.redBright, marginBottom: 8, fontWeight: 700 }}>
-              {isCorrect ? '✓ 정답!' : '✗ 오답'} · 답: {['1', '2', '3', '4'][problem.answer]}
+            {/* 헤더: 정답/오답 + 점수 */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+              <div style={{ fontSize: 12, fontFamily: TITLE_FONT, letterSpacing: '0.15em', color: isCorrect ? COLORS.greenBright : COLORS.redBright, fontWeight: 700 }}>
+                {isCorrect ? '✓ 정답!' : '✗ 오답'} · 답: {['1', '2', '3', '4'][problem.answer]}
+              </div>
+              {lastGain !== 0 && (
+                <div style={{ fontSize: 11, fontFamily: TITLE_FONT, color: lastGain > 0 ? COLORS.greenBright : COLORS.redBright, fontWeight: 700 }}>
+                  {lastGain > 0 ? `+${lastGain}pts` : '-1 ♥'}
+                  {combo >= 3 && lastGain > 0 && <span style={{ color: COLORS.pink, marginLeft: 4 }}>🔥×{combo}</span>}
+                </div>
+              )}
             </div>
+
+            {/* 설명 */}
             <div style={{ fontSize: 14, lineHeight: 1.75, color: COLORS.text, fontFamily: KOREAN_FONT, marginBottom: 10 }}>
               <GlossaryText text={problem.explanation} onTerm={setActiveTerm} />
             </div>
-            {problem.odds && (
-              <div style={{ marginTop: 10, padding: '8px 10px', background: COLORS.bgDeep, borderLeft: `3px solid ${COLORS.orange}`, borderRadius: 2 }}>
-                <div style={{ fontSize: 10, fontFamily: TITLE_FONT, letterSpacing: '0.15em', color: COLORS.orange, marginBottom: 4, fontWeight: 700 }}>📊 통계적 관점</div>
-                <div style={{ fontSize: 12.5, lineHeight: 1.65, color: COLORS.textDim, fontFamily: KOREAN_FONT, fontStyle: 'italic' }}>
-                  <GlossaryText text={problem.odds} onTerm={setActiveTerm} />
-                </div>
-              </div>
-            )}
-          </GlowBox>
-        )}
 
-        {/* Reveal */}
-        {submitted && problem.reveal && (
-          <GlowBox color={COLORS.gold} bg={COLORS.bgPanel} style={{ padding: 16, marginBottom: 12 }}>
-            <div style={{ fontSize: 11, fontFamily: TITLE_FONT, letterSpacing: '0.2em', color: COLORS.goldBright, marginBottom: 8, fontWeight: 700 }}>━ 실제 종목 공개 ━</div>
-            <div style={{ fontSize: 18, fontWeight: 700, color: COLORS.textBright, marginBottom: 3, fontFamily: KOREAN_FONT }}>{problem.reveal.title}</div>
-            <div style={{ fontSize: 11, fontFamily: TITLE_FONT, color: COLORS.textDim, marginBottom: 14, letterSpacing: '0.05em' }}>{problem.reveal.market} · {problem.reveal.period}</div>
-            <div style={{ marginBottom: 12 }}>
-              <div style={{ fontSize: 11, fontFamily: TITLE_FONT, color: COLORS.blueBright, letterSpacing: '0.15em', marginBottom: 5, fontWeight: 700 }}>▶ 실제 결과</div>
-              <div style={{ fontSize: 14, lineHeight: 1.75, color: COLORS.text, fontFamily: KOREAN_FONT }}>
-                <GlossaryText text={problem.reveal.result} onTerm={setActiveTerm} />
-              </div>
-            </div>
-            <div style={{ marginBottom: 12, padding: '10px 12px', background: COLORS.bgDeep, border: `2px solid ${COLORS.purple}` }}>
-              <div style={{ fontSize: 11, fontFamily: TITLE_FONT, color: COLORS.purple, letterSpacing: '0.15em', marginBottom: 5, fontWeight: 700 }}>▶ 매크로 배경</div>
-              <div style={{ fontSize: 14, lineHeight: 1.75, color: COLORS.text, fontFamily: KOREAN_FONT }}>
-                <GlossaryText text={problem.reveal.macro} onTerm={setActiveTerm} />
-              </div>
-            </div>
-            {problem.reveal.counterCase && (
-              <div style={{ marginBottom: 12, padding: '10px 12px', background: COLORS.bgDeep, border: `2px solid ${COLORS.pink}` }}>
-                <div style={{ fontSize: 11, fontFamily: TITLE_FONT, color: COLORS.pink, letterSpacing: '0.15em', marginBottom: 5, fontWeight: 700 }}>⚠ 반례 / 다른 가능성</div>
-                <div style={{ fontSize: 13, lineHeight: 1.7, color: COLORS.text, fontFamily: KOREAN_FONT }}>
-                  <GlossaryText text={problem.reveal.counterCase} onTerm={setActiveTerm} />
+            {/* 실제 종목 공개 (인라인) */}
+            {problem.reveal && (
+              <div style={{ marginBottom: 10, padding: '8px 10px', background: COLORS.bgDeep, borderLeft: `3px solid ${COLORS.gold}` }}>
+                <div style={{ fontSize: 14, fontWeight: 700, color: COLORS.textBright, fontFamily: KOREAN_FONT }}>{problem.reveal.title}</div>
+                <div style={{ fontSize: 10, color: COLORS.textDim, fontFamily: TITLE_FONT, letterSpacing: '0.05em', marginBottom: 5 }}>{problem.reveal.market} · {problem.reveal.period}</div>
+                <div style={{ fontSize: 13, lineHeight: 1.65, color: COLORS.text, fontFamily: KOREAN_FONT }}>
+                  <GlossaryText text={problem.reveal.result} onTerm={setActiveTerm} />
                 </div>
               </div>
             )}
-            <div style={{ borderTop: `2px dashed ${COLORS.goldDark}`, paddingTop: 10, fontSize: 13.5, lineHeight: 1.65, color: COLORS.goldBright, fontFamily: KOREAN_FONT, fontWeight: 600 }}>
-              <span style={{ fontFamily: TITLE_FONT, fontSize: 12, marginRight: 4 }}>★</span>
-              <GlossaryText text={problem.reveal.lesson} onTerm={setActiveTerm} />
-            </div>
+
+            {/* ★ 레슨 */}
+            {problem.reveal?.lesson && (
+              <div style={{ borderTop: `2px dashed ${COLORS.goldDark}`, paddingTop: 10, fontSize: 13, lineHeight: 1.65, color: COLORS.goldBright, fontFamily: KOREAN_FONT, fontWeight: 600 }}>
+                <span style={{ fontFamily: TITLE_FONT, fontSize: 12, marginRight: 4 }}>★</span>
+                <GlossaryText text={problem.reveal.lesson} onTerm={setActiveTerm} />
+              </div>
+            )}
           </GlowBox>
         )}
 

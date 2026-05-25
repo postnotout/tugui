@@ -8,7 +8,7 @@ export const GENERATED_PROBLEMS: Problem[] = [
     id: 36, market: 'KOSPI', ticker: '005930.KS', pattern: 'breakout',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2017-01-23',
-    question: '오랫동안 막혀 있던 저항선을 뚫었다. 이번엔 진짜일까? 3개월 후?',
+    question: '고점 저항을 돌파하는 강한 양봉이 출현하였다. 3개월 후 주가의 변화로 옳은 것은?',
     macroHints: [
       { label: '트럼프 효과', value: '감세 기대', trend: '인프라·규제 완화 기대', tone: 'positive' },
       { label: '글로벌 경기', value: '동반 회복', trend: '저물가·성장 동시', tone: 'positive' },
@@ -34,39 +34,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 37, market: 'KOSPI', ticker: '005930.KS', pattern: 'reversal',
-    revealDay: 55, chartDays: 120, difficulty: 'hard',
-    startDate: '2017-09-26',
-    question: '하락을 멈추고 바닥을 다지는 것 같다. 3개월 뒤 결과는?',
-    macroHints: [
-      { label: '트럼프 효과', value: '감세 기대', trend: '인프라·규제 완화 기대', tone: 'positive' },
-      { label: '글로벌 경기', value: '동반 회복', trend: '저물가·성장 동시', tone: 'positive' },
-      { label: '다우', value: '2만 돌파', trend: '사상 첫 2만 돌파', tone: 'positive' },
-      { label: '반도체', value: '사이클 상승', trend: '메모리 수요 급증', tone: 'positive' },
-    ],
-    choices: [
-      '강한 반등 → 추세 전환 (+30%+)',
-      '저점 확인 → 점진적 회복 (+10~30%)',
-      '단기 반등 후 재하락 (±10%)',
-      '반등 실패 → 추가 급락 (-10%+)',
-    ],
-    answer: 2,
-    odds: '단기 반등 후 재하락 확률 약 45%. 섣불리 매수하면 더 빠질 수도 있다.',
-    explanation: '반등 시도 후 3개월 뒤 횡보 (-3%).',
-    reveal: {
-    title: '삼성전자 (005930.KS)',
-    market: 'KOSPI · 반도체',
-    period: '2017년 9월 ~ 2018년 3월',
-    result: '3개월 횡보 (-3%).',
-    macro: '트럼프 효과 감세 기대, 글로벌 경기 동반 회복, 다우 2만 돌파, 반도체 사이클 상승.',
-    lesson: '반등 후 다시 지지부진. 진짜 전환인지 확인하려면 더 기다려야 했다.',
-    },
-  },
-  {
-    id: 38, market: 'KOSPI', ticker: '005930.KS', pattern: 'sideways',
+    id: 37, market: 'KOSPI', ticker: '005930.KS', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2020-06-18',
-    question: '횡보 구간에서 돌파 시도를 이어가고 있다. 3개월 뒤 결과는?',
+    question: '뚜렷한 추세 없이 박스권이 유지되고 있다. 3개월 후 주가의 전개로 옳은 것은?',
     macroHints: [
       { label: 'QE·부양책', value: '역대 최대', trend: '유동성 폭발적 공급', tone: 'positive' },
       { label: '기준금리', value: '0.25%', trend: '초저금리·동학개미', tone: 'positive' },
@@ -92,10 +63,39 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
+    id: 38, market: 'KOSPI', ticker: '005930.KS', pattern: 'sideways',
+    revealDay: 55, chartDays: 120, difficulty: 'hard',
+    startDate: '2021-02-19',
+    question: '횡보 구간에서 돌파 시도가 이어지고 있다. 3개월 후 결과로 알맞은 것은?',
+    macroHints: [
+      { label: '인플레이션', value: '급등 조짐', trend: '공급망 충격·유동성', tone: 'negative' },
+      { label: 'QE·저금리', value: '지속', trend: '주식·코인 동반 강세', tone: 'positive' },
+      { label: '비트코인', value: '6만달러 ATH', trend: '기관·ETF 자금 유입', tone: 'positive' },
+      { label: '코스피', value: '3,316 신고가', trend: '외국인·기관 동반 매수', tone: 'positive' },
+    ],
+    choices: [
+      '박스 상향 돌파 → 급등 (+30%+)',
+      '상단 돌파 → 추세 형성 (+10~30%)',
+      '박스권 지속 (±10%)',
+      '하단 이탈 → 하락 가속 (-10%+)',
+    ],
+    answer: 2,
+    odds: '횡보 지속 확률 40~50%. 특별한 촉매 없이 돌파하기 어려운 구간이다.',
+    explanation: '횡보 끝에 3개월 뒤 횡보 (-3%).',
+    reveal: {
+    title: '삼성전자 (005930.KS)',
+    market: 'KOSPI · 반도체',
+    period: '2021년 2월 ~ 2021년 8월',
+    result: '3개월 횡보 (-3%).',
+    macro: '인플레이션 급등 조짐, QE·저금리 지속, 비트코인 6만달러 ATH, 코스피 3,316 신고가.',
+    lesson: '박스권이 계속됐다. 기다림에 지쳐 손절한 사람들이 가장 많이 나오는 패턴.',
+    },
+  },
+  {
     id: 39, market: 'KOSPI', ticker: '005930.KS', pattern: 'breakout',
     revealDay: 55, chartDays: 120, difficulty: 'hard',
     startDate: '2021-10-22',
-    question: '중요 저항선을 상향 돌파했다. 추세 전환이 시작된 걸까? 3개월 뒤는?',
+    question: '중요 저항선을 상향 돌파하였다. 3개월 후 추세의 전개로 알맞은 것은?',
     macroHints: [
       { label: '인플레이션', value: '급등 조짐', trend: '공급망 충격·유동성', tone: 'negative' },
       { label: 'QE·저금리', value: '지속', trend: '주식·코인 동반 강세', tone: 'positive' },
@@ -121,10 +121,39 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 40, market: 'KOSPI', ticker: '005930.KS', pattern: 'reversal',
+    id: 40, market: 'KOSPI', ticker: '005930.KS', pattern: 'sideways',
+    revealDay: 55, chartDays: 120, difficulty: 'hard',
+    startDate: '2023-11-01',
+    question: '뚜렷한 추세 없이 박스권이 유지되고 있다. 3개월 후 주가의 전개로 옳은 것은?',
+    macroHints: [
+      { label: 'ChatGPT·AI', value: '폭발적 성장', trend: 'AI 투자 붐 시작', tone: 'positive' },
+      { label: 'Fed 금리', value: '5.25% 고점', trend: '인상 종료 기대', tone: 'positive' },
+      { label: '엔비디아', value: '연간 +240%', trend: 'AI 칩 독점 지위', tone: 'positive' },
+      { label: '나스닥', value: '반등 +43%', trend: '기술주 급반등', tone: 'positive' },
+    ],
+    choices: [
+      '박스 상향 돌파 → 급등 (+30%+)',
+      '상단 돌파 → 추세 형성 (+10~30%)',
+      '박스권 지속 (±10%)',
+      '하단 이탈 → 하락 가속 (-10%+)',
+    ],
+    answer: 2,
+    odds: '횡보 지속 확률 40~50%. 특별한 촉매 없이 돌파하기 어려운 구간이다.',
+    explanation: '횡보 끝에 3개월 뒤 횡보 (+3%).',
+    reveal: {
+    title: '삼성전자 (005930.KS)',
+    market: 'KOSPI · 반도체',
+    period: '2023년 11월 ~ 2024년 4월',
+    result: '3개월 횡보 (+3%).',
+    macro: 'ChatGPT·AI 폭발적 성장, Fed 금리 5.25% 고점, 엔비디아 연간 +240%, 나스닥 반등 +43%.',
+    lesson: '박스권이 계속됐다. 기다림에 지쳐 손절한 사람들이 가장 많이 나오는 패턴.',
+    },
+  },
+  {
+    id: 41, market: 'KOSPI', ticker: '005930.KS', pattern: 'reversal',
     revealDay: 55, chartDays: 120, difficulty: 'hard',
     startDate: '2024-07-05',
-    question: '하락을 멈추고 바닥을 다지는 것 같다. 3개월 뒤 결과는?',
+    question: '과매도 구간에서 거래량을 동반한 반등이 시도되고 있다. 3개월 후 주가의 전개로 적절한 것은?',
     macroHints: [
       { label: 'AI 인프라', value: '투자 급증', trend: 'NVDA 주도 AI 사이클', tone: 'positive' },
       { label: 'Fed', value: '인하 시작', trend: '연착륙 기대', tone: 'positive' },
@@ -150,10 +179,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 41, market: 'KOSPI', ticker: '005930.KS', pattern: 'sideways',
+    id: 42, market: 'KOSPI', ticker: '005930.KS', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2025-03-17',
-    question: '눌림목 구간에서 쉬어가고 있다. 3개월 후 방향은?',
+    question: '눌림목 구간에서 추세 재개를 대기하고 있다. 3개월 후 방향으로 적절한 것은?',
     macroHints: [
       { label: 'AI 인프라', value: '투자 급증', trend: 'NVDA 주도 AI 사이클', tone: 'positive' },
       { label: 'Fed', value: '인하 시작', trend: '연착륙 기대', tone: 'positive' },
@@ -179,10 +208,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 42, market: 'KOSPI', ticker: '005930.KS', pattern: 'uptrend',
+    id: 43, market: 'KOSPI', ticker: '005930.KS', pattern: 'uptrend',
     revealDay: 55, chartDays: 120, difficulty: 'easy',
     startDate: '2025-11-20',
-    question: '정배열 상태에서 거래량까지 늘고 있다. 이 추세, 3개월 뒤에도 이어졌을까?',
+    question: '신고가를 연속 갱신하며 상승세를 이어가고 있다. 3개월 후 주가의 흐름으로 적절한 것은?',
     macroHints: [
       { label: 'AI 인프라', value: '투자 급증', trend: 'NVDA 주도 AI 사이클', tone: 'positive' },
       { label: 'Fed', value: '인하 시작', trend: '연착륙 기대', tone: 'positive' },
@@ -208,10 +237,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 43, market: 'KOSPI', ticker: '051910.KS', pattern: 'sideways',
+    id: 44, market: 'KOSPI', ticker: '051910.KS', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'hard',
     startDate: '2016-05-25',
-    question: '추세 없이 박스권을 유지 중이다. 3개월 뒤 어떻게 됐을까?',
+    question: '뚜렷한 추세 없이 박스권이 유지되고 있다. 3개월 후 주가의 전개로 옳은 것은?',
     macroHints: [
       { label: 'Fed 첫 인상', value: '0.25%', trend: '9년 만의 금리 인상', tone: 'mixed' },
       { label: '원자재', value: '약세', trend: '유가·광물 급락', tone: 'negative' },
@@ -237,10 +266,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 44, market: 'KOSPI', ticker: '051910.KS', pattern: 'sideways',
+    id: 45, market: 'KOSPI', ticker: '051910.KS', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'hard',
     startDate: '2017-01-23',
-    question: '박스권에서 방향을 잡지 못하고 오르내리고 있다. 3개월 뒤 어디로 갔을까?',
+    question: '눌림목 구간에서 추세 재개를 대기하고 있다. 3개월 후 방향으로 적절한 것은?',
     macroHints: [
       { label: '트럼프 효과', value: '감세 기대', trend: '인프라·규제 완화 기대', tone: 'positive' },
       { label: '글로벌 경기', value: '동반 회복', trend: '저물가·성장 동시', tone: 'positive' },
@@ -266,39 +295,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 45, market: 'KOSPI', ticker: '051910.KS', pattern: 'sideways',
-    revealDay: 55, chartDays: 120, difficulty: 'hard',
-    startDate: '2017-09-26',
-    question: '눌림목 구간에서 쉬어가고 있다. 3개월 후 방향은?',
-    macroHints: [
-      { label: '트럼프 효과', value: '감세 기대', trend: '인프라·규제 완화 기대', tone: 'positive' },
-      { label: '글로벌 경기', value: '동반 회복', trend: '저물가·성장 동시', tone: 'positive' },
-      { label: '다우', value: '2만 돌파', trend: '사상 첫 2만 돌파', tone: 'positive' },
-      { label: '반도체', value: '사이클 상승', trend: '메모리 수요 급증', tone: 'positive' },
-    ],
-    choices: [
-      '박스 상향 돌파 → 급등 (+30%+)',
-      '상단 돌파 → 추세 형성 (+10~30%)',
-      '박스권 지속 (±10%)',
-      '하단 이탈 → 하락 가속 (-10%+)',
-    ],
-    answer: 2,
-    odds: '횡보 지속 확률 40~50%. 특별한 촉매 없이 돌파하기 어려운 구간이다.',
-    explanation: '횡보 끝에 3개월 뒤 횡보 (-2%).',
-    reveal: {
-    title: 'LG화학 (051910.KS)',
-    market: 'KOSPI · 화학·배터리',
-    period: '2017년 9월 ~ 2018년 3월',
-    result: '3개월 횡보 (-2%).',
-    macro: '트럼프 효과 감세 기대, 글로벌 경기 동반 회복, 다우 2만 돌파, 반도체 사이클 상승.',
-    lesson: '박스권이 계속됐다. 기다림에 지쳐 손절한 사람들이 가장 많이 나오는 패턴.',
-    },
-  },
-  {
     id: 46, market: 'KOSPI', ticker: '051910.KS', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'hard',
     startDate: '2019-02-14',
-    question: '눌림목 구간에서 쉬어가고 있다. 3개월 후 방향은?',
+    question: '횡보 구간에서 돌파 시도가 이어지고 있다. 3개월 후 결과로 알맞은 것은?',
     macroHints: [
       { label: 'Fed 피벗', value: '인하 전환', trend: '긴축 종료 기대', tone: 'positive' },
       { label: '미중 협상', value: '1단계 합의', trend: '무역전쟁 완화', tone: 'positive' },
@@ -324,39 +324,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 47, market: 'KOSPI', ticker: '051910.KS', pattern: 'sideways',
-    revealDay: 55, chartDays: 120, difficulty: 'hard',
-    startDate: '2019-10-17',
-    question: '횡보 구간에서 돌파 시도를 이어가고 있다. 3개월 뒤 결과는?',
-    macroHints: [
-      { label: 'Fed 피벗', value: '인하 전환', trend: '긴축 종료 기대', tone: 'positive' },
-      { label: '미중 협상', value: '1단계 합의', trend: '무역전쟁 완화', tone: 'positive' },
-      { label: 'S&P500', value: '연간 +29%', trend: '강세장 재개', tone: 'positive' },
-      { label: '코스피', value: '2,000~2,200', trend: '박스권 횡보 지속', tone: 'mixed' },
-    ],
-    choices: [
-      '박스 상향 돌파 → 급등 (+30%+)',
-      '상단 돌파 → 추세 형성 (+10~30%)',
-      '박스권 지속 (±10%)',
-      '하단 이탈 → 하락 가속 (-10%+)',
-    ],
-    answer: 2,
-    odds: '횡보 지속 확률 40~50%. 특별한 촉매 없이 돌파하기 어려운 구간이다.',
-    explanation: '횡보 끝에 3개월 뒤 횡보 (+2%).',
-    reveal: {
-    title: 'LG화학 (051910.KS)',
-    market: 'KOSPI · 화학·배터리',
-    period: '2019년 10월 ~ 2020년 4월',
-    result: '3개월 횡보 (+2%).',
-    macro: 'Fed 피벗 인하 전환, 미중 협상 1단계 합의, S&P500 연간 +29%, 코스피 2,000~2,200.',
-    lesson: '박스권이 계속됐다. 기다림에 지쳐 손절한 사람들이 가장 많이 나오는 패턴.',
-    },
-  },
-  {
-    id: 48, market: 'KOSPI', ticker: '051910.KS', pattern: 'uptrend',
+    id: 47, market: 'KOSPI', ticker: '051910.KS', pattern: 'uptrend',
     revealDay: 55, chartDays: 120, difficulty: 'hard',
     startDate: '2020-06-18',
-    question: '연속으로 신고가를 갱신하며 상승 중이다. 3개월 뒤 어떻게 됐을까?',
+    question: '신고가를 연속 갱신하며 상승세를 이어가고 있다. 3개월 후 주가의 흐름으로 적절한 것은?',
     macroHints: [
       { label: 'QE·부양책', value: '역대 최대', trend: '유동성 폭발적 공급', tone: 'positive' },
       { label: '기준금리', value: '0.25%', trend: '초저금리·동학개미', tone: 'positive' },
@@ -382,10 +353,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 49, market: 'KOSPI', ticker: '051910.KS', pattern: 'reversal',
+    id: 48, market: 'KOSPI', ticker: '051910.KS', pattern: 'reversal',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2021-10-22',
-    question: '과매도 구간에서 거래량을 동반한 반등 시도를 하고 있다. 3개월 후?',
+    question: '과매도 구간에서 거래량을 동반한 반등이 시도되고 있다. 3개월 후 주가의 전개로 적절한 것은?',
     macroHints: [
       { label: '인플레이션', value: '급등 조짐', trend: '공급망 충격·유동성', tone: 'negative' },
       { label: 'QE·저금리', value: '지속', trend: '주식·코인 동반 강세', tone: 'positive' },
@@ -411,39 +382,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 50, market: 'KOSPI', ticker: '051910.KS', pattern: 'sideways',
-    revealDay: 55, chartDays: 120, difficulty: 'hard',
-    startDate: '2022-06-28',
-    question: '눌림목 구간에서 쉬어가고 있다. 3개월 후 방향은?',
-    macroHints: [
-      { label: 'Fed 금리', value: '0→4.5%', trend: '40년래 최고속 긴축', tone: 'negative' },
-      { label: '인플레이션', value: '9.1%', trend: '경기침체 공포 확산', tone: 'negative' },
-      { label: '코스피', value: '2,200 저점', trend: '외국인 대규모 이탈', tone: 'negative' },
-      { label: '미국채', value: '역사적 하락', trend: '60/40 포트 동반 하락', tone: 'negative' },
-    ],
-    choices: [
-      '박스 상향 돌파 → 급등 (+30%+)',
-      '상단 돌파 → 추세 형성 (+10~30%)',
-      '박스권 지속 (±10%)',
-      '하단 이탈 → 하락 가속 (-10%+)',
-    ],
-    answer: 2,
-    odds: '횡보 지속 확률 40~50%. 특별한 촉매 없이 돌파하기 어려운 구간이다.',
-    explanation: '횡보 끝에 3개월 뒤 횡보 (-4%).',
-    reveal: {
-    title: 'LG화학 (051910.KS)',
-    market: 'KOSPI · 화학·배터리',
-    period: '2022년 6월 ~ 2022년 12월',
-    result: '3개월 횡보 (-4%).',
-    macro: 'Fed 금리 0→4.5%, 인플레이션 9.1%, 코스피 2,200 저점, 미국채 역사적 하락.',
-    lesson: '박스권이 계속됐다. 기다림에 지쳐 손절한 사람들이 가장 많이 나오는 패턴.',
-    },
-  },
-  {
-    id: 51, market: 'KOSPI', ticker: '051910.KS', pattern: 'sideways',
+    id: 49, market: 'KOSPI', ticker: '051910.KS', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2023-02-27',
-    question: '횡보 구간에서 돌파 시도를 이어가고 있다. 3개월 뒤 결과는?',
+    question: '횡보 구간에서 돌파 시도가 이어지고 있다. 3개월 후 결과로 알맞은 것은?',
     macroHints: [
       { label: 'ChatGPT·AI', value: '폭발적 성장', trend: 'AI 투자 붐 시작', tone: 'positive' },
       { label: 'Fed 금리', value: '5.25% 고점', trend: '인상 종료 기대', tone: 'positive' },
@@ -469,10 +411,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 52, market: 'KOSPI', ticker: '051910.KS', pattern: 'breakout',
+    id: 50, market: 'KOSPI', ticker: '051910.KS', pattern: 'breakout',
     revealDay: 55, chartDays: 120, difficulty: 'easy',
     startDate: '2024-07-05',
-    question: '중요 저항선을 상향 돌파했다. 추세 전환이 시작된 걸까? 3개월 뒤는?',
+    question: '오랫동안 막혀 있던 저항선을 상향 돌파하였다. 3개월 후 결과로 알맞은 것은?',
     macroHints: [
       { label: 'AI 인프라', value: '투자 급증', trend: 'NVDA 주도 AI 사이클', tone: 'positive' },
       { label: 'Fed', value: '인하 시작', trend: '연착륙 기대', tone: 'positive' },
@@ -498,10 +440,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 53, market: 'KOSPI', ticker: '051910.KS', pattern: 'reversal',
+    id: 51, market: 'KOSPI', ticker: '051910.KS', pattern: 'reversal',
     revealDay: 55, chartDays: 120, difficulty: 'easy',
     startDate: '2025-03-17',
-    question: '긴 하락 후 지지선에서 힘을 받는 모습이다. 3개월 뒤 어떻게 됐을까?',
+    question: '급락 이후 저점에서 강한 양봉이 나타나기 시작하였다. 3개월 후 결과로 알맞은 것은?',
     macroHints: [
       { label: 'AI 인프라', value: '투자 급증', trend: 'NVDA 주도 AI 사이클', tone: 'positive' },
       { label: 'Fed', value: '인하 시작', trend: '연착륙 기대', tone: 'positive' },
@@ -527,10 +469,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 54, market: 'KOSPI', ticker: '051910.KS', pattern: 'sideways',
+    id: 52, market: 'KOSPI', ticker: '051910.KS', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'hard',
     startDate: '2025-11-20',
-    question: '일정 범위 안에서만 움직이고 있다. 3개월 뒤 탈출에 성공했을까?',
+    question: '박스권 내에서 방향성이 나타나지 않고 있다. 3개월 후 주가의 흐름으로 가장 적절한 것은?',
     macroHints: [
       { label: 'AI 인프라', value: '투자 급증', trend: 'NVDA 주도 AI 사이클', tone: 'positive' },
       { label: 'Fed', value: '인하 시작', trend: '연착륙 기대', tone: 'positive' },
@@ -556,10 +498,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 55, market: 'KOSPI', ticker: '000660.KS', pattern: 'breakout',
+    id: 53, market: 'KOSPI', ticker: '000660.KS', pattern: 'breakout',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2016-05-25',
-    question: '중요 저항선을 상향 돌파했다. 추세 전환이 시작된 걸까? 3개월 뒤는?',
+    question: '오랫동안 막혀 있던 저항선을 상향 돌파하였다. 3개월 후 결과로 알맞은 것은?',
     macroHints: [
       { label: 'Fed 첫 인상', value: '0.25%', trend: '9년 만의 금리 인상', tone: 'mixed' },
       { label: '원자재', value: '약세', trend: '유가·광물 급락', tone: 'negative' },
@@ -585,10 +527,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 56, market: 'KOSPI', ticker: '000660.KS', pattern: 'sideways',
+    id: 54, market: 'KOSPI', ticker: '000660.KS', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2017-01-23',
-    question: '추세 없이 박스권을 유지 중이다. 3개월 뒤 어떻게 됐을까?',
+    question: '일정 범위 안에서 등락이 반복되고 있다. 3개월 후 주가의 방향으로 옳은 것은?',
     macroHints: [
       { label: '트럼프 효과', value: '감세 기대', trend: '인프라·규제 완화 기대', tone: 'positive' },
       { label: '글로벌 경기', value: '동반 회복', trend: '저물가·성장 동시', tone: 'positive' },
@@ -614,39 +556,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 57, market: 'KOSPI', ticker: '000660.KS', pattern: 'sideways',
-    revealDay: 55, chartDays: 120, difficulty: 'hard',
-    startDate: '2017-09-26',
-    question: '일정 범위 안에서만 움직이고 있다. 3개월 뒤 탈출에 성공했을까?',
-    macroHints: [
-      { label: '트럼프 효과', value: '감세 기대', trend: '인프라·규제 완화 기대', tone: 'positive' },
-      { label: '글로벌 경기', value: '동반 회복', trend: '저물가·성장 동시', tone: 'positive' },
-      { label: '다우', value: '2만 돌파', trend: '사상 첫 2만 돌파', tone: 'positive' },
-      { label: '반도체', value: '사이클 상승', trend: '메모리 수요 급증', tone: 'positive' },
-    ],
-    choices: [
-      '박스 상향 돌파 → 급등 (+30%+)',
-      '상단 돌파 → 추세 형성 (+10~30%)',
-      '박스권 지속 (±10%)',
-      '하단 이탈 → 하락 가속 (-10%+)',
-    ],
-    answer: 2,
-    odds: '횡보 지속 확률 40~50%. 특별한 촉매 없이 돌파하기 어려운 구간이다.',
-    explanation: '횡보 끝에 3개월 뒤 횡보 (+1%).',
-    reveal: {
-    title: 'SK하이닉스 (000660.KS)',
-    market: 'KOSPI · 반도체',
-    period: '2017년 9월 ~ 2018년 3월',
-    result: '3개월 횡보 (+1%).',
-    macro: '트럼프 효과 감세 기대, 글로벌 경기 동반 회복, 다우 2만 돌파, 반도체 사이클 상승.',
-    lesson: '박스권이 계속됐다. 기다림에 지쳐 손절한 사람들이 가장 많이 나오는 패턴.',
-    },
-  },
-  {
-    id: 58, market: 'KOSPI', ticker: '000660.KS', pattern: 'breakout',
+    id: 55, market: 'KOSPI', ticker: '000660.KS', pattern: 'breakout',
     revealDay: 55, chartDays: 120, difficulty: 'hard',
     startDate: '2019-02-14',
-    question: '고점 저항을 돌파하는 강한 양봉이 나왔다. 3개월 후?',
+    question: '박스권 상단을 거래량을 동반하여 돌파하였다. 3개월 후 주가의 흐름으로 옳은 것은?',
     macroHints: [
       { label: 'Fed 피벗', value: '인하 전환', trend: '긴축 종료 기대', tone: 'positive' },
       { label: '미중 협상', value: '1단계 합의', trend: '무역전쟁 완화', tone: 'positive' },
@@ -672,10 +585,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 59, market: 'KOSPI', ticker: '000660.KS', pattern: 'breakout',
+    id: 56, market: 'KOSPI', ticker: '000660.KS', pattern: 'breakout',
     revealDay: 55, chartDays: 120, difficulty: 'hard',
     startDate: '2019-10-17',
-    question: '고점 저항을 돌파하는 강한 양봉이 나왔다. 3개월 후?',
+    question: '중요 저항선을 상향 돌파하였다. 3개월 후 추세의 전개로 알맞은 것은?',
     macroHints: [
       { label: 'Fed 피벗', value: '인하 전환', trend: '긴축 종료 기대', tone: 'positive' },
       { label: '미중 협상', value: '1단계 합의', trend: '무역전쟁 완화', tone: 'positive' },
@@ -701,10 +614,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 60, market: 'KOSPI', ticker: '000660.KS', pattern: 'reversal',
+    id: 57, market: 'KOSPI', ticker: '000660.KS', pattern: 'reversal',
     revealDay: 55, chartDays: 120, difficulty: 'easy',
     startDate: '2020-06-18',
-    question: '하락을 멈추고 바닥을 다지는 것 같다. 3개월 뒤 결과는?',
+    question: '하락세가 멈추고 바닥을 다지는 흐름이 나타나고 있다. 3개월 후 결과로 옳은 것은?',
     macroHints: [
       { label: 'QE·부양책', value: '역대 최대', trend: '유동성 폭발적 공급', tone: 'positive' },
       { label: '기준금리', value: '0.25%', trend: '초저금리·동학개미', tone: 'positive' },
@@ -730,10 +643,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 61, market: 'KOSPI', ticker: '000660.KS', pattern: 'sideways',
+    id: 58, market: 'KOSPI', ticker: '000660.KS', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'hard',
     startDate: '2021-02-19',
-    question: '횡보 구간에서 돌파 시도를 이어가고 있다. 3개월 뒤 결과는?',
+    question: '뚜렷한 추세 없이 박스권이 유지되고 있다. 3개월 후 주가의 전개로 옳은 것은?',
     macroHints: [
       { label: '인플레이션', value: '급등 조짐', trend: '공급망 충격·유동성', tone: 'negative' },
       { label: 'QE·저금리', value: '지속', trend: '주식·코인 동반 강세', tone: 'positive' },
@@ -759,10 +672,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 62, market: 'KOSPI', ticker: '000660.KS', pattern: 'breakout',
+    id: 59, market: 'KOSPI', ticker: '000660.KS', pattern: 'breakout',
     revealDay: 55, chartDays: 120, difficulty: 'hard',
     startDate: '2021-10-22',
-    question: '오랫동안 막혀 있던 저항선을 뚫었다. 이번엔 진짜일까? 3개월 후?',
+    question: '52주 신고가를 경신하며 돌파에 성공하였다. 3개월 후 결과로 가장 적절한 것은?',
     macroHints: [
       { label: '인플레이션', value: '급등 조짐', trend: '공급망 충격·유동성', tone: 'negative' },
       { label: 'QE·저금리', value: '지속', trend: '주식·코인 동반 강세', tone: 'positive' },
@@ -788,10 +701,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 63, market: 'KOSPI', ticker: '000660.KS', pattern: 'sideways',
+    id: 60, market: 'KOSPI', ticker: '000660.KS', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'hard',
     startDate: '2022-06-28',
-    question: '일정 범위 안에서만 움직이고 있다. 3개월 뒤 탈출에 성공했을까?',
+    question: '눌림목 구간에서 추세 재개를 대기하고 있다. 3개월 후 방향으로 적절한 것은?',
     macroHints: [
       { label: 'Fed 금리', value: '0→4.5%', trend: '40년래 최고속 긴축', tone: 'negative' },
       { label: '인플레이션', value: '9.1%', trend: '경기침체 공포 확산', tone: 'negative' },
@@ -817,10 +730,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 64, market: 'KOSPI', ticker: '000660.KS', pattern: 'sideways',
+    id: 61, market: 'KOSPI', ticker: '000660.KS', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2023-02-27',
-    question: '눌림목 구간에서 쉬어가고 있다. 3개월 후 방향은?',
+    question: '횡보 구간에서 돌파 시도가 이어지고 있다. 3개월 후 결과로 알맞은 것은?',
     macroHints: [
       { label: 'ChatGPT·AI', value: '폭발적 성장', trend: 'AI 투자 붐 시작', tone: 'positive' },
       { label: 'Fed 금리', value: '5.25% 고점', trend: '인상 종료 기대', tone: 'positive' },
@@ -846,10 +759,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 65, market: 'KOSPI', ticker: '000660.KS', pattern: 'sideways',
+    id: 62, market: 'KOSPI', ticker: '000660.KS', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2023-11-01',
-    question: '추세 없이 박스권을 유지 중이다. 3개월 뒤 어떻게 됐을까?',
+    question: '박스권 내에서 방향성이 나타나지 않고 있다. 3개월 후 주가의 흐름으로 가장 적절한 것은?',
     macroHints: [
       { label: 'ChatGPT·AI', value: '폭발적 성장', trend: 'AI 투자 붐 시작', tone: 'positive' },
       { label: 'Fed 금리', value: '5.25% 고점', trend: '인상 종료 기대', tone: 'positive' },
@@ -875,10 +788,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 66, market: 'KOSPI', ticker: '000660.KS', pattern: 'breakout',
+    id: 63, market: 'KOSPI', ticker: '000660.KS', pattern: 'breakout',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2025-03-17',
-    question: '오랫동안 막혀 있던 저항선을 뚫었다. 이번엔 진짜일까? 3개월 후?',
+    question: '오랫동안 막혀 있던 저항선을 상향 돌파하였다. 3개월 후 결과로 알맞은 것은?',
     macroHints: [
       { label: 'AI 인프라', value: '투자 급증', trend: 'NVDA 주도 AI 사이클', tone: 'positive' },
       { label: 'Fed', value: '인하 시작', trend: '연착륙 기대', tone: 'positive' },
@@ -904,10 +817,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 67, market: 'KOSPI', ticker: '000660.KS', pattern: 'uptrend',
+    id: 64, market: 'KOSPI', ticker: '000660.KS', pattern: 'uptrend',
     revealDay: 55, chartDays: 120, difficulty: 'easy',
     startDate: '2025-11-20',
-    question: '꾸준히 우상향하며 매수세가 계속 몰리고 있다. 3개월 뒤 주가는 어떻게 됐을까?',
+    question: '정배열 상태에서 거래량이 증가하고 있다. 3개월 후 추세의 전개로 옳은 것은?',
     macroHints: [
       { label: 'AI 인프라', value: '투자 급증', trend: 'NVDA 주도 AI 사이클', tone: 'positive' },
       { label: 'Fed', value: '인하 시작', trend: '연착륙 기대', tone: 'positive' },
@@ -933,10 +846,39 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 68, market: 'KOSDAQ', ticker: '247540.KQ', pattern: 'sideways',
+    id: 65, market: 'KOSDAQ', ticker: '247540.KQ', pattern: 'reversal',
+    revealDay: 55, chartDays: 120, difficulty: 'hard',
+    startDate: '2019-03-05',
+    question: '급락 이후 바닥에서 반등 신호가 출현하였다. 3개월 후 주가의 변화로 옳은 것은?',
+    macroHints: [
+      { label: 'Fed 피벗', value: '인하 전환', trend: '긴축 종료 기대', tone: 'positive' },
+      { label: '미중 협상', value: '1단계 합의', trend: '무역전쟁 완화', tone: 'positive' },
+      { label: 'S&P500', value: '연간 +29%', trend: '강세장 재개', tone: 'positive' },
+      { label: '코스피', value: '2,000~2,200', trend: '박스권 횡보 지속', tone: 'mixed' },
+    ],
+    choices: [
+      '강한 반등 → 추세 전환 (+30%+)',
+      '저점 확인 → 점진적 회복 (+10~30%)',
+      '단기 반등 후 재하락 (±10%)',
+      '반등 실패 → 추가 급락 (-10%+)',
+    ],
+    answer: 2,
+    odds: '단기 반등 후 재하락 확률 약 45%. 섣불리 매수하면 더 빠질 수도 있다.',
+    explanation: '반등 시도 후 3개월 뒤 횡보 (+7%).',
+    reveal: {
+    title: '에코프로비엠 (247540.KQ)',
+    market: 'KOSDAQ · 배터리소재',
+    period: '2019년 3월 ~ 2019년 8월',
+    result: '3개월 횡보 (+7%).',
+    macro: 'Fed 피벗 인하 전환, 미중 협상 1단계 합의, S&P500 연간 +29%, 코스피 2,000~2,200.',
+    lesson: '반등 후 다시 지지부진. 진짜 전환인지 확인하려면 더 기다려야 했다.',
+    },
+  },
+  {
+    id: 66, market: 'KOSDAQ', ticker: '247540.KQ', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2019-08-21',
-    question: '눌림목 구간에서 쉬어가고 있다. 3개월 후 방향은?',
+    question: '눌림목 구간에서 추세 재개를 대기하고 있다. 3개월 후 방향으로 적절한 것은?',
     macroHints: [
       { label: 'Fed 피벗', value: '인하 전환', trend: '긴축 종료 기대', tone: 'positive' },
       { label: '미중 협상', value: '1단계 합의', trend: '무역전쟁 완화', tone: 'positive' },
@@ -962,10 +904,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 69, market: 'KOSDAQ', ticker: '247540.KQ', pattern: 'sideways',
+    id: 67, market: 'KOSDAQ', ticker: '247540.KQ', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2020-02-13',
-    question: '횡보 구간에서 돌파 시도를 이어가고 있다. 3개월 뒤 결과는?',
+    question: '눌림목 구간에서 추세 재개를 대기하고 있다. 3개월 후 방향으로 적절한 것은?',
     macroHints: [
       { label: 'COVID-19', value: '팬데믹 선언', trend: '전 세계 봉쇄 시작', tone: 'negative' },
       { label: 'Fed', value: '긴급 제로금리', trend: '무제한 QE 선언', tone: 'mixed' },
@@ -991,10 +933,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 70, market: 'KOSDAQ', ticker: '247540.KQ', pattern: 'reversal',
+    id: 68, market: 'KOSDAQ', ticker: '247540.KQ', pattern: 'reversal',
     revealDay: 55, chartDays: 120, difficulty: 'easy',
     startDate: '2020-07-31',
-    question: '긴 하락 후 지지선에서 힘을 받는 모습이다. 3개월 뒤 어떻게 됐을까?',
+    question: '과매도 구간에서 거래량을 동반한 반등이 시도되고 있다. 3개월 후 주가의 전개로 적절한 것은?',
     macroHints: [
       { label: 'QE·부양책', value: '역대 최대', trend: '유동성 폭발적 공급', tone: 'positive' },
       { label: '기준금리', value: '0.25%', trend: '초저금리·동학개미', tone: 'positive' },
@@ -1020,10 +962,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 71, market: 'KOSDAQ', ticker: '247540.KQ', pattern: 'sideways',
+    id: 69, market: 'KOSDAQ', ticker: '247540.KQ', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2021-01-22',
-    question: '횡보 구간에서 돌파 시도를 이어가고 있다. 3개월 뒤 결과는?',
+    question: '횡보 구간에서 돌파 시도가 이어지고 있다. 3개월 후 결과로 알맞은 것은?',
     macroHints: [
       { label: '인플레이션', value: '급등 조짐', trend: '공급망 충격·유동성', tone: 'negative' },
       { label: 'QE·저금리', value: '지속', trend: '주식·코인 동반 강세', tone: 'positive' },
@@ -1049,10 +991,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 72, market: 'KOSDAQ', ticker: '247540.KQ', pattern: 'breakout',
+    id: 70, market: 'KOSDAQ', ticker: '247540.KQ', pattern: 'breakout',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2022-01-04',
-    question: '중요 저항선을 상향 돌파했다. 추세 전환이 시작된 걸까? 3개월 뒤는?',
+    question: '오랫동안 막혀 있던 저항선을 상향 돌파하였다. 3개월 후 결과로 알맞은 것은?',
     macroHints: [
       { label: 'Fed 금리', value: '0→4.5%', trend: '40년래 최고속 긴축', tone: 'negative' },
       { label: '인플레이션', value: '9.1%', trend: '경기침체 공포 확산', tone: 'negative' },
@@ -1078,10 +1020,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 73, market: 'KOSDAQ', ticker: '247540.KQ', pattern: 'uptrend',
+    id: 71, market: 'KOSDAQ', ticker: '247540.KQ', pattern: 'uptrend',
     revealDay: 55, chartDays: 120, difficulty: 'easy',
     startDate: '2022-12-16',
-    question: '꾸준히 우상향하며 매수세가 계속 몰리고 있다. 3개월 뒤 주가는 어떻게 됐을까?',
+    question: 'MA20 위에서 완만한 우상향이 나타나고 있다. 3개월 후 결과로 알맞은 것은?',
     macroHints: [
       { label: 'Fed 금리', value: '0→4.5%', trend: '40년래 최고속 긴축', tone: 'negative' },
       { label: '인플레이션', value: '9.1%', trend: '경기침체 공포 확산', tone: 'negative' },
@@ -1107,10 +1049,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 74, market: 'KOSDAQ', ticker: '247540.KQ', pattern: 'sideways',
+    id: 72, market: 'KOSDAQ', ticker: '247540.KQ', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2024-05-27',
-    question: '일정 범위 안에서만 움직이고 있다. 3개월 뒤 탈출에 성공했을까?',
+    question: '일정 범위 안에서 등락이 반복되고 있다. 3개월 후 주가의 방향으로 옳은 것은?',
     macroHints: [
       { label: 'AI 인프라', value: '투자 급증', trend: 'NVDA 주도 AI 사이클', tone: 'positive' },
       { label: 'Fed', value: '인하 시작', trend: '연착륙 기대', tone: 'positive' },
@@ -1136,10 +1078,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 75, market: 'KOSDAQ', ticker: '247540.KQ', pattern: 'breakout',
+    id: 73, market: 'KOSDAQ', ticker: '247540.KQ', pattern: 'breakout',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2024-11-18',
-    question: '오랫동안 막혀 있던 저항선을 뚫었다. 이번엔 진짜일까? 3개월 후?',
+    question: '고점 저항을 돌파하는 강한 양봉이 출현하였다. 3개월 후 주가의 변화로 옳은 것은?',
     macroHints: [
       { label: 'AI 인프라', value: '투자 급증', trend: 'NVDA 주도 AI 사이클', tone: 'positive' },
       { label: 'Fed', value: '인하 시작', trend: '연착륙 기대', tone: 'positive' },
@@ -1165,10 +1107,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 76, market: 'KOSDAQ', ticker: '247540.KQ', pattern: 'breakout',
+    id: 74, market: 'KOSDAQ', ticker: '247540.KQ', pattern: 'breakout',
     revealDay: 55, chartDays: 120, difficulty: 'easy',
     startDate: '2025-05-15',
-    question: '박스권 상단을 돌파하며 거래량이 터졌다. 3개월 뒤 어떻게 됐을까?',
+    question: '52주 신고가를 경신하며 돌파에 성공하였다. 3개월 후 결과로 가장 적절한 것은?',
     macroHints: [
       { label: 'AI 인프라', value: '투자 급증', trend: 'NVDA 주도 AI 사이클', tone: 'positive' },
       { label: 'Fed', value: '인하 시작', trend: '연착륙 기대', tone: 'positive' },
@@ -1194,10 +1136,39 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 77, market: 'KOSPI', ticker: '011170.KS', pattern: 'sideways',
+    id: 75, market: 'KOSDAQ', ticker: '247540.KQ', pattern: 'sideways',
+    revealDay: 55, chartDays: 120, difficulty: 'hard',
+    startDate: '2025-11-06',
+    question: '횡보 구간에서 돌파 시도가 이어지고 있다. 3개월 후 결과로 알맞은 것은?',
+    macroHints: [
+      { label: 'AI 인프라', value: '투자 급증', trend: 'NVDA 주도 AI 사이클', tone: 'positive' },
+      { label: 'Fed', value: '인하 시작', trend: '연착륙 기대', tone: 'positive' },
+      { label: '비트코인', value: '신고가 경신', trend: '현물 ETF 승인·기관 매수', tone: 'positive' },
+      { label: '코스피', value: '불안정', trend: '환율·경기 불확실', tone: 'negative' },
+    ],
+    choices: [
+      '박스 상향 돌파 → 급등 (+30%+)',
+      '상단 돌파 → 추세 형성 (+10~30%)',
+      '박스권 지속 (±10%)',
+      '하단 이탈 → 하락 가속 (-10%+)',
+    ],
+    answer: 2,
+    odds: '횡보 지속 확률 40~50%. 특별한 촉매 없이 돌파하기 어려운 구간이다.',
+    explanation: '횡보 끝에 3개월 뒤 횡보 (+3%).',
+    reveal: {
+    title: '에코프로비엠 (247540.KQ)',
+    market: 'KOSDAQ · 배터리소재',
+    period: '2025년 11월 ~ 2026년 5월',
+    result: '3개월 횡보 (+3%).',
+    macro: 'AI 인프라 투자 급증, Fed 인하 시작, 비트코인 신고가 경신, 코스피 불안정.',
+    lesson: '박스권이 계속됐다. 기다림에 지쳐 손절한 사람들이 가장 많이 나오는 패턴.',
+    },
+  },
+  {
+    id: 76, market: 'KOSPI', ticker: '011170.KS', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2017-09-26',
-    question: '일정 범위 안에서만 움직이고 있다. 3개월 뒤 탈출에 성공했을까?',
+    question: '뚜렷한 추세 없이 박스권이 유지되고 있다. 3개월 후 주가의 전개로 옳은 것은?',
     macroHints: [
       { label: '트럼프 효과', value: '감세 기대', trend: '인프라·규제 완화 기대', tone: 'positive' },
       { label: '글로벌 경기', value: '동반 회복', trend: '저물가·성장 동시', tone: 'positive' },
@@ -1223,10 +1194,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 78, market: 'KOSPI', ticker: '011170.KS', pattern: 'sideways',
+    id: 77, market: 'KOSPI', ticker: '011170.KS', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2019-02-14',
-    question: '일정 범위 안에서만 움직이고 있다. 3개월 뒤 탈출에 성공했을까?',
+    question: '횡보 구간에서 돌파 시도가 이어지고 있다. 3개월 후 결과로 알맞은 것은?',
     macroHints: [
       { label: 'Fed 피벗', value: '인하 전환', trend: '긴축 종료 기대', tone: 'positive' },
       { label: '미중 협상', value: '1단계 합의', trend: '무역전쟁 완화', tone: 'positive' },
@@ -1252,10 +1223,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 79, market: 'KOSPI', ticker: '011170.KS', pattern: 'sideways',
+    id: 78, market: 'KOSPI', ticker: '011170.KS', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2019-10-17',
-    question: '횡보 구간에서 돌파 시도를 이어가고 있다. 3개월 뒤 결과는?',
+    question: '눌림목 구간에서 추세 재개를 대기하고 있다. 3개월 후 방향으로 적절한 것은?',
     macroHints: [
       { label: 'Fed 피벗', value: '인하 전환', trend: '긴축 종료 기대', tone: 'positive' },
       { label: '미중 협상', value: '1단계 합의', trend: '무역전쟁 완화', tone: 'positive' },
@@ -1281,10 +1252,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 80, market: 'KOSPI', ticker: '011170.KS', pattern: 'sideways',
+    id: 79, market: 'KOSPI', ticker: '011170.KS', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2020-06-18',
-    question: '박스권에서 방향을 잡지 못하고 오르내리고 있다. 3개월 뒤 어디로 갔을까?',
+    question: '눌림목 구간에서 추세 재개를 대기하고 있다. 3개월 후 방향으로 적절한 것은?',
     macroHints: [
       { label: 'QE·부양책', value: '역대 최대', trend: '유동성 폭발적 공급', tone: 'positive' },
       { label: '기준금리', value: '0.25%', trend: '초저금리·동학개미', tone: 'positive' },
@@ -1310,10 +1281,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 81, market: 'KOSPI', ticker: '011170.KS', pattern: 'sideways',
+    id: 80, market: 'KOSPI', ticker: '011170.KS', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2021-02-19',
-    question: '일정 범위 안에서만 움직이고 있다. 3개월 뒤 탈출에 성공했을까?',
+    question: '뚜렷한 추세 없이 박스권이 유지되고 있다. 3개월 후 주가의 전개로 옳은 것은?',
     macroHints: [
       { label: '인플레이션', value: '급등 조짐', trend: '공급망 충격·유동성', tone: 'negative' },
       { label: 'QE·저금리', value: '지속', trend: '주식·코인 동반 강세', tone: 'positive' },
@@ -1339,39 +1310,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 82, market: 'KOSPI', ticker: '011170.KS', pattern: 'sideways',
-    revealDay: 55, chartDays: 120, difficulty: 'hard',
-    startDate: '2022-06-28',
-    question: '추세 없이 박스권을 유지 중이다. 3개월 뒤 어떻게 됐을까?',
-    macroHints: [
-      { label: 'Fed 금리', value: '0→4.5%', trend: '40년래 최고속 긴축', tone: 'negative' },
-      { label: '인플레이션', value: '9.1%', trend: '경기침체 공포 확산', tone: 'negative' },
-      { label: '코스피', value: '2,200 저점', trend: '외국인 대규모 이탈', tone: 'negative' },
-      { label: '미국채', value: '역사적 하락', trend: '60/40 포트 동반 하락', tone: 'negative' },
-    ],
-    choices: [
-      '박스 상향 돌파 → 급등 (+30%+)',
-      '상단 돌파 → 추세 형성 (+10~30%)',
-      '박스권 지속 (±10%)',
-      '하단 이탈 → 하락 가속 (-10%+)',
-    ],
-    answer: 2,
-    odds: '횡보 지속 확률 40~50%. 특별한 촉매 없이 돌파하기 어려운 구간이다.',
-    explanation: '횡보 끝에 3개월 뒤 횡보 (+0%).',
-    reveal: {
-    title: '롯데케미칼 (011170.KS)',
-    market: 'KOSPI · 석유화학',
-    period: '2022년 6월 ~ 2022년 12월',
-    result: '3개월 횡보 (+0%).',
-    macro: 'Fed 금리 0→4.5%, 인플레이션 9.1%, 코스피 2,200 저점, 미국채 역사적 하락.',
-    lesson: '박스권이 계속됐다. 기다림에 지쳐 손절한 사람들이 가장 많이 나오는 패턴.',
-    },
-  },
-  {
-    id: 83, market: 'KOSPI', ticker: '011170.KS', pattern: 'reversal',
+    id: 81, market: 'KOSPI', ticker: '011170.KS', pattern: 'reversal',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2023-02-27',
-    question: '과매도 구간에서 거래량을 동반한 반등 시도를 하고 있다. 3개월 후?',
+    question: '하락세가 멈추고 바닥을 다지는 흐름이 나타나고 있다. 3개월 후 결과로 옳은 것은?',
     macroHints: [
       { label: 'ChatGPT·AI', value: '폭발적 성장', trend: 'AI 투자 붐 시작', tone: 'positive' },
       { label: 'Fed 금리', value: '5.25% 고점', trend: '인상 종료 기대', tone: 'positive' },
@@ -1397,10 +1339,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 84, market: 'KOSPI', ticker: '011170.KS', pattern: 'reversal',
+    id: 82, market: 'KOSPI', ticker: '011170.KS', pattern: 'reversal',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2023-11-01',
-    question: '하락을 멈추고 바닥을 다지는 것 같다. 3개월 뒤 결과는?',
+    question: '과매도 구간에서 거래량을 동반한 반등이 시도되고 있다. 3개월 후 주가의 전개로 적절한 것은?',
     macroHints: [
       { label: 'ChatGPT·AI', value: '폭발적 성장', trend: 'AI 투자 붐 시작', tone: 'positive' },
       { label: 'Fed 금리', value: '5.25% 고점', trend: '인상 종료 기대', tone: 'positive' },
@@ -1426,10 +1368,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 85, market: 'KOSPI', ticker: '011170.KS', pattern: 'reversal',
+    id: 83, market: 'KOSPI', ticker: '011170.KS', pattern: 'reversal',
     revealDay: 55, chartDays: 120, difficulty: 'easy',
     startDate: '2024-07-05',
-    question: '하락을 멈추고 바닥을 다지는 것 같다. 3개월 뒤 결과는?',
+    question: '과매도 구간에서 거래량을 동반한 반등이 시도되고 있다. 3개월 후 주가의 전개로 적절한 것은?',
     macroHints: [
       { label: 'AI 인프라', value: '투자 급증', trend: 'NVDA 주도 AI 사이클', tone: 'positive' },
       { label: 'Fed', value: '인하 시작', trend: '연착륙 기대', tone: 'positive' },
@@ -1455,10 +1397,39 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 86, market: 'KOSPI', ticker: '011170.KS', pattern: 'breakout',
+    id: 84, market: 'KOSPI', ticker: '011170.KS', pattern: 'sideways',
+    revealDay: 55, chartDays: 120, difficulty: 'hard',
+    startDate: '2025-03-17',
+    question: '박스권 내에서 방향성이 나타나지 않고 있다. 3개월 후 주가의 흐름으로 가장 적절한 것은?',
+    macroHints: [
+      { label: 'AI 인프라', value: '투자 급증', trend: 'NVDA 주도 AI 사이클', tone: 'positive' },
+      { label: 'Fed', value: '인하 시작', trend: '연착륙 기대', tone: 'positive' },
+      { label: '비트코인', value: '신고가 경신', trend: '현물 ETF 승인·기관 매수', tone: 'positive' },
+      { label: '코스피', value: '불안정', trend: '환율·경기 불확실', tone: 'negative' },
+    ],
+    choices: [
+      '박스 상향 돌파 → 급등 (+30%+)',
+      '상단 돌파 → 추세 형성 (+10~30%)',
+      '박스권 지속 (±10%)',
+      '하단 이탈 → 하락 가속 (-10%+)',
+    ],
+    answer: 2,
+    odds: '횡보 지속 확률 40~50%. 특별한 촉매 없이 돌파하기 어려운 구간이다.',
+    explanation: '횡보 끝에 3개월 뒤 횡보 (+4%).',
+    reveal: {
+    title: '롯데케미칼 (011170.KS)',
+    market: 'KOSPI · 석유화학',
+    period: '2025년 3월 ~ 2025년 9월',
+    result: '3개월 횡보 (+4%).',
+    macro: 'AI 인프라 투자 급증, Fed 인하 시작, 비트코인 신고가 경신, 코스피 불안정.',
+    lesson: '박스권이 계속됐다. 기다림에 지쳐 손절한 사람들이 가장 많이 나오는 패턴.',
+    },
+  },
+  {
+    id: 85, market: 'KOSPI', ticker: '011170.KS', pattern: 'breakout',
     revealDay: 55, chartDays: 120, difficulty: 'hard',
     startDate: '2025-11-20',
-    question: '박스권 상단을 돌파하며 거래량이 터졌다. 3개월 뒤 어떻게 됐을까?',
+    question: '고점 저항을 돌파하는 강한 양봉이 출현하였다. 3개월 후 주가의 변화로 옳은 것은?',
     macroHints: [
       { label: 'AI 인프라', value: '투자 급증', trend: 'NVDA 주도 AI 사이클', tone: 'positive' },
       { label: 'Fed', value: '인하 시작', trend: '연착륙 기대', tone: 'positive' },
@@ -1484,10 +1455,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 87, market: 'NASDAQ', ticker: 'TSLA', pattern: 'breakout',
+    id: 86, market: 'NASDAQ', ticker: 'TSLA', pattern: 'breakout',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2016-05-25',
-    question: '고점 저항을 돌파하는 강한 양봉이 나왔다. 3개월 후?',
+    question: '박스권 상단을 거래량을 동반하여 돌파하였다. 3개월 후 주가의 흐름으로 옳은 것은?',
     macroHints: [
       { label: 'Fed 첫 인상', value: '0.25%', trend: '9년 만의 금리 인상', tone: 'mixed' },
       { label: '원자재', value: '약세', trend: '유가·광물 급락', tone: 'negative' },
@@ -1513,10 +1484,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 88, market: 'NASDAQ', ticker: 'TSLA', pattern: 'sideways',
+    id: 87, market: 'NASDAQ', ticker: 'TSLA', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'hard',
     startDate: '2017-09-29',
-    question: '횡보 구간에서 돌파 시도를 이어가고 있다. 3개월 뒤 결과는?',
+    question: '횡보 구간에서 돌파 시도가 이어지고 있다. 3개월 후 결과로 알맞은 것은?',
     macroHints: [
       { label: '트럼프 효과', value: '감세 기대', trend: '인프라·규제 완화 기대', tone: 'positive' },
       { label: '글로벌 경기', value: '동반 회복', trend: '저물가·성장 동시', tone: 'positive' },
@@ -1542,10 +1513,39 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
+    id: 88, market: 'NASDAQ', ticker: 'TSLA', pattern: 'sideways',
+    revealDay: 55, chartDays: 120, difficulty: 'hard',
+    startDate: '2019-02-07',
+    question: '뚜렷한 추세 없이 박스권이 유지되고 있다. 3개월 후 주가의 전개로 옳은 것은?',
+    macroHints: [
+      { label: 'Fed 피벗', value: '인하 전환', trend: '긴축 종료 기대', tone: 'positive' },
+      { label: '미중 협상', value: '1단계 합의', trend: '무역전쟁 완화', tone: 'positive' },
+      { label: 'S&P500', value: '연간 +29%', trend: '강세장 재개', tone: 'positive' },
+      { label: '코스피', value: '2,000~2,200', trend: '박스권 횡보 지속', tone: 'mixed' },
+    ],
+    choices: [
+      '박스 상향 돌파 → 급등 (+30%+)',
+      '상단 돌파 → 추세 형성 (+10~30%)',
+      '박스권 지속 (±10%)',
+      '하단 이탈 → 하락 가속 (-10%+)',
+    ],
+    answer: 2,
+    odds: '횡보 지속 확률 40~50%. 특별한 촉매 없이 돌파하기 어려운 구간이다.',
+    explanation: '횡보 끝에 3개월 뒤 횡보 (+3%).',
+    reveal: {
+    title: '테슬라 (TSLA)',
+    market: 'NASDAQ · EV·자율주행',
+    period: '2019년 2월 ~ 2019년 7월',
+    result: '3개월 횡보 (+3%).',
+    macro: 'Fed 피벗 인하 전환, 미중 협상 1단계 합의, S&P500 연간 +29%, 코스피 2,000~2,200.',
+    lesson: '박스권이 계속됐다. 기다림에 지쳐 손절한 사람들이 가장 많이 나오는 패턴.',
+    },
+  },
+  {
     id: 89, market: 'NASDAQ', ticker: 'TSLA', pattern: 'uptrend',
     revealDay: 55, chartDays: 120, difficulty: 'hard',
     startDate: '2020-06-15',
-    question: 'MA20 위에서 완만하게 우상향하고 있다. 3개월 뒤 결과는?',
+    question: '이평선 위에서 강한 상승 흐름이 이어지고 있다. 3개월 후 결과로 알맞은 것은?',
     macroHints: [
       { label: 'QE·부양책', value: '역대 최대', trend: '유동성 폭발적 공급', tone: 'positive' },
       { label: '기준금리', value: '0.25%', trend: '초저금리·동학개미', tone: 'positive' },
@@ -1571,39 +1571,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 90, market: 'NASDAQ', ticker: 'TSLA', pattern: 'sideways',
-    revealDay: 55, chartDays: 120, difficulty: 'hard',
-    startDate: '2021-10-19',
-    question: '추세 없이 박스권을 유지 중이다. 3개월 뒤 어떻게 됐을까?',
-    macroHints: [
-      { label: '인플레이션', value: '급등 조짐', trend: '공급망 충격·유동성', tone: 'negative' },
-      { label: 'QE·저금리', value: '지속', trend: '주식·코인 동반 강세', tone: 'positive' },
-      { label: '비트코인', value: '6만달러 ATH', trend: '기관·ETF 자금 유입', tone: 'positive' },
-      { label: '코스피', value: '3,316 신고가', trend: '외국인·기관 동반 매수', tone: 'positive' },
-    ],
-    choices: [
-      '박스 상향 돌파 → 급등 (+30%+)',
-      '상단 돌파 → 추세 형성 (+10~30%)',
-      '박스권 지속 (±10%)',
-      '하단 이탈 → 하락 가속 (-10%+)',
-    ],
-    answer: 2,
-    odds: '횡보 지속 확률 40~50%. 특별한 촉매 없이 돌파하기 어려운 구간이다.',
-    explanation: '횡보 끝에 3개월 뒤 횡보 (-6%).',
-    reveal: {
-    title: '테슬라 (TSLA)',
-    market: 'NASDAQ · EV·자율주행',
-    period: '2021년 10월 ~ 2022년 4월',
-    result: '3개월 횡보 (-6%).',
-    macro: '인플레이션 급등 조짐, QE·저금리 지속, 비트코인 6만달러 ATH, 코스피 3,316 신고가.',
-    lesson: '박스권이 계속됐다. 기다림에 지쳐 손절한 사람들이 가장 많이 나오는 패턴.',
-    },
-  },
-  {
-    id: 91, market: 'NASDAQ', ticker: 'TSLA', pattern: 'reversal',
+    id: 90, market: 'NASDAQ', ticker: 'TSLA', pattern: 'reversal',
     revealDay: 55, chartDays: 120, difficulty: 'easy',
     startDate: '2023-02-27',
-    question: '급락 이후 저점에서 강한 양봉이 나오기 시작했다. 3개월 후?',
+    question: '급락 이후 저점에서 강한 양봉이 나타나기 시작하였다. 3개월 후 결과로 알맞은 것은?',
     macroHints: [
       { label: 'ChatGPT·AI', value: '폭발적 성장', trend: 'AI 투자 붐 시작', tone: 'positive' },
       { label: 'Fed 금리', value: '5.25% 고점', trend: '인상 종료 기대', tone: 'positive' },
@@ -1629,10 +1600,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 92, market: 'NASDAQ', ticker: 'TSLA', pattern: 'sideways',
+    id: 91, market: 'NASDAQ', ticker: 'TSLA', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2023-10-30',
-    question: '눌림목 구간에서 쉬어가고 있다. 3개월 후 방향은?',
+    question: '뚜렷한 추세 없이 박스권이 유지되고 있다. 3개월 후 주가의 전개로 옳은 것은?',
     macroHints: [
       { label: 'ChatGPT·AI', value: '폭발적 성장', trend: 'AI 투자 붐 시작', tone: 'positive' },
       { label: 'Fed 금리', value: '5.25% 고점', trend: '인상 종료 기대', tone: 'positive' },
@@ -1658,10 +1629,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 93, market: 'NASDAQ', ticker: 'TSLA', pattern: 'sideways',
+    id: 92, market: 'NASDAQ', ticker: 'TSLA', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2024-07-05',
-    question: '눌림목 구간에서 쉬어가고 있다. 3개월 후 방향은?',
+    question: '뚜렷한 추세 없이 박스권이 유지되고 있다. 3개월 후 주가의 전개로 옳은 것은?',
     macroHints: [
       { label: 'AI 인프라', value: '투자 급증', trend: 'NVDA 주도 AI 사이클', tone: 'positive' },
       { label: 'Fed', value: '인하 시작', trend: '연착륙 기대', tone: 'positive' },
@@ -1687,10 +1658,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 94, market: 'NASDAQ', ticker: 'TSLA', pattern: 'reversal',
+    id: 93, market: 'NASDAQ', ticker: 'TSLA', pattern: 'reversal',
     revealDay: 55, chartDays: 120, difficulty: 'hard',
     startDate: '2025-11-11',
-    question: '하락을 멈추고 바닥을 다지는 것 같다. 3개월 뒤 결과는?',
+    question: '장기 하락 후 지지선에서 반등 조짐이 나타나고 있다. 3개월 후 결과로 알맞은 것은?',
     macroHints: [
       { label: 'AI 인프라', value: '투자 급증', trend: 'NVDA 주도 AI 사이클', tone: 'positive' },
       { label: 'Fed', value: '인하 시작', trend: '연착륙 기대', tone: 'positive' },
@@ -1716,10 +1687,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 95, market: 'NASDAQ', ticker: 'NVDA', pattern: 'breakout',
+    id: 94, market: 'NASDAQ', ticker: 'NVDA', pattern: 'breakout',
     revealDay: 55, chartDays: 120, difficulty: 'easy',
     startDate: '2016-05-25',
-    question: '고점 저항을 돌파하는 강한 양봉이 나왔다. 3개월 후?',
+    question: '52주 신고가를 경신하며 돌파에 성공하였다. 3개월 후 결과로 가장 적절한 것은?',
     macroHints: [
       { label: 'Fed 첫 인상', value: '0.25%', trend: '9년 만의 금리 인상', tone: 'mixed' },
       { label: '원자재', value: '약세', trend: '유가·광물 급락', tone: 'negative' },
@@ -1745,10 +1716,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 96, market: 'NASDAQ', ticker: 'NVDA', pattern: 'sideways',
+    id: 95, market: 'NASDAQ', ticker: 'NVDA', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2017-01-27',
-    question: '일정 범위 안에서만 움직이고 있다. 3개월 뒤 탈출에 성공했을까?',
+    question: '뚜렷한 추세 없이 박스권이 유지되고 있다. 3개월 후 주가의 전개로 옳은 것은?',
     macroHints: [
       { label: '트럼프 효과', value: '감세 기대', trend: '인프라·규제 완화 기대', tone: 'positive' },
       { label: '글로벌 경기', value: '동반 회복', trend: '저물가·성장 동시', tone: 'positive' },
@@ -1774,10 +1745,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 97, market: 'NASDAQ', ticker: 'NVDA', pattern: 'sideways',
+    id: 96, market: 'NASDAQ', ticker: 'NVDA', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2017-09-29',
-    question: '횡보 구간에서 돌파 시도를 이어가고 있다. 3개월 뒤 결과는?',
+    question: '눌림목 구간에서 추세 재개를 대기하고 있다. 3개월 후 방향으로 적절한 것은?',
     macroHints: [
       { label: '트럼프 효과', value: '감세 기대', trend: '인프라·규제 완화 기대', tone: 'positive' },
       { label: '글로벌 경기', value: '동반 회복', trend: '저물가·성장 동시', tone: 'positive' },
@@ -1803,10 +1774,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 98, market: 'NASDAQ', ticker: 'NVDA', pattern: 'sideways',
+    id: 97, market: 'NASDAQ', ticker: 'NVDA', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2018-06-05',
-    question: '눌림목 구간에서 쉬어가고 있다. 3개월 후 방향은?',
+    question: '눌림목 구간에서 추세 재개를 대기하고 있다. 3개월 후 방향으로 적절한 것은?',
     macroHints: [
       { label: 'Fed 금리', value: '연 4회 인상', trend: '긴축 가속', tone: 'negative' },
       { label: '미중 무역전쟁', value: '관세 충돌', trend: '성장 둔화 우려', tone: 'negative' },
@@ -1832,10 +1803,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 99, market: 'NASDAQ', ticker: 'NVDA', pattern: 'breakout',
+    id: 98, market: 'NASDAQ', ticker: 'NVDA', pattern: 'breakout',
     revealDay: 55, chartDays: 120, difficulty: 'easy',
     startDate: '2021-02-17',
-    question: '고점 저항을 돌파하는 강한 양봉이 나왔다. 3개월 후?',
+    question: '박스권 상단을 거래량을 동반하여 돌파하였다. 3개월 후 주가의 흐름으로 옳은 것은?',
     macroHints: [
       { label: '인플레이션', value: '급등 조짐', trend: '공급망 충격·유동성', tone: 'negative' },
       { label: 'QE·저금리', value: '지속', trend: '주식·코인 동반 강세', tone: 'positive' },
@@ -1861,10 +1832,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 100, market: 'NASDAQ', ticker: 'NVDA', pattern: 'reversal',
+    id: 99, market: 'NASDAQ', ticker: 'NVDA', pattern: 'reversal',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2021-10-19',
-    question: '크게 빠진 후 바닥에서 반등 신호가 나왔다. 3개월 뒤 어떻게 됐을까?',
+    question: '장기 하락 후 지지선에서 반등 조짐이 나타나고 있다. 3개월 후 결과로 알맞은 것은?',
     macroHints: [
       { label: '인플레이션', value: '급등 조짐', trend: '공급망 충격·유동성', tone: 'negative' },
       { label: 'QE·저금리', value: '지속', trend: '주식·코인 동반 강세', tone: 'positive' },
@@ -1890,10 +1861,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 101, market: 'NASDAQ', ticker: 'NVDA', pattern: 'reversal',
+    id: 100, market: 'NASDAQ', ticker: 'NVDA', pattern: 'reversal',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2022-06-23',
-    question: '하락을 멈추고 바닥을 다지는 것 같다. 3개월 뒤 결과는?',
+    question: '하락세가 멈추고 바닥을 다지는 흐름이 나타나고 있다. 3개월 후 결과로 옳은 것은?',
     macroHints: [
       { label: 'Fed 금리', value: '0→4.5%', trend: '40년래 최고속 긴축', tone: 'negative' },
       { label: '인플레이션', value: '9.1%', trend: '경기침체 공포 확산', tone: 'negative' },
@@ -1919,10 +1890,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 102, market: 'NASDAQ', ticker: 'NVDA', pattern: 'breakout',
+    id: 101, market: 'NASDAQ', ticker: 'NVDA', pattern: 'breakout',
     revealDay: 55, chartDays: 120, difficulty: 'easy',
     startDate: '2023-10-30',
-    question: '52주 신고가를 경신하며 돌파에 성공했다. 3개월 뒤 결과는?',
+    question: '52주 신고가를 경신하며 돌파에 성공하였다. 3개월 후 결과로 가장 적절한 것은?',
     macroHints: [
       { label: 'ChatGPT·AI', value: '폭발적 성장', trend: 'AI 투자 붐 시작', tone: 'positive' },
       { label: 'Fed 금리', value: '5.25% 고점', trend: '인상 종료 기대', tone: 'positive' },
@@ -1948,10 +1919,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 103, market: 'NASDAQ', ticker: 'NVDA', pattern: 'sideways',
+    id: 102, market: 'NASDAQ', ticker: 'NVDA', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2024-07-05',
-    question: '박스권에서 방향을 잡지 못하고 오르내리고 있다. 3개월 뒤 어디로 갔을까?',
+    question: '일정 범위 안에서 등락이 반복되고 있다. 3개월 후 주가의 방향으로 옳은 것은?',
     macroHints: [
       { label: 'AI 인프라', value: '투자 급증', trend: 'NVDA 주도 AI 사이클', tone: 'positive' },
       { label: 'Fed', value: '인하 시작', trend: '연착륙 기대', tone: 'positive' },
@@ -1977,10 +1948,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 104, market: 'NASDAQ', ticker: 'NVDA', pattern: 'breakout',
+    id: 103, market: 'NASDAQ', ticker: 'NVDA', pattern: 'breakout',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2025-03-11',
-    question: '오랫동안 막혀 있던 저항선을 뚫었다. 이번엔 진짜일까? 3개월 후?',
+    question: '고점 저항을 돌파하는 강한 양봉이 출현하였다. 3개월 후 주가의 변화로 옳은 것은?',
     macroHints: [
       { label: 'AI 인프라', value: '투자 급증', trend: 'NVDA 주도 AI 사이클', tone: 'positive' },
       { label: 'Fed', value: '인하 시작', trend: '연착륙 기대', tone: 'positive' },
@@ -2006,10 +1977,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 105, market: 'CRYPTO', ticker: 'BTC-USD', pattern: 'sideways',
+    id: 104, market: 'CRYPTO', ticker: 'BTC-USD', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'hard',
     startDate: '2016-05-25',
-    question: '눌림목 구간에서 쉬어가고 있다. 3개월 후 방향은?',
+    question: '눌림목 구간에서 추세 재개를 대기하고 있다. 3개월 후 방향으로 적절한 것은?',
     macroHints: [
       { label: 'Fed 첫 인상', value: '0.25%', trend: '9년 만의 금리 인상', tone: 'mixed' },
       { label: '원자재', value: '약세', trend: '유가·광물 급락', tone: 'negative' },
@@ -2035,10 +2006,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 106, market: 'CRYPTO', ticker: 'BTC-USD', pattern: 'reversal',
+    id: 105, market: 'CRYPTO', ticker: 'BTC-USD', pattern: 'reversal',
     revealDay: 55, chartDays: 120, difficulty: 'easy',
     startDate: '2017-02-01',
-    question: '크게 빠진 후 바닥에서 반등 신호가 나왔다. 3개월 뒤 어떻게 됐을까?',
+    question: '과매도 구간에서 거래량을 동반한 반등이 시도되고 있다. 3개월 후 주가의 전개로 적절한 것은?',
     macroHints: [
       { label: '트럼프 효과', value: '감세 기대', trend: '인프라·규제 완화 기대', tone: 'positive' },
       { label: '글로벌 경기', value: '동반 회복', trend: '저물가·성장 동시', tone: 'positive' },
@@ -2064,10 +2035,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 107, market: 'CRYPTO', ticker: 'BTC-USD', pattern: 'sideways',
+    id: 106, market: 'CRYPTO', ticker: 'BTC-USD', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2019-11-06',
-    question: '일정 범위 안에서만 움직이고 있다. 3개월 뒤 탈출에 성공했을까?',
+    question: '횡보 구간에서 돌파 시도가 이어지고 있다. 3개월 후 결과로 알맞은 것은?',
     macroHints: [
       { label: 'Fed 피벗', value: '인하 전환', trend: '긴축 종료 기대', tone: 'positive' },
       { label: '미중 협상', value: '1단계 합의', trend: '무역전쟁 완화', tone: 'positive' },
@@ -2093,10 +2064,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 108, market: 'CRYPTO', ticker: 'BTC-USD', pattern: 'reversal',
+    id: 107, market: 'CRYPTO', ticker: 'BTC-USD', pattern: 'reversal',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2021-03-24',
-    question: '크게 빠진 후 바닥에서 반등 신호가 나왔다. 3개월 뒤 어떻게 됐을까?',
+    question: '급락 이후 저점에서 강한 양봉이 나타나기 시작하였다. 3개월 후 결과로 알맞은 것은?',
     macroHints: [
       { label: '인플레이션', value: '급등 조짐', trend: '공급망 충격·유동성', tone: 'negative' },
       { label: 'QE·저금리', value: '지속', trend: '주식·코인 동반 강세', tone: 'positive' },
@@ -2122,10 +2093,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 109, market: 'CRYPTO', ticker: 'BTC-USD', pattern: 'reversal',
+    id: 108, market: 'CRYPTO', ticker: 'BTC-USD', pattern: 'reversal',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2021-12-01',
-    question: '크게 빠진 후 바닥에서 반등 신호가 나왔다. 3개월 뒤 어떻게 됐을까?',
+    question: '급락 이후 바닥에서 반등 신호가 출현하였다. 3개월 후 주가의 변화로 옳은 것은?',
     macroHints: [
       { label: '인플레이션', value: '급등 조짐', trend: '공급망 충격·유동성', tone: 'negative' },
       { label: 'QE·저금리', value: '지속', trend: '주식·코인 동반 강세', tone: 'positive' },
@@ -2151,10 +2122,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 110, market: 'CRYPTO', ticker: 'BTC-USD', pattern: 'sideways',
+    id: 109, market: 'CRYPTO', ticker: 'BTC-USD', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'hard',
     startDate: '2023-04-19',
-    question: '박스권에서 방향을 잡지 못하고 오르내리고 있다. 3개월 뒤 어디로 갔을까?',
+    question: '횡보 구간에서 돌파 시도가 이어지고 있다. 3개월 후 결과로 알맞은 것은?',
     macroHints: [
       { label: 'ChatGPT·AI', value: '폭발적 성장', trend: 'AI 투자 붐 시작', tone: 'positive' },
       { label: 'Fed 금리', value: '5.25% 고점', trend: '인상 종료 기대', tone: 'positive' },
@@ -2180,10 +2151,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 111, market: 'CRYPTO', ticker: 'BTC-USD', pattern: 'sideways',
+    id: 110, market: 'CRYPTO', ticker: 'BTC-USD', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2024-09-04',
-    question: '일정 범위 안에서만 움직이고 있다. 3개월 뒤 탈출에 성공했을까?',
+    question: '일정 범위 안에서 등락이 반복되고 있다. 3개월 후 주가의 방향으로 옳은 것은?',
     macroHints: [
       { label: 'AI 인프라', value: '투자 급증', trend: 'NVDA 주도 AI 사이클', tone: 'positive' },
       { label: 'Fed', value: '인하 시작', trend: '연착륙 기대', tone: 'positive' },
@@ -2209,15 +2180,15 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 112, market: 'NYSE', ticker: '^GSPC', pattern: 'sideways',
+    id: 111, market: 'CRYPTO', ticker: 'BTC-USD', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'hard',
-    startDate: '2016-05-25',
-    question: '일정 범위 안에서만 움직이고 있다. 3개월 뒤 탈출에 성공했을까?',
+    startDate: '2026-01-21',
+    question: '일정 범위 안에서 등락이 반복되고 있다. 3개월 후 주가의 방향으로 옳은 것은?',
     macroHints: [
-      { label: 'Fed 첫 인상', value: '0.25%', trend: '9년 만의 금리 인상', tone: 'mixed' },
-      { label: '원자재', value: '약세', trend: '유가·광물 급락', tone: 'negative' },
-      { label: '달러', value: '강세 지속', trend: '신흥국 자금 이탈', tone: 'negative' },
-      { label: '브렉시트', value: '불확실성', trend: '영국 EU 탈퇴 투표', tone: 'negative' },
+      { label: 'AI 인프라', value: '투자 급증', trend: 'NVDA 주도 AI 사이클', tone: 'positive' },
+      { label: 'Fed', value: '인하 시작', trend: '연착륙 기대', tone: 'positive' },
+      { label: '비트코인', value: '신고가 경신', trend: '현물 ETF 승인·기관 매수', tone: 'positive' },
+      { label: '코스피', value: '불안정', trend: '환율·경기 불확실', tone: 'negative' },
     ],
     choices: [
       '박스 상향 돌파 → 급등 (+30%+)',
@@ -2227,13 +2198,42 @@ export const GENERATED_PROBLEMS: Problem[] = [
     ],
     answer: 2,
     odds: '횡보 지속 확률 40~50%. 특별한 촉매 없이 돌파하기 어려운 구간이다.',
-    explanation: '횡보 끝에 3개월 뒤 횡보 (-1%).',
+    explanation: '횡보 끝에 3개월 뒤 횡보 (+3%).',
+    reveal: {
+    title: '비트코인 (BTC-USD)',
+    market: 'CRYPTO · 가상자산',
+    period: '2026년 1월 ~ 2026년 5월',
+    result: '3개월 횡보 (+3%).',
+    macro: 'AI 인프라 투자 급증, Fed 인하 시작, 비트코인 신고가 경신, 코스피 불안정.',
+    lesson: '박스권이 계속됐다. 기다림에 지쳐 손절한 사람들이 가장 많이 나오는 패턴.',
+    },
+  },
+  {
+    id: 112, market: 'NYSE', ticker: '^GSPC', pattern: 'sideways',
+    revealDay: 55, chartDays: 120, difficulty: 'hard',
+    startDate: '2018-06-05',
+    question: '횡보 구간에서 돌파 시도가 이어지고 있다. 3개월 후 결과로 알맞은 것은?',
+    macroHints: [
+      { label: 'Fed 금리', value: '연 4회 인상', trend: '긴축 가속', tone: 'negative' },
+      { label: '미중 무역전쟁', value: '관세 충돌', trend: '성장 둔화 우려', tone: 'negative' },
+      { label: '신흥국', value: '통화위기', trend: '터키·아르헨 급락', tone: 'negative' },
+      { label: '나스닥', value: '연말 -20%', trend: '기술주 조정 가속', tone: 'negative' },
+    ],
+    choices: [
+      '박스 상향 돌파 → 급등 (+30%+)',
+      '상단 돌파 → 추세 형성 (+10~30%)',
+      '박스권 지속 (±10%)',
+      '하단 이탈 → 하락 가속 (-10%+)',
+    ],
+    answer: 2,
+    odds: '횡보 지속 확률 40~50%. 특별한 촉매 없이 돌파하기 어려운 구간이다.',
+    explanation: '횡보 끝에 3개월 뒤 횡보 (-7%).',
     reveal: {
     title: 'S&P 500 (^GSPC)',
     market: 'NYSE · 미국 대형주',
-    period: '2016년 5월 ~ 2016년 11월',
-    result: '3개월 횡보 (-1%).',
-    macro: 'Fed 첫 인상 0.25%, 원자재 약세, 달러 강세 지속, 브렉시트 불확실성.',
+    period: '2018년 6월 ~ 2018년 11월',
+    result: '3개월 횡보 (-7%).',
+    macro: 'Fed 금리 연 4회 인상, 미중 무역전쟁 관세 충돌, 신흥국 통화위기, 나스닥 연말 -20%.',
     lesson: '박스권이 계속됐다. 기다림에 지쳐 손절한 사람들이 가장 많이 나오는 패턴.',
     },
   },
@@ -2241,7 +2241,7 @@ export const GENERATED_PROBLEMS: Problem[] = [
     id: 113, market: 'NYSE', ticker: '^GSPC', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2019-10-10',
-    question: '눌림목 구간에서 쉬어가고 있다. 3개월 후 방향은?',
+    question: '뚜렷한 추세 없이 박스권이 유지되고 있다. 3개월 후 주가의 전개로 옳은 것은?',
     macroHints: [
       { label: 'Fed 피벗', value: '인하 전환', trend: '긴축 종료 기대', tone: 'positive' },
       { label: '미중 협상', value: '1단계 합의', trend: '무역전쟁 완화', tone: 'positive' },
@@ -2267,10 +2267,39 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 114, market: 'NYSE', ticker: '^GSPC', pattern: 'breakout',
+    id: 114, market: 'NYSE', ticker: '^GSPC', pattern: 'sideways',
+    revealDay: 55, chartDays: 120, difficulty: 'hard',
+    startDate: '2023-10-30',
+    question: '일정 범위 안에서 등락이 반복되고 있다. 3개월 후 주가의 방향으로 옳은 것은?',
+    macroHints: [
+      { label: 'ChatGPT·AI', value: '폭발적 성장', trend: 'AI 투자 붐 시작', tone: 'positive' },
+      { label: 'Fed 금리', value: '5.25% 고점', trend: '인상 종료 기대', tone: 'positive' },
+      { label: '엔비디아', value: '연간 +240%', trend: 'AI 칩 독점 지위', tone: 'positive' },
+      { label: '나스닥', value: '반등 +43%', trend: '기술주 급반등', tone: 'positive' },
+    ],
+    choices: [
+      '박스 상향 돌파 → 급등 (+30%+)',
+      '상단 돌파 → 추세 형성 (+10~30%)',
+      '박스권 지속 (±10%)',
+      '하단 이탈 → 하락 가속 (-10%+)',
+    ],
+    answer: 2,
+    odds: '횡보 지속 확률 40~50%. 특별한 촉매 없이 돌파하기 어려운 구간이다.',
+    explanation: '횡보 끝에 3개월 뒤 횡보 (+5%).',
+    reveal: {
+    title: 'S&P 500 (^GSPC)',
+    market: 'NYSE · 미국 대형주',
+    period: '2023년 10월 ~ 2024년 4월',
+    result: '3개월 횡보 (+5%).',
+    macro: 'ChatGPT·AI 폭발적 성장, Fed 금리 5.25% 고점, 엔비디아 연간 +240%, 나스닥 반등 +43%.',
+    lesson: '박스권이 계속됐다. 기다림에 지쳐 손절한 사람들이 가장 많이 나오는 패턴.',
+    },
+  },
+  {
+    id: 115, market: 'NYSE', ticker: '^GSPC', pattern: 'breakout',
     revealDay: 55, chartDays: 120, difficulty: 'hard',
     startDate: '2025-03-11',
-    question: '52주 신고가를 경신하며 돌파에 성공했다. 3개월 뒤 결과는?',
+    question: '52주 신고가를 경신하며 돌파에 성공하였다. 3개월 후 결과로 가장 적절한 것은?',
     macroHints: [
       { label: 'AI 인프라', value: '투자 급증', trend: 'NVDA 주도 AI 사이클', tone: 'positive' },
       { label: 'Fed', value: '인하 시작', trend: '연착륙 기대', tone: 'positive' },
@@ -2296,10 +2325,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 115, market: 'NYSE', ticker: 'GSPC2007', pattern: 'sideways',
+    id: 116, market: 'NYSE', ticker: 'GSPC2007', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'hard',
     startDate: '2006-05-01',
-    question: '일정 범위 안에서만 움직이고 있다. 3개월 뒤 탈출에 성공했을까?',
+    question: '눌림목 구간에서 추세 재개를 대기하고 있다. 3개월 후 방향으로 적절한 것은?',
     macroHints: [
       { label: '미국 경기', value: '저금리 성장', trend: '주택 붐 + 소비 확대', tone: 'positive' },
       { label: 'Fed 금리', value: '1%→5.25%', trend: '점진적 정상화', tone: 'mixed' },
@@ -2325,10 +2354,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 116, market: 'NYSE', ticker: 'GSPC2007', pattern: 'sideways',
+    id: 117, market: 'NYSE', ticker: 'GSPC2007', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'hard',
     startDate: '2007-08-14',
-    question: '횡보 구간에서 돌파 시도를 이어가고 있다. 3개월 뒤 결과는?',
+    question: '눌림목 구간에서 추세 재개를 대기하고 있다. 3개월 후 방향으로 적절한 것은?',
     macroHints: [
       { label: '서브프라임', value: '균열 시작', trend: '주택시장 버블 경고', tone: 'negative' },
       { label: '시장', value: '사상 최고', trend: '위기 인식 부재', tone: 'negative' },
@@ -2354,10 +2383,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 117, market: 'NYSE', ticker: 'GSPC2007', pattern: 'sideways',
+    id: 118, market: 'NYSE', ticker: 'GSPC2007', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'hard',
     startDate: '2008-04-07',
-    question: '눌림목 구간에서 쉬어가고 있다. 3개월 후 방향은?',
+    question: '일정 범위 안에서 등락이 반복되고 있다. 3개월 후 주가의 방향으로 옳은 것은?',
     macroHints: [
       { label: '글로벌 금융위기', value: '리먼 파산', trend: '시스템 붕괴 공포', tone: 'negative' },
       { label: 'Fed', value: '제로금리·QE', trend: '긴급 양적완화', tone: 'mixed' },
@@ -2383,10 +2412,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 118, market: 'NYSE', ticker: 'GSPC2007', pattern: 'reversal',
+    id: 119, market: 'NYSE', ticker: 'GSPC2007', pattern: 'reversal',
     revealDay: 55, chartDays: 120, difficulty: 'hard',
     startDate: '2008-07-31',
-    question: '긴 하락 후 지지선에서 힘을 받는 모습이다. 3개월 뒤 어떻게 됐을까?',
+    question: '급락 이후 바닥에서 반등 신호가 출현하였다. 3개월 후 주가의 변화로 옳은 것은?',
     macroHints: [
       { label: '글로벌 금융위기', value: '리먼 파산', trend: '시스템 붕괴 공포', tone: 'negative' },
       { label: 'Fed', value: '제로금리·QE', trend: '긴급 양적완화', tone: 'mixed' },
@@ -2412,10 +2441,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 119, market: 'NYSE', ticker: 'GSPC2007', pattern: 'sideways',
+    id: 120, market: 'NYSE', ticker: 'GSPC2007', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'hard',
     startDate: '2009-03-24',
-    question: '눌림목 구간에서 쉬어가고 있다. 3개월 후 방향은?',
+    question: '박스권 내에서 방향성이 나타나지 않고 있다. 3개월 후 주가의 흐름으로 가장 적절한 것은?',
     macroHints: [
       { label: '글로벌 금융위기', value: '리먼 파산', trend: '시스템 붕괴 공포', tone: 'negative' },
       { label: 'Fed', value: '제로금리·QE', trend: '긴급 양적완화', tone: 'mixed' },
@@ -2441,10 +2470,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 120, market: 'NYSE', ticker: 'GSPC2007', pattern: 'sideways',
+    id: 121, market: 'NYSE', ticker: 'GSPC2007', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'hard',
     startDate: '2009-07-20',
-    question: '일정 범위 안에서만 움직이고 있다. 3개월 뒤 탈출에 성공했을까?',
+    question: '횡보 구간에서 돌파 시도가 이어지고 있다. 3개월 후 결과로 알맞은 것은?',
     macroHints: [
       { label: 'QE 1·2차', value: '유동성 공급', trend: '위기 후 회복 국면', tone: 'positive' },
       { label: '미국 경기', value: '완만한 회복', trend: '실업률 서서히 하락', tone: 'positive' },
@@ -2470,10 +2499,68 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 121, market: 'NYSE', ticker: 'GSPC2007', pattern: 'sideways',
+    id: 122, market: 'NYSE', ticker: 'GSPC2007', pattern: 'sideways',
+    revealDay: 55, chartDays: 120, difficulty: 'hard',
+    startDate: '2009-11-11',
+    question: '눌림목 구간에서 추세 재개를 대기하고 있다. 3개월 후 방향으로 적절한 것은?',
+    macroHints: [
+      { label: 'QE 1·2차', value: '유동성 공급', trend: '위기 후 회복 국면', tone: 'positive' },
+      { label: '미국 경기', value: '완만한 회복', trend: '실업률 서서히 하락', tone: 'positive' },
+      { label: '금값', value: '1,900달러 고점', trend: '안전자산 선호 강세', tone: 'mixed' },
+      { label: '신흥국', value: '자금 유입', trend: '달러 약세·캐리트레이드', tone: 'positive' },
+    ],
+    choices: [
+      '박스 상향 돌파 → 급등 (+30%+)',
+      '상단 돌파 → 추세 형성 (+10~30%)',
+      '박스권 지속 (±10%)',
+      '하단 이탈 → 하락 가속 (-10%+)',
+    ],
+    answer: 2,
+    odds: '횡보 지속 확률 40~50%. 특별한 촉매 없이 돌파하기 어려운 구간이다.',
+    explanation: '횡보 끝에 3개월 뒤 횡보 (+7%).',
+    reveal: {
+    title: 'S&P 500 (GSPC2007)',
+    market: 'NYSE · 미국 대형주',
+    period: '2009년 11월 ~ 2010년 5월',
+    result: '3개월 횡보 (+7%).',
+    macro: 'QE 1·2차 유동성 공급, 미국 경기 완만한 회복, 금값 1,900달러 고점, 신흥국 자금 유입.',
+    lesson: '박스권이 계속됐다. 기다림에 지쳐 손절한 사람들이 가장 많이 나오는 패턴.',
+    },
+  },
+  {
+    id: 123, market: 'NYSE', ticker: 'GSPC2007', pattern: 'reversal',
+    revealDay: 55, chartDays: 120, difficulty: 'hard',
+    startDate: '2010-03-11',
+    question: '과매도 구간에서 거래량을 동반한 반등이 시도되고 있다. 3개월 후 주가의 전개로 적절한 것은?',
+    macroHints: [
+      { label: 'QE 1·2차', value: '유동성 공급', trend: '위기 후 회복 국면', tone: 'positive' },
+      { label: '미국 경기', value: '완만한 회복', trend: '실업률 서서히 하락', tone: 'positive' },
+      { label: '금값', value: '1,900달러 고점', trend: '안전자산 선호 강세', tone: 'mixed' },
+      { label: '신흥국', value: '자금 유입', trend: '달러 약세·캐리트레이드', tone: 'positive' },
+    ],
+    choices: [
+      '강한 반등 → 추세 전환 (+30%+)',
+      '저점 확인 → 점진적 회복 (+10~30%)',
+      '단기 반등 후 재하락 (±10%)',
+      '반등 실패 → 추가 급락 (-10%+)',
+    ],
+    answer: 2,
+    odds: '단기 반등 후 재하락 확률 약 45%. 섣불리 매수하면 더 빠질 수도 있다.',
+    explanation: '반등 시도 후 3개월 뒤 횡보 (-5%).',
+    reveal: {
+    title: 'S&P 500 (GSPC2007)',
+    market: 'NYSE · 미국 대형주',
+    period: '2010년 3월 ~ 2010년 8월',
+    result: '3개월 횡보 (-5%).',
+    macro: 'QE 1·2차 유동성 공급, 미국 경기 완만한 회복, 금값 1,900달러 고점, 신흥국 자금 유입.',
+    lesson: '반등 후 다시 지지부진. 진짜 전환인지 확인하려면 더 기다려야 했다.',
+    },
+  },
+  {
+    id: 124, market: 'NYSE', ticker: 'GSPC2007', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'hard',
     startDate: '2010-07-07',
-    question: '추세 없이 박스권을 유지 중이다. 3개월 뒤 어떻게 됐을까?',
+    question: '눌림목 구간에서 추세 재개를 대기하고 있다. 3개월 후 방향으로 적절한 것은?',
     macroHints: [
       { label: 'QE 1·2차', value: '유동성 공급', trend: '위기 후 회복 국면', tone: 'positive' },
       { label: '미국 경기', value: '완만한 회복', trend: '실업률 서서히 하락', tone: 'positive' },
@@ -2499,10 +2586,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 122, market: 'KOSPI', ticker: 'KS11', pattern: 'sideways',
+    id: 125, market: 'KOSPI', ticker: 'KS11', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'hard',
     startDate: '1996-12-11',
-    question: '일정 범위 안에서만 움직이고 있다. 3개월 뒤 탈출에 성공했을까?',
+    question: '일정 범위 안에서 등락이 반복되고 있다. 3개월 후 주가의 방향으로 옳은 것은?',
     macroHints: [
       { label: '아시아', value: '위기 전야', trend: '태국 바트화 흔들림', tone: 'negative' },
       { label: '한국 경제', value: '경상적자', trend: '외환보유고 고갈', tone: 'negative' },
@@ -2528,10 +2615,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 123, market: 'KOSPI', ticker: 'KS11', pattern: 'breakout',
+    id: 126, market: 'KOSPI', ticker: 'KS11', pattern: 'breakout',
     revealDay: 55, chartDays: 120, difficulty: 'hard',
     startDate: '1997-02-20',
-    question: '박스권 상단을 돌파하며 거래량이 터졌다. 3개월 뒤 어떻게 됐을까?',
+    question: '52주 신고가를 경신하며 돌파에 성공하였다. 3개월 후 결과로 가장 적절한 것은?',
     macroHints: [
       { label: '아시아', value: '위기 전야', trend: '태국 바트화 흔들림', tone: 'negative' },
       { label: '한국 경제', value: '경상적자', trend: '외환보유고 고갈', tone: 'negative' },
@@ -2557,10 +2644,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 124, market: 'KOSPI', ticker: 'KS11', pattern: 'sideways',
+    id: 127, market: 'KOSPI', ticker: 'KS11', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '1997-04-24',
-    question: '추세 없이 박스권을 유지 중이다. 3개월 뒤 어떻게 됐을까?',
+    question: '횡보 구간에서 돌파 시도가 이어지고 있다. 3개월 후 결과로 알맞은 것은?',
     macroHints: [
       { label: '아시아', value: '위기 전야', trend: '태국 바트화 흔들림', tone: 'negative' },
       { label: '한국 경제', value: '경상적자', trend: '외환보유고 고갈', tone: 'negative' },
@@ -2586,10 +2673,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 125, market: 'KOSPI', ticker: 'KS11', pattern: 'sideways',
+    id: 128, market: 'KOSPI', ticker: 'KS11', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '1998-06-09',
-    question: '박스권에서 방향을 잡지 못하고 오르내리고 있다. 3개월 뒤 어디로 갔을까?',
+    question: '일정 범위 안에서 등락이 반복되고 있다. 3개월 후 주가의 방향으로 옳은 것은?',
     macroHints: [
       { label: 'IMF 외환위기', value: '구제금융', trend: '원화 -50% 이상 절하', tone: 'negative' },
       { label: 'USD/KRW', value: '2000원 돌파', trend: '기업 연쇄 부도', tone: 'negative' },
@@ -2615,10 +2702,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 126, market: 'KOSPI', ticker: 'KS11', pattern: 'breakout',
+    id: 129, market: 'KOSPI', ticker: 'KS11', pattern: 'breakout',
     revealDay: 55, chartDays: 120, difficulty: 'easy',
     startDate: '1998-08-12',
-    question: '고점 저항을 돌파하는 강한 양봉이 나왔다. 3개월 후?',
+    question: '52주 신고가를 경신하며 돌파에 성공하였다. 3개월 후 결과로 가장 적절한 것은?',
     macroHints: [
       { label: 'IMF 외환위기', value: '구제금융', trend: '원화 -50% 이상 절하', tone: 'negative' },
       { label: 'USD/KRW', value: '2000원 돌파', trend: '기업 연쇄 부도', tone: 'negative' },
@@ -2644,10 +2731,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 127, market: 'KOSPI', ticker: 'KS11', pattern: 'uptrend',
+    id: 130, market: 'KOSPI', ticker: 'KS11', pattern: 'uptrend',
     revealDay: 55, chartDays: 120, difficulty: 'hard',
     startDate: '1998-10-16',
-    question: 'MA20 위에서 완만하게 우상향하고 있다. 3개월 뒤 결과는?',
+    question: '정배열 상태에서 거래량이 증가하고 있다. 3개월 후 추세의 전개로 옳은 것은?',
     macroHints: [
       { label: 'IMF 외환위기', value: '구제금융', trend: '원화 -50% 이상 절하', tone: 'negative' },
       { label: 'USD/KRW', value: '2000원 돌파', trend: '기업 연쇄 부도', tone: 'negative' },
@@ -2673,10 +2760,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 128, market: 'KOSPI', ticker: 'KS11', pattern: 'sideways',
+    id: 131, market: 'KOSPI', ticker: 'KS11', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '1998-12-18',
-    question: '눌림목 구간에서 쉬어가고 있다. 3개월 후 방향은?',
+    question: '횡보 구간에서 돌파 시도가 이어지고 있다. 3개월 후 결과로 알맞은 것은?',
     macroHints: [
       { label: 'IMF 외환위기', value: '구제금융', trend: '원화 -50% 이상 절하', tone: 'negative' },
       { label: 'USD/KRW', value: '2000원 돌파', trend: '기업 연쇄 부도', tone: 'negative' },
@@ -2702,10 +2789,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 129, market: 'KOSPI', ticker: 'KS11', pattern: 'breakout',
+    id: 132, market: 'KOSPI', ticker: 'KS11', pattern: 'breakout',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '1999-03-04',
-    question: '중요 저항선을 상향 돌파했다. 추세 전환이 시작된 걸까? 3개월 뒤는?',
+    question: '고점 저항을 돌파하는 강한 양봉이 출현하였다. 3개월 후 주가의 변화로 옳은 것은?',
     macroHints: [
       { label: '닷컴 붐', value: '과열 극점', trend: '나스닥 PER 100x+', tone: 'negative' },
       { label: '기술주', value: '폭발적 상승', trend: '인터넷 기업 IPO 러시', tone: 'positive' },
@@ -2731,10 +2818,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 130, market: 'KOSPI', ticker: 'KS11', pattern: 'breakout',
+    id: 133, market: 'KOSPI', ticker: 'KS11', pattern: 'breakout',
     revealDay: 55, chartDays: 120, difficulty: 'hard',
     startDate: '1999-05-10',
-    question: '52주 신고가를 경신하며 돌파에 성공했다. 3개월 뒤 결과는?',
+    question: '박스권 상단을 거래량을 동반하여 돌파하였다. 3개월 후 주가의 흐름으로 옳은 것은?',
     macroHints: [
       { label: '닷컴 붐', value: '과열 극점', trend: '나스닥 PER 100x+', tone: 'negative' },
       { label: '기술주', value: '폭발적 상승', trend: '인터넷 기업 IPO 러시', tone: 'positive' },
@@ -2760,10 +2847,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 131, market: 'SSE', ticker: 'SSE', pattern: 'sideways',
+    id: 134, market: 'SSE', ticker: 'SSE', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'hard',
     startDate: '2013-01-04',
-    question: '박스권에서 방향을 잡지 못하고 오르내리고 있다. 3개월 뒤 어디로 갔을까?',
+    question: '일정 범위 안에서 등락이 반복되고 있다. 3개월 후 주가의 방향으로 옳은 것은?',
     macroHints: [
       { label: 'Fed 테이퍼링', value: 'QE 축소', trend: '신흥국 자금 이탈', tone: 'mixed' },
       { label: '미국 경기', value: '안정 성장', trend: 'S&P 강세 지속', tone: 'positive' },
@@ -2789,10 +2876,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 132, market: 'SSE', ticker: 'SSE', pattern: 'reversal',
+    id: 135, market: 'SSE', ticker: 'SSE', pattern: 'reversal',
     revealDay: 55, chartDays: 120, difficulty: 'hard',
     startDate: '2013-04-09',
-    question: '긴 하락 후 지지선에서 힘을 받는 모습이다. 3개월 뒤 어떻게 됐을까?',
+    question: '하락세가 멈추고 바닥을 다지는 흐름이 나타나고 있다. 3개월 후 결과로 옳은 것은?',
     macroHints: [
       { label: 'Fed 테이퍼링', value: 'QE 축소', trend: '신흥국 자금 이탈', tone: 'mixed' },
       { label: '미국 경기', value: '안정 성장', trend: 'S&P 강세 지속', tone: 'positive' },
@@ -2818,10 +2905,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 133, market: 'SSE', ticker: 'SSE', pattern: 'breakout',
+    id: 136, market: 'SSE', ticker: 'SSE', pattern: 'breakout',
     revealDay: 55, chartDays: 120, difficulty: 'hard',
     startDate: '2013-07-10',
-    question: '중요 저항선을 상향 돌파했다. 추세 전환이 시작된 걸까? 3개월 뒤는?',
+    question: '박스권 상단을 거래량을 동반하여 돌파하였다. 3개월 후 주가의 흐름으로 옳은 것은?',
     macroHints: [
       { label: 'Fed 테이퍼링', value: 'QE 축소', trend: '신흥국 자금 이탈', tone: 'mixed' },
       { label: '미국 경기', value: '안정 성장', trend: 'S&P 강세 지속', tone: 'positive' },
@@ -2847,10 +2934,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 134, market: 'SSE', ticker: 'SSE', pattern: 'sideways',
+    id: 137, market: 'SSE', ticker: 'SSE', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2014-04-08',
-    question: '횡보 구간에서 돌파 시도를 이어가고 있다. 3개월 뒤 결과는?',
+    question: '횡보 구간에서 돌파 시도가 이어지고 있다. 3개월 후 결과로 알맞은 것은?',
     macroHints: [
       { label: 'Fed 테이퍼링', value: 'QE 축소', trend: '신흥국 자금 이탈', tone: 'mixed' },
       { label: '미국 경기', value: '안정 성장', trend: 'S&P 강세 지속', tone: 'positive' },
@@ -2876,10 +2963,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 135, market: 'SSE', ticker: 'SSE', pattern: 'sideways',
+    id: 138, market: 'SSE', ticker: 'SSE', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2014-07-04',
-    question: '눌림목 구간에서 쉬어가고 있다. 3개월 후 방향은?',
+    question: '눌림목 구간에서 추세 재개를 대기하고 있다. 3개월 후 방향으로 적절한 것은?',
     macroHints: [
       { label: 'Fed 테이퍼링', value: 'QE 축소', trend: '신흥국 자금 이탈', tone: 'mixed' },
       { label: '미국 경기', value: '안정 성장', trend: 'S&P 강세 지속', tone: 'positive' },
@@ -2905,10 +2992,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 136, market: 'SSE', ticker: 'SSE', pattern: 'breakout',
+    id: 139, market: 'SSE', ticker: 'SSE', pattern: 'breakout',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2014-09-29',
-    question: '고점 저항을 돌파하는 강한 양봉이 나왔다. 3개월 후?',
+    question: '고점 저항을 돌파하는 강한 양봉이 출현하였다. 3개월 후 주가의 변화로 옳은 것은?',
     macroHints: [
       { label: 'Fed 테이퍼링', value: 'QE 축소', trend: '신흥국 자금 이탈', tone: 'mixed' },
       { label: '미국 경기', value: '안정 성장', trend: 'S&P 강세 지속', tone: 'positive' },
@@ -2934,10 +3021,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 137, market: 'SSE', ticker: 'SSE', pattern: 'breakout',
+    id: 140, market: 'SSE', ticker: 'SSE', pattern: 'breakout',
     revealDay: 55, chartDays: 120, difficulty: 'hard',
     startDate: '2014-12-30',
-    question: '52주 신고가를 경신하며 돌파에 성공했다. 3개월 뒤 결과는?',
+    question: '오랫동안 막혀 있던 저항선을 상향 돌파하였다. 3개월 후 결과로 알맞은 것은?',
     macroHints: [
       { label: 'Fed 테이퍼링', value: 'QE 축소', trend: '신흥국 자금 이탈', tone: 'mixed' },
       { label: '미국 경기', value: '안정 성장', trend: 'S&P 강세 지속', tone: 'positive' },
@@ -2963,39 +3050,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 138, market: 'SSE', ticker: 'SSE', pattern: 'sideways',
-    revealDay: 55, chartDays: 120, difficulty: 'hard',
-    startDate: '2016-06-23',
-    question: '박스권에서 방향을 잡지 못하고 오르내리고 있다. 3개월 뒤 어디로 갔을까?',
-    macroHints: [
-      { label: 'Fed 첫 인상', value: '0.25%', trend: '9년 만의 금리 인상', tone: 'mixed' },
-      { label: '원자재', value: '약세', trend: '유가·광물 급락', tone: 'negative' },
-      { label: '달러', value: '강세 지속', trend: '신흥국 자금 이탈', tone: 'negative' },
-      { label: '브렉시트', value: '불확실성', trend: '영국 EU 탈퇴 투표', tone: 'negative' },
-    ],
-    choices: [
-      '박스 상향 돌파 → 급등 (+30%+)',
-      '상단 돌파 → 추세 형성 (+10~30%)',
-      '박스권 지속 (±10%)',
-      '하단 이탈 → 하락 가속 (-10%+)',
-    ],
-    answer: 2,
-    odds: '횡보 지속 확률 40~50%. 특별한 촉매 없이 돌파하기 어려운 구간이다.',
-    explanation: '횡보 끝에 3개월 뒤 횡보 (+1%).',
-    reveal: {
-    title: '상하이종합 (SSE)',
-    market: 'SSE · 중국 시장',
-    period: '2016년 6월 ~ 2016년 12월',
-    result: '3개월 횡보 (+1%).',
-    macro: 'Fed 첫 인상 0.25%, 원자재 약세, 달러 강세 지속, 브렉시트 불확실성.',
-    lesson: '박스권이 계속됐다. 기다림에 지쳐 손절한 사람들이 가장 많이 나오는 패턴.',
-    },
-  },
-  {
-    id: 139, market: 'NASDAQ', ticker: 'IXIC', pattern: 'sideways',
+    id: 141, market: 'NASDAQ', ticker: 'IXIC', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'hard',
     startDate: '1997-01-02',
-    question: '일정 범위 안에서만 움직이고 있다. 3개월 뒤 탈출에 성공했을까?',
+    question: '박스권 내에서 방향성이 나타나지 않고 있다. 3개월 후 주가의 흐름으로 가장 적절한 것은?',
     macroHints: [
       { label: '아시아', value: '위기 전야', trend: '태국 바트화 흔들림', tone: 'negative' },
       { label: '한국 경제', value: '경상적자', trend: '외환보유고 고갈', tone: 'negative' },
@@ -3021,10 +3079,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 140, market: 'NASDAQ', ticker: 'IXIC', pattern: 'sideways',
+    id: 142, market: 'NASDAQ', ticker: 'IXIC', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '1997-10-14',
-    question: '횡보 구간에서 돌파 시도를 이어가고 있다. 3개월 뒤 결과는?',
+    question: '일정 범위 안에서 등락이 반복되고 있다. 3개월 후 주가의 방향으로 옳은 것은?',
     macroHints: [
       { label: 'IMF 외환위기', value: '구제금융', trend: '원화 -50% 이상 절하', tone: 'negative' },
       { label: 'USD/KRW', value: '2000원 돌파', trend: '기업 연쇄 부도', tone: 'negative' },
@@ -3050,10 +3108,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 141, market: 'NASDAQ', ticker: 'IXIC', pattern: 'sideways',
+    id: 143, market: 'NASDAQ', ticker: 'IXIC', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '1998-07-29',
-    question: '박스권에서 방향을 잡지 못하고 오르내리고 있다. 3개월 뒤 어디로 갔을까?',
+    question: '뚜렷한 추세 없이 박스권이 유지되고 있다. 3개월 후 주가의 전개로 옳은 것은?',
     macroHints: [
       { label: 'IMF 외환위기', value: '구제금융', trend: '원화 -50% 이상 절하', tone: 'negative' },
       { label: 'USD/KRW', value: '2000원 돌파', trend: '기업 연쇄 부도', tone: 'negative' },
@@ -3079,10 +3137,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 142, market: 'NASDAQ', ticker: 'IXIC', pattern: 'breakout',
+    id: 144, market: 'NASDAQ', ticker: 'IXIC', pattern: 'breakout',
     revealDay: 55, chartDays: 120, difficulty: 'hard',
     startDate: '1999-05-12',
-    question: '52주 신고가를 경신하며 돌파에 성공했다. 3개월 뒤 결과는?',
+    question: '박스권 상단을 거래량을 동반하여 돌파하였다. 3개월 후 주가의 흐름으로 옳은 것은?',
     macroHints: [
       { label: '닷컴 붐', value: '과열 극점', trend: '나스닥 PER 100x+', tone: 'negative' },
       { label: '기술주', value: '폭발적 상승', trend: '인터넷 기업 IPO 러시', tone: 'positive' },
@@ -3108,10 +3166,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 143, market: 'NASDAQ', ticker: 'IXIC', pattern: 'reversal',
+    id: 145, market: 'NASDAQ', ticker: 'IXIC', pattern: 'reversal',
     revealDay: 55, chartDays: 120, difficulty: 'hard',
     startDate: '2000-02-23',
-    question: '긴 하락 후 지지선에서 힘을 받는 모습이다. 3개월 뒤 어떻게 됐을까?',
+    question: '하락세가 멈추고 바닥을 다지는 흐름이 나타나고 있다. 3개월 후 결과로 옳은 것은?',
     macroHints: [
       { label: '닷컴 붐', value: '과열 극점', trend: '나스닥 PER 100x+', tone: 'negative' },
       { label: '기술주', value: '폭발적 상승', trend: '인터넷 기업 IPO 러시', tone: 'positive' },
@@ -3137,10 +3195,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 144, market: 'NASDAQ', ticker: 'IXIC', pattern: 'sideways',
+    id: 146, market: 'NASDAQ', ticker: 'IXIC', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2000-07-14',
-    question: '추세 없이 박스권을 유지 중이다. 3개월 뒤 어떻게 됐을까?',
+    question: '뚜렷한 추세 없이 박스권이 유지되고 있다. 3개월 후 주가의 전개로 옳은 것은?',
     macroHints: [
       { label: '닷컴버블', value: '붕괴', trend: '나스닥 -78% 하락', tone: 'negative' },
       { label: 'Fed', value: '금리 인하', trend: '경기 침체 대응', tone: 'positive' },
@@ -3166,10 +3224,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 145, market: 'NASDAQ', ticker: 'IXIC', pattern: 'reversal',
+    id: 147, market: 'NASDAQ', ticker: 'IXIC', pattern: 'reversal',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2001-04-27',
-    question: '긴 하락 후 지지선에서 힘을 받는 모습이다. 3개월 뒤 어떻게 됐을까?',
+    question: '과매도 구간에서 거래량을 동반한 반등이 시도되고 있다. 3개월 후 주가의 전개로 적절한 것은?',
     macroHints: [
       { label: '닷컴버블', value: '붕괴', trend: '나스닥 -78% 하락', tone: 'negative' },
       { label: 'Fed', value: '금리 인하', trend: '경기 침체 대응', tone: 'positive' },
@@ -3195,10 +3253,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 146, market: 'NASDAQ', ticker: 'IXIC', pattern: 'reversal',
+    id: 148, market: 'NASDAQ', ticker: 'IXIC', pattern: 'reversal',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2002-02-14',
-    question: '하락을 멈추고 바닥을 다지는 것 같다. 3개월 뒤 결과는?',
+    question: '급락 이후 저점에서 강한 양봉이 나타나기 시작하였다. 3개월 후 결과로 알맞은 것은?',
     macroHints: [
       { label: '닷컴버블', value: '붕괴', trend: '나스닥 -78% 하락', tone: 'negative' },
       { label: 'Fed', value: '금리 인하', trend: '경기 침체 대응', tone: 'positive' },
@@ -3224,10 +3282,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 147, market: 'NASDAQ', ticker: 'IXIC', pattern: 'sideways',
+    id: 149, market: 'NASDAQ', ticker: 'IXIC', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2002-07-09',
-    question: '박스권에서 방향을 잡지 못하고 오르내리고 있다. 3개월 뒤 어디로 갔을까?',
+    question: '일정 범위 안에서 등락이 반복되고 있다. 3개월 후 주가의 방향으로 옳은 것은?',
     macroHints: [
       { label: '미국 경기', value: '저금리 성장', trend: '주택 붐 + 소비 확대', tone: 'positive' },
       { label: 'Fed 금리', value: '1%→5.25%', trend: '점진적 정상화', tone: 'mixed' },
@@ -3253,10 +3311,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 148, market: 'TSE', ticker: 'N225', pattern: 'breakout',
+    id: 150, market: 'TSE', ticker: 'N225', pattern: 'breakout',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '1986-01-06',
-    question: '중요 저항선을 상향 돌파했다. 추세 전환이 시작된 걸까? 3개월 뒤는?',
+    question: '오랫동안 막혀 있던 저항선을 상향 돌파하였다. 3개월 후 결과로 알맞은 것은?',
     macroHints: [
       { label: '일본 버블', value: '최고조', trend: '부동산·주식 동반 폭등', tone: 'positive' },
       { label: '엔화', value: '엔고 지속', trend: '플라자 합의 후 강세', tone: 'mixed' },
@@ -3282,10 +3340,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 149, market: 'TSE', ticker: 'N225', pattern: 'sideways',
+    id: 151, market: 'TSE', ticker: 'N225', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '1986-12-01',
-    question: '횡보 구간에서 돌파 시도를 이어가고 있다. 3개월 뒤 결과는?',
+    question: '뚜렷한 추세 없이 박스권이 유지되고 있다. 3개월 후 주가의 전개로 옳은 것은?',
     macroHints: [
       { label: '일본 버블', value: '최고조', trend: '부동산·주식 동반 폭등', tone: 'positive' },
       { label: '엔화', value: '엔고 지속', trend: '플라자 합의 후 강세', tone: 'mixed' },
@@ -3311,10 +3369,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 150, market: 'TSE', ticker: 'N225', pattern: 'sideways',
+    id: 152, market: 'TSE', ticker: 'N225', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'hard',
     startDate: '1987-05-22',
-    question: '박스권에서 방향을 잡지 못하고 오르내리고 있다. 3개월 뒤 어디로 갔을까?',
+    question: '횡보 구간에서 돌파 시도가 이어지고 있다. 3개월 후 결과로 알맞은 것은?',
     macroHints: [
       { label: '일본 버블', value: '최고조', trend: '부동산·주식 동반 폭등', tone: 'positive' },
       { label: '엔화', value: '엔고 지속', trend: '플라자 합의 후 강세', tone: 'mixed' },
@@ -3340,10 +3398,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 151, market: 'TSE', ticker: 'N225', pattern: 'sideways',
+    id: 153, market: 'TSE', ticker: 'N225', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '1987-11-02',
-    question: '일정 범위 안에서만 움직이고 있다. 3개월 뒤 탈출에 성공했을까?',
+    question: '횡보 구간에서 돌파 시도가 이어지고 있다. 3개월 후 결과로 알맞은 것은?',
     macroHints: [
       { label: '일본 버블', value: '최고조', trend: '부동산·주식 동반 폭등', tone: 'positive' },
       { label: '엔화', value: '엔고 지속', trend: '플라자 합의 후 강세', tone: 'mixed' },
@@ -3369,10 +3427,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 152, market: 'TSE', ticker: 'N225', pattern: 'sideways',
+    id: 154, market: 'TSE', ticker: 'N225', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'hard',
     startDate: '1988-10-06',
-    question: '눌림목 구간에서 쉬어가고 있다. 3개월 후 방향은?',
+    question: '일정 범위 안에서 등락이 반복되고 있다. 3개월 후 주가의 방향으로 옳은 것은?',
     macroHints: [
       { label: '일본 버블', value: '최고조', trend: '부동산·주식 동반 폭등', tone: 'positive' },
       { label: '엔화', value: '엔고 지속', trend: '플라자 합의 후 강세', tone: 'mixed' },
@@ -3398,39 +3456,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 153, market: 'TSE', ticker: 'N225', pattern: 'sideways',
-    revealDay: 55, chartDays: 120, difficulty: 'hard',
-    startDate: '1989-03-29',
-    question: '박스권에서 방향을 잡지 못하고 오르내리고 있다. 3개월 뒤 어디로 갔을까?',
-    macroHints: [
-      { label: '일본 금리', value: '대폭 인상 예고', trend: 'BOJ 버블 억제 시작', tone: 'negative' },
-      { label: '닛케이', value: '38,957 고점', trend: '버블 최고점 형성', tone: 'negative' },
-      { label: '부동산', value: '도쿄 폭등', trend: '대출 과잉·투기 극단', tone: 'negative' },
-      { label: '일본 GDP', value: '4% 성장', trend: '실물과 자산 괴리 극대', tone: 'mixed' },
-    ],
-    choices: [
-      '박스 상향 돌파 → 급등 (+30%+)',
-      '상단 돌파 → 추세 형성 (+10~30%)',
-      '박스권 지속 (±10%)',
-      '하단 이탈 → 하락 가속 (-10%+)',
-    ],
-    answer: 2,
-    odds: '횡보 지속 확률 40~50%. 특별한 촉매 없이 돌파하기 어려운 구간이다.',
-    explanation: '횡보 끝에 3개월 뒤 횡보 (+4%).',
-    reveal: {
-    title: '니케이 225 (N225)',
-    market: 'TSE · 일본 시장',
-    period: '1989년 3월 ~ 1989년 9월',
-    result: '3개월 횡보 (+4%).',
-    macro: '일본 금리 대폭 인상 예고, 닛케이 38,957 고점, 부동산 도쿄 폭등, 일본 GDP 4% 성장.',
-    lesson: '박스권이 계속됐다. 기다림에 지쳐 손절한 사람들이 가장 많이 나오는 패턴.',
-    },
-  },
-  {
-    id: 154, market: 'TSE', ticker: 'N225', pattern: 'sideways',
+    id: 155, market: 'TSE', ticker: 'N225', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'hard',
     startDate: '1989-09-08',
-    question: '박스권에서 방향을 잡지 못하고 오르내리고 있다. 3개월 뒤 어디로 갔을까?',
+    question: '뚜렷한 추세 없이 박스권이 유지되고 있다. 3개월 후 주가의 전개로 옳은 것은?',
     macroHints: [
       { label: '일본 금리', value: '대폭 인상 예고', trend: 'BOJ 버블 억제 시작', tone: 'negative' },
       { label: '닛케이', value: '38,957 고점', trend: '버블 최고점 형성', tone: 'negative' },
@@ -3456,10 +3485,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 155, market: 'TSE', ticker: 'N225', pattern: 'sideways',
+    id: 156, market: 'TSE', ticker: 'N225', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'hard',
     startDate: '1991-02-01',
-    question: '추세 없이 박스권을 유지 중이다. 3개월 뒤 어떻게 됐을까?',
+    question: '일정 범위 안에서 등락이 반복되고 있다. 3개월 후 주가의 방향으로 옳은 것은?',
     macroHints: [
       { label: '닛케이', value: '급락 중', trend: '버블 붕괴 -60%+', tone: 'negative' },
       { label: '일본 경기', value: '침체 돌입', trend: '잃어버린 10년 시작', tone: 'negative' },
@@ -3485,10 +3514,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 156, market: 'TSE', ticker: 'N225', pattern: 'sideways',
+    id: 157, market: 'TSE', ticker: 'N225', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'hard',
     startDate: '1991-07-18',
-    question: '일정 범위 안에서만 움직이고 있다. 3개월 뒤 탈출에 성공했을까?',
+    question: '일정 범위 안에서 등락이 반복되고 있다. 3개월 후 주가의 방향으로 옳은 것은?',
     macroHints: [
       { label: '닛케이', value: '급락 중', trend: '버블 붕괴 -60%+', tone: 'negative' },
       { label: '일본 경기', value: '침체 돌입', trend: '잃어버린 10년 시작', tone: 'negative' },
@@ -3514,10 +3543,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 157, market: 'TSE', ticker: 'N225', pattern: 'sideways',
+    id: 158, market: 'TSE', ticker: 'N225', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '1992-01-07',
-    question: '눌림목 구간에서 쉬어가고 있다. 3개월 후 방향은?',
+    question: '횡보 구간에서 돌파 시도가 이어지고 있다. 3개월 후 결과로 알맞은 것은?',
     macroHints: [
       { label: '닛케이', value: '급락 중', trend: '버블 붕괴 -60%+', tone: 'negative' },
       { label: '일본 경기', value: '침체 돌입', trend: '잃어버린 10년 시작', tone: 'negative' },
@@ -3543,10 +3572,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 158, market: 'NYSE', ticker: 'GME', pattern: 'sideways',
+    id: 159, market: 'NYSE', ticker: 'GME', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2020-01-02',
-    question: '추세 없이 박스권을 유지 중이다. 3개월 뒤 어떻게 됐을까?',
+    question: '박스권 내에서 방향성이 나타나지 않고 있다. 3개월 후 주가의 흐름으로 가장 적절한 것은?',
     macroHints: [
       { label: 'COVID-19', value: '팬데믹 선언', trend: '전 세계 봉쇄 시작', tone: 'negative' },
       { label: 'Fed', value: '긴급 제로금리', trend: '무제한 QE 선언', tone: 'mixed' },
@@ -3572,10 +3601,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 159, market: 'NYSE', ticker: 'GME', pattern: 'sideways',
+    id: 160, market: 'NYSE', ticker: 'GME', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2020-04-28',
-    question: '박스권에서 방향을 잡지 못하고 오르내리고 있다. 3개월 뒤 어디로 갔을까?',
+    question: '눌림목 구간에서 추세 재개를 대기하고 있다. 3개월 후 방향으로 적절한 것은?',
     macroHints: [
       { label: 'QE·부양책', value: '역대 최대', trend: '유동성 폭발적 공급', tone: 'positive' },
       { label: '기준금리', value: '0.25%', trend: '초저금리·동학개미', tone: 'positive' },
@@ -3601,10 +3630,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 160, market: 'NYSE', ticker: 'GME', pattern: 'uptrend',
+    id: 161, market: 'NYSE', ticker: 'GME', pattern: 'uptrend',
     revealDay: 55, chartDays: 120, difficulty: 'easy',
     startDate: '2020-06-24',
-    question: '꾸준히 우상향하며 매수세가 계속 몰리고 있다. 3개월 뒤 주가는 어떻게 됐을까?',
+    question: '꾸준히 우상향하며 매수세가 지속되고 있다. 3개월 후 주가의 변화로 가장 적절한 것은?',
     macroHints: [
       { label: 'QE·부양책', value: '역대 최대', trend: '유동성 폭발적 공급', tone: 'positive' },
       { label: '기준금리', value: '0.25%', trend: '초저금리·동학개미', tone: 'positive' },
@@ -3630,10 +3659,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 161, market: 'NYSE', ticker: 'GME', pattern: 'uptrend',
+    id: 162, market: 'NYSE', ticker: 'GME', pattern: 'uptrend',
     revealDay: 55, chartDays: 120, difficulty: 'easy',
     startDate: '2020-08-20',
-    question: '꾸준히 우상향하며 매수세가 계속 몰리고 있다. 3개월 뒤 주가는 어떻게 됐을까?',
+    question: '꾸준히 우상향하며 매수세가 지속되고 있다. 3개월 후 주가의 변화로 가장 적절한 것은?',
     macroHints: [
       { label: 'QE·부양책', value: '역대 최대', trend: '유동성 폭발적 공급', tone: 'positive' },
       { label: '기준금리', value: '0.25%', trend: '초저금리·동학개미', tone: 'positive' },
@@ -3659,10 +3688,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 162, market: 'NYSE', ticker: 'GME', pattern: 'uptrend',
+    id: 163, market: 'NYSE', ticker: 'GME', pattern: 'uptrend',
     revealDay: 55, chartDays: 120, difficulty: 'easy',
     startDate: '2020-10-16',
-    question: '꾸준히 우상향하며 매수세가 계속 몰리고 있다. 3개월 뒤 주가는 어떻게 됐을까?',
+    question: '이평선 위에서 강한 상승 흐름이 이어지고 있다. 3개월 후 결과로 알맞은 것은?',
     macroHints: [
       { label: 'QE·부양책', value: '역대 최대', trend: '유동성 폭발적 공급', tone: 'positive' },
       { label: '기준금리', value: '0.25%', trend: '초저금리·동학개미', tone: 'positive' },
@@ -3688,39 +3717,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 163, market: 'NYSE', ticker: 'GME', pattern: 'reversal',
-    revealDay: 55, chartDays: 120, difficulty: 'hard',
-    startDate: '2021-06-08',
-    question: '크게 빠진 후 바닥에서 반등 신호가 나왔다. 3개월 뒤 어떻게 됐을까?',
-    macroHints: [
-      { label: '인플레이션', value: '급등 조짐', trend: '공급망 충격·유동성', tone: 'negative' },
-      { label: 'QE·저금리', value: '지속', trend: '주식·코인 동반 강세', tone: 'positive' },
-      { label: '비트코인', value: '6만달러 ATH', trend: '기관·ETF 자금 유입', tone: 'positive' },
-      { label: '코스피', value: '3,316 신고가', trend: '외국인·기관 동반 매수', tone: 'positive' },
-    ],
-    choices: [
-      '강한 반등 → 추세 전환 (+30%+)',
-      '저점 확인 → 점진적 회복 (+10~30%)',
-      '단기 반등 후 재하락 (±10%)',
-      '반등 실패 → 추가 급락 (-10%+)',
-    ],
-    answer: 2,
-    odds: '단기 반등 후 재하락 확률 약 45%. 섣불리 매수하면 더 빠질 수도 있다.',
-    explanation: '반등 시도 후 3개월 뒤 횡보 (+1%).',
-    reveal: {
-    title: '게임스톱 (GME)',
-    market: 'NYSE · 밈주·공매도',
-    period: '2021년 6월 ~ 2021년 11월',
-    result: '3개월 횡보 (+1%).',
-    macro: '인플레이션 급등 조짐, QE·저금리 지속, 비트코인 6만달러 ATH, 코스피 3,316 신고가.',
-    lesson: '반등 후 다시 지지부진. 진짜 전환인지 확인하려면 더 기다려야 했다.',
-    },
-  },
-  {
     id: 164, market: 'KOSDAQ', ticker: 'SEEGENE', pattern: 'breakout',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2019-01-02',
-    question: '오랫동안 막혀 있던 저항선을 뚫었다. 이번엔 진짜일까? 3개월 후?',
+    question: '52주 신고가를 경신하며 돌파에 성공하였다. 3개월 후 결과로 가장 적절한 것은?',
     macroHints: [
       { label: 'Fed 피벗', value: '인하 전환', trend: '긴축 종료 기대', tone: 'positive' },
       { label: '미중 협상', value: '1단계 합의', trend: '무역전쟁 완화', tone: 'positive' },
@@ -3749,7 +3749,7 @@ export const GENERATED_PROBLEMS: Problem[] = [
     id: 165, market: 'KOSDAQ', ticker: 'SEEGENE', pattern: 'breakout',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2019-03-11',
-    question: '고점 저항을 돌파하는 강한 양봉이 나왔다. 3개월 후?',
+    question: '고점 저항을 돌파하는 강한 양봉이 출현하였다. 3개월 후 주가의 변화로 옳은 것은?',
     macroHints: [
       { label: 'Fed 피벗', value: '인하 전환', trend: '긴축 종료 기대', tone: 'positive' },
       { label: '미중 협상', value: '1단계 합의', trend: '무역전쟁 완화', tone: 'positive' },
@@ -3778,7 +3778,7 @@ export const GENERATED_PROBLEMS: Problem[] = [
     id: 166, market: 'KOSDAQ', ticker: 'SEEGENE', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2019-07-16',
-    question: '박스권에서 방향을 잡지 못하고 오르내리고 있다. 3개월 뒤 어디로 갔을까?',
+    question: '횡보 구간에서 돌파 시도가 이어지고 있다. 3개월 후 결과로 알맞은 것은?',
     macroHints: [
       { label: 'Fed 피벗', value: '인하 전환', trend: '긴축 종료 기대', tone: 'positive' },
       { label: '미중 협상', value: '1단계 합의', trend: '무역전쟁 완화', tone: 'positive' },
@@ -3807,7 +3807,7 @@ export const GENERATED_PROBLEMS: Problem[] = [
     id: 167, market: 'KOSDAQ', ticker: 'SEEGENE', pattern: 'breakout',
     revealDay: 55, chartDays: 120, difficulty: 'easy',
     startDate: '2019-09-19',
-    question: '박스권 상단을 돌파하며 거래량이 터졌다. 3개월 뒤 어떻게 됐을까?',
+    question: '박스권 상단을 거래량을 동반하여 돌파하였다. 3개월 후 주가의 흐름으로 옳은 것은?',
     macroHints: [
       { label: 'Fed 피벗', value: '인하 전환', trend: '긴축 종료 기대', tone: 'positive' },
       { label: '미중 협상', value: '1단계 합의', trend: '무역전쟁 완화', tone: 'positive' },
@@ -3836,7 +3836,7 @@ export const GENERATED_PROBLEMS: Problem[] = [
     id: 168, market: 'KOSDAQ', ticker: 'SEEGENE', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2019-11-22',
-    question: '박스권에서 방향을 잡지 못하고 오르내리고 있다. 3개월 뒤 어디로 갔을까?',
+    question: '박스권 내에서 방향성이 나타나지 않고 있다. 3개월 후 주가의 흐름으로 가장 적절한 것은?',
     macroHints: [
       { label: 'Fed 피벗', value: '인하 전환', trend: '긴축 종료 기대', tone: 'positive' },
       { label: '미중 협상', value: '1단계 합의', trend: '무역전쟁 완화', tone: 'positive' },
@@ -3865,7 +3865,7 @@ export const GENERATED_PROBLEMS: Problem[] = [
     id: 169, market: 'KOSDAQ', ticker: 'SEEGENE', pattern: 'reversal',
     revealDay: 55, chartDays: 120, difficulty: 'hard',
     startDate: '2020-10-15',
-    question: '과매도 구간에서 거래량을 동반한 반등 시도를 하고 있다. 3개월 후?',
+    question: '급락 이후 저점에서 강한 양봉이 나타나기 시작하였다. 3개월 후 결과로 알맞은 것은?',
     macroHints: [
       { label: 'QE·부양책', value: '역대 최대', trend: '유동성 폭발적 공급', tone: 'positive' },
       { label: '기준금리', value: '0.25%', trend: '초저금리·동학개미', tone: 'positive' },
@@ -3892,9 +3892,38 @@ export const GENERATED_PROBLEMS: Problem[] = [
   },
   {
     id: 170, market: 'KOSDAQ', ticker: 'SEEGENE', pattern: 'uptrend',
+    revealDay: 55, chartDays: 120, difficulty: 'hard',
+    startDate: '2021-02-23',
+    question: '꾸준히 우상향하며 매수세가 지속되고 있다. 3개월 후 주가의 변화로 가장 적절한 것은?',
+    macroHints: [
+      { label: '인플레이션', value: '급등 조짐', trend: '공급망 충격·유동성', tone: 'negative' },
+      { label: 'QE·저금리', value: '지속', trend: '주식·코인 동반 강세', tone: 'positive' },
+      { label: '비트코인', value: '6만달러 ATH', trend: '기관·ETF 자금 유입', tone: 'positive' },
+      { label: '코스피', value: '3,316 신고가', trend: '외국인·기관 동반 매수', tone: 'positive' },
+    ],
+    choices: [
+      '추세 가속 → 신고가 경신 (+30%+)',
+      '추세 유지 → 완만한 우상향 (+10~30%)',
+      '상승 피로 → 숨 고르기 (±10%)',
+      '추세 꺾임 → 조정 국면 (-10%+)',
+    ],
+    answer: 2,
+    odds: '강세 후 숨 고르기 확률 30~40%. 고점 매수자들의 물량이 부담이 될 수 있다.',
+    explanation: '상승 추세 이어가며 3개월 뒤 횡보 (-8%).',
+    reveal: {
+    title: '씨젠 (SEEGENE)',
+    market: 'KOSDAQ · 바이오·진단',
+    period: '2021년 2월 ~ 2021년 8월',
+    result: '3개월 횡보 (-8%).',
+    macro: '인플레이션 급등 조짐, QE·저금리 지속, 비트코인 6만달러 ATH, 코스피 3,316 신고가.',
+    lesson: '상승 후 숨 고르기. 추세는 살아있지만 단기 모멘텀은 소진됐다.',
+    },
+  },
+  {
+    id: 171, market: 'KOSDAQ', ticker: 'SEEGENE', pattern: 'uptrend',
     revealDay: 55, chartDays: 120, difficulty: 'easy',
     startDate: '2021-04-27',
-    question: '꾸준히 우상향하며 매수세가 계속 몰리고 있다. 3개월 뒤 주가는 어떻게 됐을까?',
+    question: '이평선 위에서 강한 상승 흐름이 이어지고 있다. 3개월 후 결과로 알맞은 것은?',
     macroHints: [
       { label: '인플레이션', value: '급등 조짐', trend: '공급망 충격·유동성', tone: 'negative' },
       { label: 'QE·저금리', value: '지속', trend: '주식·코인 동반 강세', tone: 'positive' },
@@ -3920,39 +3949,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 171, market: 'KOSDAQ', ticker: 'SEEGENE', pattern: 'reversal',
-    revealDay: 55, chartDays: 120, difficulty: 'hard',
-    startDate: '2021-06-30',
-    question: '긴 하락 후 지지선에서 힘을 받는 모습이다. 3개월 뒤 어떻게 됐을까?',
-    macroHints: [
-      { label: '인플레이션', value: '급등 조짐', trend: '공급망 충격·유동성', tone: 'negative' },
-      { label: 'QE·저금리', value: '지속', trend: '주식·코인 동반 강세', tone: 'positive' },
-      { label: '비트코인', value: '6만달러 ATH', trend: '기관·ETF 자금 유입', tone: 'positive' },
-      { label: '코스피', value: '3,316 신고가', trend: '외국인·기관 동반 매수', tone: 'positive' },
-    ],
-    choices: [
-      '강한 반등 → 추세 전환 (+30%+)',
-      '저점 확인 → 점진적 회복 (+10~30%)',
-      '단기 반등 후 재하락 (±10%)',
-      '반등 실패 → 추가 급락 (-10%+)',
-    ],
-    answer: 2,
-    odds: '단기 반등 후 재하락 확률 약 45%. 섣불리 매수하면 더 빠질 수도 있다.',
-    explanation: '반등 시도 후 3개월 뒤 횡보 (-2%).',
-    reveal: {
-    title: '씨젠 (SEEGENE)',
-    market: 'KOSDAQ · 바이오·진단',
-    period: '2021년 6월 ~ 2021년 12월',
-    result: '3개월 횡보 (-2%).',
-    macro: '인플레이션 급등 조짐, QE·저금리 지속, 비트코인 6만달러 ATH, 코스피 3,316 신고가.',
-    lesson: '반등 후 다시 지지부진. 진짜 전환인지 확인하려면 더 기다려야 했다.',
-    },
-  },
-  {
     id: 172, market: 'NASDAQ', ticker: 'META', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2021-01-04',
-    question: '추세 없이 박스권을 유지 중이다. 3개월 뒤 어떻게 됐을까?',
+    question: '눌림목 구간에서 추세 재개를 대기하고 있다. 3개월 후 방향으로 적절한 것은?',
     macroHints: [
       { label: '인플레이션', value: '급등 조짐', trend: '공급망 충격·유동성', tone: 'negative' },
       { label: 'QE·저금리', value: '지속', trend: '주식·코인 동반 강세', tone: 'positive' },
@@ -3978,39 +3978,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 173, market: 'NASDAQ', ticker: 'META', pattern: 'breakout',
-    revealDay: 55, chartDays: 120, difficulty: 'hard',
-    startDate: '2021-04-06',
-    question: '박스권 상단을 돌파하며 거래량이 터졌다. 3개월 뒤 어떻게 됐을까?',
-    macroHints: [
-      { label: '인플레이션', value: '급등 조짐', trend: '공급망 충격·유동성', tone: 'negative' },
-      { label: 'QE·저금리', value: '지속', trend: '주식·코인 동반 강세', tone: 'positive' },
-      { label: '비트코인', value: '6만달러 ATH', trend: '기관·ETF 자금 유입', tone: 'positive' },
-      { label: '코스피', value: '3,316 신고가', trend: '외국인·기관 동반 매수', tone: 'positive' },
-    ],
-    choices: [
-      '돌파 성공 → 강한 추세 지속 (+30%+)',
-      '돌파 후 점진적 상승 (+10~30%)',
-      '가짜 돌파 → 박스권 재진입 (±10%)',
-      '돌파 실패 → 되돌림 하락 (-10%+)',
-    ],
-    answer: 2,
-    odds: '가짜 돌파(페이크아웃) 확률이 40~50%. 돌파 후 눌림목을 기다리는 전략이 유리하다.',
-    explanation: '돌파 이후 3개월 뒤 횡보 (+2%).',
-    reveal: {
-    title: '메타 (META)',
-    market: 'NASDAQ · 소셜미디어·AI',
-    period: '2021년 4월 ~ 2021년 9월',
-    result: '3개월 횡보 (+2%).',
-    macro: '인플레이션 급등 조짐, QE·저금리 지속, 비트코인 6만달러 ATH, 코스피 3,316 신고가.',
-    lesson: '돌파 시도가 무산되고 다시 박스권으로. 가짜 돌파 (페이크아웃)였다.',
-    },
-  },
-  {
-    id: 174, market: 'NASDAQ', ticker: 'META', pattern: 'sideways',
+    id: 173, market: 'NASDAQ', ticker: 'META', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2021-10-04',
-    question: '박스권에서 방향을 잡지 못하고 오르내리고 있다. 3개월 뒤 어디로 갔을까?',
+    question: '일정 범위 안에서 등락이 반복되고 있다. 3개월 후 주가의 방향으로 옳은 것은?',
     macroHints: [
       { label: '인플레이션', value: '급등 조짐', trend: '공급망 충격·유동성', tone: 'negative' },
       { label: 'QE·저금리', value: '지속', trend: '주식·코인 동반 강세', tone: 'positive' },
@@ -4036,10 +4007,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 175, market: 'NASDAQ', ticker: 'META', pattern: 'reversal',
+    id: 174, market: 'NASDAQ', ticker: 'META', pattern: 'reversal',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2022-01-03',
-    question: '하락을 멈추고 바닥을 다지는 것 같다. 3개월 뒤 결과는?',
+    question: '과매도 구간에서 거래량을 동반한 반등이 시도되고 있다. 3개월 후 주가의 전개로 적절한 것은?',
     macroHints: [
       { label: 'Fed 금리', value: '0→4.5%', trend: '40년래 최고속 긴축', tone: 'negative' },
       { label: '인플레이션', value: '9.1%', trend: '경기침체 공포 확산', tone: 'negative' },
@@ -4065,10 +4036,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 176, market: 'NASDAQ', ticker: 'META', pattern: 'reversal',
+    id: 175, market: 'NASDAQ', ticker: 'META', pattern: 'reversal',
     revealDay: 55, chartDays: 120, difficulty: 'hard',
     startDate: '2022-04-04',
-    question: '긴 하락 후 지지선에서 힘을 받는 모습이다. 3개월 뒤 어떻게 됐을까?',
+    question: '급락 이후 바닥에서 반등 신호가 출현하였다. 3개월 후 주가의 변화로 옳은 것은?',
     macroHints: [
       { label: 'Fed 금리', value: '0→4.5%', trend: '40년래 최고속 긴축', tone: 'negative' },
       { label: '인플레이션', value: '9.1%', trend: '경기침체 공포 확산', tone: 'negative' },
@@ -4094,10 +4065,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 177, market: 'NASDAQ', ticker: 'META', pattern: 'reversal',
+    id: 176, market: 'NASDAQ', ticker: 'META', pattern: 'reversal',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2022-07-06',
-    question: '과매도 구간에서 거래량을 동반한 반등 시도를 하고 있다. 3개월 후?',
+    question: '과매도 구간에서 거래량을 동반한 반등이 시도되고 있다. 3개월 후 주가의 전개로 적절한 것은?',
     macroHints: [
       { label: 'Fed 금리', value: '0→4.5%', trend: '40년래 최고속 긴축', tone: 'negative' },
       { label: '인플레이션', value: '9.1%', trend: '경기침체 공포 확산', tone: 'negative' },
@@ -4123,10 +4094,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 178, market: 'NASDAQ', ticker: 'META', pattern: 'sideways',
+    id: 177, market: 'NASDAQ', ticker: 'META', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2023-10-05',
-    question: '추세 없이 박스권을 유지 중이다. 3개월 뒤 어떻게 됐을까?',
+    question: '일정 범위 안에서 등락이 반복되고 있다. 3개월 후 주가의 방향으로 옳은 것은?',
     macroHints: [
       { label: 'ChatGPT·AI', value: '폭발적 성장', trend: 'AI 투자 붐 시작', tone: 'positive' },
       { label: 'Fed 금리', value: '5.25% 고점', trend: '인상 종료 기대', tone: 'positive' },
@@ -4152,10 +4123,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 179, market: 'NASDAQ', ticker: 'META', pattern: 'breakout',
+    id: 178, market: 'NASDAQ', ticker: 'META', pattern: 'breakout',
     revealDay: 55, chartDays: 120, difficulty: 'hard',
     startDate: '2024-04-08',
-    question: '박스권 상단을 돌파하며 거래량이 터졌다. 3개월 뒤 어떻게 됐을까?',
+    question: '박스권 상단을 거래량을 동반하여 돌파하였다. 3개월 후 주가의 흐름으로 옳은 것은?',
     macroHints: [
       { label: 'AI 인프라', value: '투자 급증', trend: 'NVDA 주도 AI 사이클', tone: 'positive' },
       { label: 'Fed', value: '인하 시작', trend: '연착륙 기대', tone: 'positive' },
@@ -4181,10 +4152,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 180, market: 'KOSPI', ticker: '035720.KS', pattern: 'sideways',
+    id: 179, market: 'KOSPI', ticker: '035720.KS', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2019-01-02',
-    question: '일정 범위 안에서만 움직이고 있다. 3개월 뒤 탈출에 성공했을까?',
+    question: '횡보 구간에서 돌파 시도가 이어지고 있다. 3개월 후 결과로 알맞은 것은?',
     macroHints: [
       { label: 'Fed 피벗', value: '인하 전환', trend: '긴축 종료 기대', tone: 'positive' },
       { label: '미중 협상', value: '1단계 합의', trend: '무역전쟁 완화', tone: 'positive' },
@@ -4210,10 +4181,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 181, market: 'KOSPI', ticker: '035720.KS', pattern: 'sideways',
+    id: 180, market: 'KOSPI', ticker: '035720.KS', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2019-05-24',
-    question: '횡보 구간에서 돌파 시도를 이어가고 있다. 3개월 뒤 결과는?',
+    question: '눌림목 구간에서 추세 재개를 대기하고 있다. 3개월 후 방향으로 적절한 것은?',
     macroHints: [
       { label: 'Fed 피벗', value: '인하 전환', trend: '긴축 종료 기대', tone: 'positive' },
       { label: '미중 협상', value: '1단계 합의', trend: '무역전쟁 완화', tone: 'positive' },
@@ -4239,10 +4210,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 182, market: 'KOSPI', ticker: '035720.KS', pattern: 'uptrend',
+    id: 181, market: 'KOSPI', ticker: '035720.KS', pattern: 'uptrend',
     revealDay: 55, chartDays: 120, difficulty: 'easy',
     startDate: '2020-03-04',
-    question: 'MA20 위에서 완만하게 우상향하고 있다. 3개월 뒤 결과는?',
+    question: 'MA20 위에서 완만한 우상향이 나타나고 있다. 3개월 후 결과로 알맞은 것은?',
     macroHints: [
       { label: 'COVID-19', value: '팬데믹 선언', trend: '전 세계 봉쇄 시작', tone: 'negative' },
       { label: 'Fed', value: '긴급 제로금리', trend: '무제한 QE 선언', tone: 'mixed' },
@@ -4268,10 +4239,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 183, market: 'KOSPI', ticker: '035720.KS', pattern: 'sideways',
+    id: 182, market: 'KOSPI', ticker: '035720.KS', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2020-07-22',
-    question: '박스권에서 방향을 잡지 못하고 오르내리고 있다. 3개월 뒤 어디로 갔을까?',
+    question: '뚜렷한 추세 없이 박스권이 유지되고 있다. 3개월 후 주가의 전개로 옳은 것은?',
     macroHints: [
       { label: 'QE·부양책', value: '역대 최대', trend: '유동성 폭발적 공급', tone: 'positive' },
       { label: '기준금리', value: '0.25%', trend: '초저금리·동학개미', tone: 'positive' },
@@ -4297,10 +4268,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 184, market: 'KOSPI', ticker: '035720.KS', pattern: 'breakout',
+    id: 183, market: 'KOSPI', ticker: '035720.KS', pattern: 'breakout',
     revealDay: 55, chartDays: 120, difficulty: 'easy',
     startDate: '2020-12-10',
-    question: '오랫동안 막혀 있던 저항선을 뚫었다. 이번엔 진짜일까? 3개월 후?',
+    question: '박스권 상단을 거래량을 동반하여 돌파하였다. 3개월 후 주가의 흐름으로 옳은 것은?',
     macroHints: [
       { label: 'QE·부양책', value: '역대 최대', trend: '유동성 폭발적 공급', tone: 'positive' },
       { label: '기준금리', value: '0.25%', trend: '초저금리·동학개미', tone: 'positive' },
@@ -4326,10 +4297,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 185, market: 'KOSPI', ticker: '035720.KS', pattern: 'breakout',
+    id: 184, market: 'KOSPI', ticker: '035720.KS', pattern: 'breakout',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2021-05-03',
-    question: '오랫동안 막혀 있던 저항선을 뚫었다. 이번엔 진짜일까? 3개월 후?',
+    question: '고점 저항을 돌파하는 강한 양봉이 출현하였다. 3개월 후 주가의 변화로 옳은 것은?',
     macroHints: [
       { label: '인플레이션', value: '급등 조짐', trend: '공급망 충격·유동성', tone: 'negative' },
       { label: 'QE·저금리', value: '지속', trend: '주식·코인 동반 강세', tone: 'positive' },
@@ -4355,10 +4326,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 186, market: 'KOSPI', ticker: '035720.KS', pattern: 'reversal',
+    id: 185, market: 'KOSPI', ticker: '035720.KS', pattern: 'reversal',
     revealDay: 55, chartDays: 120, difficulty: 'hard',
     startDate: '2022-07-06',
-    question: '크게 빠진 후 바닥에서 반등 신호가 나왔다. 3개월 뒤 어떻게 됐을까?',
+    question: '장기 하락 후 지지선에서 반등 조짐이 나타나고 있다. 3개월 후 결과로 알맞은 것은?',
     macroHints: [
       { label: 'Fed 금리', value: '0→4.5%', trend: '40년래 최고속 긴축', tone: 'negative' },
       { label: '인플레이션', value: '9.1%', trend: '경기침체 공포 확산', tone: 'negative' },
@@ -4384,10 +4355,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 187, market: 'KOSPI', ticker: '035720.KS', pattern: 'breakout',
+    id: 186, market: 'KOSPI', ticker: '035720.KS', pattern: 'breakout',
     revealDay: 55, chartDays: 120, difficulty: 'hard',
     startDate: '2022-11-24',
-    question: '52주 신고가를 경신하며 돌파에 성공했다. 3개월 뒤 결과는?',
+    question: '고점 저항을 돌파하는 강한 양봉이 출현하였다. 3개월 후 주가의 변화로 옳은 것은?',
     macroHints: [
       { label: 'Fed 금리', value: '0→4.5%', trend: '40년래 최고속 긴축', tone: 'negative' },
       { label: '인플레이션', value: '9.1%', trend: '경기침체 공포 확산', tone: 'negative' },
@@ -4413,10 +4384,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 188, market: 'KOSPI', ticker: '035720.KS', pattern: 'reversal',
+    id: 187, market: 'KOSPI', ticker: '035720.KS', pattern: 'reversal',
     revealDay: 55, chartDays: 120, difficulty: 'hard',
     startDate: '2023-04-13',
-    question: '하락을 멈추고 바닥을 다지는 것 같다. 3개월 뒤 결과는?',
+    question: '장기 하락 후 지지선에서 반등 조짐이 나타나고 있다. 3개월 후 결과로 알맞은 것은?',
     macroHints: [
       { label: 'ChatGPT·AI', value: '폭발적 성장', trend: 'AI 투자 붐 시작', tone: 'positive' },
       { label: 'Fed 금리', value: '5.25% 고점', trend: '인상 종료 기대', tone: 'positive' },
@@ -4442,39 +4413,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 189, market: 'KOSPI', ticker: '035720.KS', pattern: 'breakout',
-    revealDay: 55, chartDays: 120, difficulty: 'hard',
-    startDate: '2023-09-01',
-    question: '고점 저항을 돌파하는 강한 양봉이 나왔다. 3개월 후?',
-    macroHints: [
-      { label: 'ChatGPT·AI', value: '폭발적 성장', trend: 'AI 투자 붐 시작', tone: 'positive' },
-      { label: 'Fed 금리', value: '5.25% 고점', trend: '인상 종료 기대', tone: 'positive' },
-      { label: '엔비디아', value: '연간 +240%', trend: 'AI 칩 독점 지위', tone: 'positive' },
-      { label: '나스닥', value: '반등 +43%', trend: '기술주 급반등', tone: 'positive' },
-    ],
-    choices: [
-      '돌파 성공 → 강한 추세 지속 (+30%+)',
-      '돌파 후 점진적 상승 (+10~30%)',
-      '가짜 돌파 → 박스권 재진입 (±10%)',
-      '돌파 실패 → 되돌림 하락 (-10%+)',
-    ],
-    answer: 2,
-    odds: '가짜 돌파(페이크아웃) 확률이 40~50%. 돌파 후 눌림목을 기다리는 전략이 유리하다.',
-    explanation: '돌파 이후 3개월 뒤 횡보 (+6%).',
-    reveal: {
-    title: '카카오 (035720.KS)',
-    market: 'KOSPI · 인터넷·플랫폼',
-    period: '2023년 9월 ~ 2024년 2월',
-    result: '3개월 횡보 (+6%).',
-    macro: 'ChatGPT·AI 폭발적 성장, Fed 금리 5.25% 고점, 엔비디아 연간 +240%, 나스닥 반등 +43%.',
-    lesson: '돌파 시도가 무산되고 다시 박스권으로. 가짜 돌파 (페이크아웃)였다.',
-    },
-  },
-  {
-    id: 190, market: 'KOSPI', ticker: '035720.KS', pattern: 'reversal',
+    id: 188, market: 'KOSPI', ticker: '035720.KS', pattern: 'reversal',
     revealDay: 55, chartDays: 120, difficulty: 'hard',
     startDate: '2024-01-25',
-    question: '하락을 멈추고 바닥을 다지는 것 같다. 3개월 뒤 결과는?',
+    question: '장기 하락 후 지지선에서 반등 조짐이 나타나고 있다. 3개월 후 결과로 알맞은 것은?',
     macroHints: [
       { label: 'AI 인프라', value: '투자 급증', trend: 'NVDA 주도 AI 사이클', tone: 'positive' },
       { label: 'Fed', value: '인하 시작', trend: '연착륙 기대', tone: 'positive' },
@@ -4500,10 +4442,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 191, market: 'KOSPI', ticker: '035720.KS', pattern: 'reversal',
+    id: 189, market: 'KOSPI', ticker: '035720.KS', pattern: 'reversal',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2024-06-19',
-    question: '급락 이후 저점에서 강한 양봉이 나오기 시작했다. 3개월 후?',
+    question: '과매도 구간에서 거래량을 동반한 반등이 시도되고 있다. 3개월 후 주가의 전개로 적절한 것은?',
     macroHints: [
       { label: 'AI 인프라', value: '투자 급증', trend: 'NVDA 주도 AI 사이클', tone: 'positive' },
       { label: 'Fed', value: '인하 시작', trend: '연착륙 기대', tone: 'positive' },
@@ -4529,10 +4471,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 192, market: 'KOSPI', ticker: '035420.KS', pattern: 'sideways',
+    id: 190, market: 'KOSPI', ticker: '035420.KS', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'hard',
     startDate: '2019-01-02',
-    question: '추세 없이 박스권을 유지 중이다. 3개월 뒤 어떻게 됐을까?',
+    question: '박스권 내에서 방향성이 나타나지 않고 있다. 3개월 후 주가의 흐름으로 가장 적절한 것은?',
     macroHints: [
       { label: 'Fed 피벗', value: '인하 전환', trend: '긴축 종료 기대', tone: 'positive' },
       { label: '미중 협상', value: '1단계 합의', trend: '무역전쟁 완화', tone: 'positive' },
@@ -4558,10 +4500,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 193, market: 'KOSPI', ticker: '035420.KS', pattern: 'breakout',
+    id: 191, market: 'KOSPI', ticker: '035420.KS', pattern: 'breakout',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2019-05-24',
-    question: '오랫동안 막혀 있던 저항선을 뚫었다. 이번엔 진짜일까? 3개월 후?',
+    question: '중요 저항선을 상향 돌파하였다. 3개월 후 추세의 전개로 알맞은 것은?',
     macroHints: [
       { label: 'Fed 피벗', value: '인하 전환', trend: '긴축 종료 기대', tone: 'positive' },
       { label: '미중 협상', value: '1단계 합의', trend: '무역전쟁 완화', tone: 'positive' },
@@ -4587,10 +4529,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 194, market: 'KOSPI', ticker: '035420.KS', pattern: 'uptrend',
+    id: 192, market: 'KOSPI', ticker: '035420.KS', pattern: 'uptrend',
     revealDay: 55, chartDays: 120, difficulty: 'easy',
     startDate: '2020-03-04',
-    question: '꾸준히 우상향하며 매수세가 계속 몰리고 있다. 3개월 뒤 주가는 어떻게 됐을까?',
+    question: 'MA20 위에서 완만한 우상향이 나타나고 있다. 3개월 후 결과로 알맞은 것은?',
     macroHints: [
       { label: 'COVID-19', value: '팬데믹 선언', trend: '전 세계 봉쇄 시작', tone: 'negative' },
       { label: 'Fed', value: '긴급 제로금리', trend: '무제한 QE 선언', tone: 'mixed' },
@@ -4616,10 +4558,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 195, market: 'KOSPI', ticker: '035420.KS', pattern: 'sideways',
+    id: 193, market: 'KOSPI', ticker: '035420.KS', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'hard',
     startDate: '2021-09-17',
-    question: '박스권에서 방향을 잡지 못하고 오르내리고 있다. 3개월 뒤 어디로 갔을까?',
+    question: '횡보 구간에서 돌파 시도가 이어지고 있다. 3개월 후 결과로 알맞은 것은?',
     macroHints: [
       { label: '인플레이션', value: '급등 조짐', trend: '공급망 충격·유동성', tone: 'negative' },
       { label: 'QE·저금리', value: '지속', trend: '주식·코인 동반 강세', tone: 'positive' },
@@ -4645,10 +4587,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 196, market: 'KOSPI', ticker: '035420.KS', pattern: 'reversal',
+    id: 194, market: 'KOSPI', ticker: '035420.KS', pattern: 'reversal',
     revealDay: 55, chartDays: 120, difficulty: 'hard',
     startDate: '2022-02-14',
-    question: '급락 이후 저점에서 강한 양봉이 나오기 시작했다. 3개월 후?',
+    question: '장기 하락 후 지지선에서 반등 조짐이 나타나고 있다. 3개월 후 결과로 알맞은 것은?',
     macroHints: [
       { label: 'Fed 금리', value: '0→4.5%', trend: '40년래 최고속 긴축', tone: 'negative' },
       { label: '인플레이션', value: '9.1%', trend: '경기침체 공포 확산', tone: 'negative' },
@@ -4674,10 +4616,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 197, market: 'KOSPI', ticker: '035420.KS', pattern: 'reversal',
+    id: 195, market: 'KOSPI', ticker: '035420.KS', pattern: 'reversal',
     revealDay: 55, chartDays: 120, difficulty: 'hard',
     startDate: '2022-07-06',
-    question: '크게 빠진 후 바닥에서 반등 신호가 나왔다. 3개월 뒤 어떻게 됐을까?',
+    question: '과매도 구간에서 거래량을 동반한 반등이 시도되고 있다. 3개월 후 주가의 전개로 적절한 것은?',
     macroHints: [
       { label: 'Fed 금리', value: '0→4.5%', trend: '40년래 최고속 긴축', tone: 'negative' },
       { label: '인플레이션', value: '9.1%', trend: '경기침체 공포 확산', tone: 'negative' },
@@ -4703,10 +4645,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 198, market: 'KOSPI', ticker: '035420.KS', pattern: 'reversal',
+    id: 196, market: 'KOSPI', ticker: '035420.KS', pattern: 'reversal',
     revealDay: 55, chartDays: 120, difficulty: 'easy',
     startDate: '2024-06-19',
-    question: '급락 이후 저점에서 강한 양봉이 나오기 시작했다. 3개월 후?',
+    question: '하락세가 멈추고 바닥을 다지는 흐름이 나타나고 있다. 3개월 후 결과로 옳은 것은?',
     macroHints: [
       { label: 'AI 인프라', value: '투자 급증', trend: 'NVDA 주도 AI 사이클', tone: 'positive' },
       { label: 'Fed', value: '인하 시작', trend: '연착륙 기대', tone: 'positive' },
@@ -4732,10 +4674,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 199, market: 'KOSPI', ticker: '005380.KS', pattern: 'sideways',
+    id: 197, market: 'KOSPI', ticker: '005380.KS', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2018-01-02',
-    question: '횡보 구간에서 돌파 시도를 이어가고 있다. 3개월 뒤 결과는?',
+    question: '일정 범위 안에서 등락이 반복되고 있다. 3개월 후 주가의 방향으로 옳은 것은?',
     macroHints: [
       { label: '비트코인', value: '2만달러', trend: '암호화폐 투기 열풍', tone: 'positive' },
       { label: 'CME 선물', value: '상장', trend: '기관 참여 확대', tone: 'positive' },
@@ -4761,10 +4703,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 200, market: 'KOSPI', ticker: '005380.KS', pattern: 'sideways',
+    id: 198, market: 'KOSPI', ticker: '005380.KS', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'hard',
     startDate: '2018-06-21',
-    question: '박스권에서 방향을 잡지 못하고 오르내리고 있다. 3개월 뒤 어디로 갔을까?',
+    question: '횡보 구간에서 돌파 시도가 이어지고 있다. 3개월 후 결과로 알맞은 것은?',
     macroHints: [
       { label: 'Fed 금리', value: '연 4회 인상', trend: '긴축 가속', tone: 'negative' },
       { label: '미중 무역전쟁', value: '관세 충돌', trend: '성장 둔화 우려', tone: 'negative' },
@@ -4790,10 +4732,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 201, market: 'KOSPI', ticker: '005380.KS', pattern: 'sideways',
+    id: 199, market: 'KOSPI', ticker: '005380.KS', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'hard',
     startDate: '2018-12-06',
-    question: '일정 범위 안에서만 움직이고 있다. 3개월 뒤 탈출에 성공했을까?',
+    question: '일정 범위 안에서 등락이 반복되고 있다. 3개월 후 주가의 방향으로 옳은 것은?',
     macroHints: [
       { label: 'Fed 금리', value: '연 4회 인상', trend: '긴축 가속', tone: 'negative' },
       { label: '미중 무역전쟁', value: '관세 충돌', trend: '성장 둔화 우려', tone: 'negative' },
@@ -4819,10 +4761,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 202, market: 'KOSPI', ticker: '005380.KS', pattern: 'sideways',
+    id: 200, market: 'KOSPI', ticker: '005380.KS', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2019-11-12',
-    question: '횡보 구간에서 돌파 시도를 이어가고 있다. 3개월 뒤 결과는?',
+    question: '일정 범위 안에서 등락이 반복되고 있다. 3개월 후 주가의 방향으로 옳은 것은?',
     macroHints: [
       { label: 'Fed 피벗', value: '인하 전환', trend: '긴축 종료 기대', tone: 'positive' },
       { label: '미중 협상', value: '1단계 합의', trend: '무역전쟁 완화', tone: 'positive' },
@@ -4848,10 +4790,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 203, market: 'KOSPI', ticker: '005380.KS', pattern: 'sideways',
+    id: 201, market: 'KOSPI', ticker: '005380.KS', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2020-04-28',
-    question: '횡보 구간에서 돌파 시도를 이어가고 있다. 3개월 뒤 결과는?',
+    question: '박스권 내에서 방향성이 나타나지 않고 있다. 3개월 후 주가의 흐름으로 가장 적절한 것은?',
     macroHints: [
       { label: 'QE·부양책', value: '역대 최대', trend: '유동성 폭발적 공급', tone: 'positive' },
       { label: '기준금리', value: '0.25%', trend: '초저금리·동학개미', tone: 'positive' },
@@ -4877,10 +4819,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 204, market: 'KOSPI', ticker: '005380.KS', pattern: 'sideways',
+    id: 202, market: 'KOSPI', ticker: '005380.KS', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2021-09-13',
-    question: '횡보 구간에서 돌파 시도를 이어가고 있다. 3개월 뒤 결과는?',
+    question: '눌림목 구간에서 추세 재개를 대기하고 있다. 3개월 후 방향으로 적절한 것은?',
     macroHints: [
       { label: '인플레이션', value: '급등 조짐', trend: '공급망 충격·유동성', tone: 'negative' },
       { label: 'QE·저금리', value: '지속', trend: '주식·코인 동반 강세', tone: 'positive' },
@@ -4906,10 +4848,68 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
+    id: 203, market: 'KOSPI', ticker: '005380.KS', pattern: 'sideways',
+    revealDay: 55, chartDays: 120, difficulty: 'hard',
+    startDate: '2022-03-07',
+    question: '눌림목 구간에서 추세 재개를 대기하고 있다. 3개월 후 방향으로 적절한 것은?',
+    macroHints: [
+      { label: 'Fed 금리', value: '0→4.5%', trend: '40년래 최고속 긴축', tone: 'negative' },
+      { label: '인플레이션', value: '9.1%', trend: '경기침체 공포 확산', tone: 'negative' },
+      { label: '코스피', value: '2,200 저점', trend: '외국인 대규모 이탈', tone: 'negative' },
+      { label: '미국채', value: '역사적 하락', trend: '60/40 포트 동반 하락', tone: 'negative' },
+    ],
+    choices: [
+      '박스 상향 돌파 → 급등 (+30%+)',
+      '상단 돌파 → 추세 형성 (+10~30%)',
+      '박스권 지속 (±10%)',
+      '하단 이탈 → 하락 가속 (-10%+)',
+    ],
+    answer: 2,
+    odds: '횡보 지속 확률 40~50%. 특별한 촉매 없이 돌파하기 어려운 구간이다.',
+    explanation: '횡보 끝에 3개월 뒤 횡보 (+3%).',
+    reveal: {
+    title: '현대차 (005380.KS)',
+    market: 'KOSPI · EV·자동차',
+    period: '2022년 3월 ~ 2022년 8월',
+    result: '3개월 횡보 (+3%).',
+    macro: 'Fed 금리 0→4.5%, 인플레이션 9.1%, 코스피 2,200 저점, 미국채 역사적 하락.',
+    lesson: '박스권이 계속됐다. 기다림에 지쳐 손절한 사람들이 가장 많이 나오는 패턴.',
+    },
+  },
+  {
+    id: 204, market: 'KOSPI', ticker: '005380.KS', pattern: 'breakout',
+    revealDay: 55, chartDays: 120, difficulty: 'hard',
+    startDate: '2023-02-07',
+    question: '중요 저항선을 상향 돌파하였다. 3개월 후 추세의 전개로 알맞은 것은?',
+    macroHints: [
+      { label: 'ChatGPT·AI', value: '폭발적 성장', trend: 'AI 투자 붐 시작', tone: 'positive' },
+      { label: 'Fed 금리', value: '5.25% 고점', trend: '인상 종료 기대', tone: 'positive' },
+      { label: '엔비디아', value: '연간 +240%', trend: 'AI 칩 독점 지위', tone: 'positive' },
+      { label: '나스닥', value: '반등 +43%', trend: '기술주 급반등', tone: 'positive' },
+    ],
+    choices: [
+      '돌파 성공 → 강한 추세 지속 (+30%+)',
+      '돌파 후 점진적 상승 (+10~30%)',
+      '가짜 돌파 → 박스권 재진입 (±10%)',
+      '돌파 실패 → 되돌림 하락 (-10%+)',
+    ],
+    answer: 2,
+    odds: '가짜 돌파(페이크아웃) 확률이 40~50%. 돌파 후 눌림목을 기다리는 전략이 유리하다.',
+    explanation: '돌파 이후 3개월 뒤 횡보 (-2%).',
+    reveal: {
+    title: '현대차 (005380.KS)',
+    market: 'KOSPI · EV·자동차',
+    period: '2023년 2월 ~ 2023년 7월',
+    result: '3개월 횡보 (-2%).',
+    macro: 'ChatGPT·AI 폭발적 성장, Fed 금리 5.25% 고점, 엔비디아 연간 +240%, 나스닥 반등 +43%.',
+    lesson: '돌파 시도가 무산되고 다시 박스권으로. 가짜 돌파 (페이크아웃)였다.',
+    },
+  },
+  {
     id: 205, market: 'KOSPI', ticker: '005380.KS', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2024-01-11',
-    question: '일정 범위 안에서만 움직이고 있다. 3개월 뒤 탈출에 성공했을까?',
+    question: '눌림목 구간에서 추세 재개를 대기하고 있다. 3개월 후 방향으로 적절한 것은?',
     macroHints: [
       { label: 'AI 인프라', value: '투자 급증', trend: 'NVDA 주도 AI 사이클', tone: 'positive' },
       { label: 'Fed', value: '인하 시작', trend: '연착륙 기대', tone: 'positive' },
@@ -4938,7 +4938,7 @@ export const GENERATED_PROBLEMS: Problem[] = [
     id: 206, market: 'KOSPI', ticker: '005380.KS', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'hard',
     startDate: '2024-07-01',
-    question: '횡보 구간에서 돌파 시도를 이어가고 있다. 3개월 뒤 결과는?',
+    question: '뚜렷한 추세 없이 박스권이 유지되고 있다. 3개월 후 주가의 전개로 옳은 것은?',
     macroHints: [
       { label: 'AI 인프라', value: '투자 급증', trend: 'NVDA 주도 AI 사이클', tone: 'positive' },
       { label: 'Fed', value: '인하 시작', trend: '연착륙 기대', tone: 'positive' },
@@ -4967,7 +4967,7 @@ export const GENERATED_PROBLEMS: Problem[] = [
     id: 207, market: 'NASDAQ', ticker: 'AAPL', pattern: 'breakout',
     revealDay: 55, chartDays: 120, difficulty: 'hard',
     startDate: '2018-01-02',
-    question: '고점 저항을 돌파하는 강한 양봉이 나왔다. 3개월 후?',
+    question: '오랫동안 막혀 있던 저항선을 상향 돌파하였다. 3개월 후 결과로 알맞은 것은?',
     macroHints: [
       { label: '비트코인', value: '2만달러', trend: '암호화폐 투기 열풍', tone: 'positive' },
       { label: 'CME 선물', value: '상장', trend: '기관 참여 확대', tone: 'positive' },
@@ -4996,7 +4996,7 @@ export const GENERATED_PROBLEMS: Problem[] = [
     id: 208, market: 'NASDAQ', ticker: 'AAPL', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2018-03-01',
-    question: '박스권에서 방향을 잡지 못하고 오르내리고 있다. 3개월 뒤 어디로 갔을까?',
+    question: '일정 범위 안에서 등락이 반복되고 있다. 3개월 후 주가의 방향으로 옳은 것은?',
     macroHints: [
       { label: 'Fed 금리', value: '연 4회 인상', trend: '긴축 가속', tone: 'negative' },
       { label: '미중 무역전쟁', value: '관세 충돌', trend: '성장 둔화 우려', tone: 'negative' },
@@ -5025,7 +5025,7 @@ export const GENERATED_PROBLEMS: Problem[] = [
     id: 209, market: 'NASDAQ', ticker: 'AAPL', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2018-04-27',
-    question: '눌림목 구간에서 쉬어가고 있다. 3개월 후 방향은?',
+    question: '눌림목 구간에서 추세 재개를 대기하고 있다. 3개월 후 방향으로 적절한 것은?',
     macroHints: [
       { label: 'Fed 금리', value: '연 4회 인상', trend: '긴축 가속', tone: 'negative' },
       { label: '미중 무역전쟁', value: '관세 충돌', trend: '성장 둔화 우려', tone: 'negative' },
@@ -5054,7 +5054,7 @@ export const GENERATED_PROBLEMS: Problem[] = [
     id: 210, market: 'NASDAQ', ticker: 'AAPL', pattern: 'breakout',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2018-06-25',
-    question: '고점 저항을 돌파하는 강한 양봉이 나왔다. 3개월 후?',
+    question: '52주 신고가를 경신하며 돌파에 성공하였다. 3개월 후 결과로 가장 적절한 것은?',
     macroHints: [
       { label: 'Fed 금리', value: '연 4회 인상', trend: '긴축 가속', tone: 'negative' },
       { label: '미중 무역전쟁', value: '관세 충돌', trend: '성장 둔화 우려', tone: 'negative' },
@@ -5083,7 +5083,7 @@ export const GENERATED_PROBLEMS: Problem[] = [
     id: 211, market: 'NASDAQ', ticker: 'AAPL', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2018-08-21',
-    question: '박스권에서 방향을 잡지 못하고 오르내리고 있다. 3개월 뒤 어디로 갔을까?',
+    question: '뚜렷한 추세 없이 박스권이 유지되고 있다. 3개월 후 주가의 전개로 옳은 것은?',
     macroHints: [
       { label: 'Fed 금리', value: '연 4회 인상', trend: '긴축 가속', tone: 'negative' },
       { label: '미중 무역전쟁', value: '관세 충돌', trend: '성장 둔화 우려', tone: 'negative' },
@@ -5112,7 +5112,7 @@ export const GENERATED_PROBLEMS: Problem[] = [
     id: 212, market: 'NASDAQ', ticker: 'AAPL', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2019-06-10',
-    question: '박스권에서 방향을 잡지 못하고 오르내리고 있다. 3개월 뒤 어디로 갔을까?',
+    question: '일정 범위 안에서 등락이 반복되고 있다. 3개월 후 주가의 방향으로 옳은 것은?',
     macroHints: [
       { label: 'Fed 피벗', value: '인하 전환', trend: '긴축 종료 기대', tone: 'positive' },
       { label: '미중 협상', value: '1단계 합의', trend: '무역전쟁 완화', tone: 'positive' },
@@ -5141,7 +5141,7 @@ export const GENERATED_PROBLEMS: Problem[] = [
     id: 213, market: 'NASDAQ', ticker: 'AAPL', pattern: 'breakout',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2019-08-06',
-    question: '중요 저항선을 상향 돌파했다. 추세 전환이 시작된 걸까? 3개월 뒤는?',
+    question: '오랫동안 막혀 있던 저항선을 상향 돌파하였다. 3개월 후 결과로 알맞은 것은?',
     macroHints: [
       { label: 'Fed 피벗', value: '인하 전환', trend: '긴축 종료 기대', tone: 'positive' },
       { label: '미중 협상', value: '1단계 합의', trend: '무역전쟁 완화', tone: 'positive' },
@@ -5170,7 +5170,7 @@ export const GENERATED_PROBLEMS: Problem[] = [
     id: 214, market: 'NASDAQ', ticker: 'AAPL', pattern: 'breakout',
     revealDay: 55, chartDays: 120, difficulty: 'hard',
     startDate: '2019-10-02',
-    question: '중요 저항선을 상향 돌파했다. 추세 전환이 시작된 걸까? 3개월 뒤는?',
+    question: '중요 저항선을 상향 돌파하였다. 3개월 후 추세의 전개로 알맞은 것은?',
     macroHints: [
       { label: 'Fed 피벗', value: '인하 전환', trend: '긴축 종료 기대', tone: 'positive' },
       { label: '미중 협상', value: '1단계 합의', trend: '무역전쟁 완화', tone: 'positive' },
@@ -5199,7 +5199,7 @@ export const GENERATED_PROBLEMS: Problem[] = [
     id: 215, market: 'NASDAQ', ticker: 'AMD', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2022-01-03',
-    question: '박스권에서 방향을 잡지 못하고 오르내리고 있다. 3개월 뒤 어디로 갔을까?',
+    question: '박스권 내에서 방향성이 나타나지 않고 있다. 3개월 후 주가의 흐름으로 가장 적절한 것은?',
     macroHints: [
       { label: 'Fed 금리', value: '0→4.5%', trend: '40년래 최고속 긴축', tone: 'negative' },
       { label: '인플레이션', value: '9.1%', trend: '경기침체 공포 확산', tone: 'negative' },
@@ -5228,7 +5228,7 @@ export const GENERATED_PROBLEMS: Problem[] = [
     id: 216, market: 'NASDAQ', ticker: 'AMD', pattern: 'reversal',
     revealDay: 55, chartDays: 120, difficulty: 'easy',
     startDate: '2022-05-12',
-    question: '크게 빠진 후 바닥에서 반등 신호가 나왔다. 3개월 뒤 어떻게 됐을까?',
+    question: '장기 하락 후 지지선에서 반등 조짐이 나타나고 있다. 3개월 후 결과로 알맞은 것은?',
     macroHints: [
       { label: 'Fed 금리', value: '0→4.5%', trend: '40년래 최고속 긴축', tone: 'negative' },
       { label: '인플레이션', value: '9.1%', trend: '경기침체 공포 확산', tone: 'negative' },
@@ -5257,7 +5257,7 @@ export const GENERATED_PROBLEMS: Problem[] = [
     id: 217, market: 'NASDAQ', ticker: 'AMD', pattern: 'uptrend',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2022-09-21',
-    question: '이평선 위에서 강한 상승 흐름을 이어가는 중이다. 3개월 후 결과는?',
+    question: '이평선 위에서 강한 상승 흐름이 이어지고 있다. 3개월 후 결과로 알맞은 것은?',
     macroHints: [
       { label: 'Fed 금리', value: '0→4.5%', trend: '40년래 최고속 긴축', tone: 'negative' },
       { label: '인플레이션', value: '9.1%', trend: '경기침체 공포 확산', tone: 'negative' },
@@ -5286,7 +5286,7 @@ export const GENERATED_PROBLEMS: Problem[] = [
     id: 218, market: 'NASDAQ', ticker: 'AMD', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2023-08-15',
-    question: '눌림목 구간에서 쉬어가고 있다. 3개월 후 방향은?',
+    question: '횡보 구간에서 돌파 시도가 이어지고 있다. 3개월 후 결과로 알맞은 것은?',
     macroHints: [
       { label: 'ChatGPT·AI', value: '폭발적 성장', trend: 'AI 투자 붐 시작', tone: 'positive' },
       { label: 'Fed 금리', value: '5.25% 고점', trend: '인상 종료 기대', tone: 'positive' },
@@ -5315,7 +5315,7 @@ export const GENERATED_PROBLEMS: Problem[] = [
     id: 219, market: 'NASDAQ', ticker: 'AMD', pattern: 'breakout',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2023-10-18',
-    question: '중요 저항선을 상향 돌파했다. 추세 전환이 시작된 걸까? 3개월 뒤는?',
+    question: '중요 저항선을 상향 돌파하였다. 3개월 후 추세의 전개로 알맞은 것은?',
     macroHints: [
       { label: 'ChatGPT·AI', value: '폭발적 성장', trend: 'AI 투자 붐 시작', tone: 'positive' },
       { label: 'Fed 금리', value: '5.25% 고점', trend: '인상 종료 기대', tone: 'positive' },
@@ -5344,7 +5344,7 @@ export const GENERATED_PROBLEMS: Problem[] = [
     id: 220, market: 'NASDAQ', ticker: 'AMD', pattern: 'breakout',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2023-12-21',
-    question: '박스권 상단을 돌파하며 거래량이 터졌다. 3개월 뒤 어떻게 됐을까?',
+    question: '오랫동안 막혀 있던 저항선을 상향 돌파하였다. 3개월 후 결과로 알맞은 것은?',
     macroHints: [
       { label: 'ChatGPT·AI', value: '폭발적 성장', trend: 'AI 투자 붐 시작', tone: 'positive' },
       { label: 'Fed 금리', value: '5.25% 고점', trend: '인상 종료 기대', tone: 'positive' },
@@ -5373,7 +5373,7 @@ export const GENERATED_PROBLEMS: Problem[] = [
     id: 221, market: 'NASDAQ', ticker: 'AMD', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2024-07-09',
-    question: '박스권에서 방향을 잡지 못하고 오르내리고 있다. 3개월 뒤 어디로 갔을까?',
+    question: '눌림목 구간에서 추세 재개를 대기하고 있다. 3개월 후 방향으로 적절한 것은?',
     macroHints: [
       { label: 'AI 인프라', value: '투자 급증', trend: 'NVDA 주도 AI 사이클', tone: 'positive' },
       { label: 'Fed', value: '인하 시작', trend: '연착륙 기대', tone: 'positive' },
@@ -5401,8 +5401,8 @@ export const GENERATED_PROBLEMS: Problem[] = [
   {
     id: 222, market: 'NYSE', ticker: 'GLD', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'hard',
-    startDate: '2019-07-30',
-    question: '추세 없이 박스권을 유지 중이다. 3개월 뒤 어떻게 됐을까?',
+    startDate: '2019-06-03',
+    question: '눌림목 구간에서 추세 재개를 대기하고 있다. 3개월 후 방향으로 적절한 것은?',
     macroHints: [
       { label: 'Fed 피벗', value: '인하 전환', trend: '긴축 종료 기대', tone: 'positive' },
       { label: '미중 협상', value: '1단계 합의', trend: '무역전쟁 완화', tone: 'positive' },
@@ -5417,12 +5417,12 @@ export const GENERATED_PROBLEMS: Problem[] = [
     ],
     answer: 2,
     odds: '횡보 지속 확률 40~50%. 특별한 촉매 없이 돌파하기 어려운 구간이다.',
-    explanation: '횡보 끝에 3개월 뒤 횡보 (+5%).',
+    explanation: '횡보 끝에 3개월 뒤 횡보 (-2%).',
     reveal: {
     title: '금 ETF (GLD)',
     market: 'NYSE · 원자재·금',
-    period: '2019년 7월 ~ 2020년 1월',
-    result: '3개월 횡보 (+5%).',
+    period: '2019년 6월 ~ 2019년 11월',
+    result: '3개월 횡보 (-2%).',
     macro: 'Fed 피벗 인하 전환, 미중 협상 1단계 합의, S&P500 연간 +29%, 코스피 2,000~2,200.',
     lesson: '박스권이 계속됐다. 기다림에 지쳐 손절한 사람들이 가장 많이 나오는 패턴.',
     },
@@ -5430,8 +5430,37 @@ export const GENERATED_PROBLEMS: Problem[] = [
   {
     id: 223, market: 'NYSE', ticker: 'GLD', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'hard',
+    startDate: '2019-09-25',
+    question: '일정 범위 안에서 등락이 반복되고 있다. 3개월 후 주가의 방향으로 옳은 것은?',
+    macroHints: [
+      { label: 'Fed 피벗', value: '인하 전환', trend: '긴축 종료 기대', tone: 'positive' },
+      { label: '미중 협상', value: '1단계 합의', trend: '무역전쟁 완화', tone: 'positive' },
+      { label: 'S&P500', value: '연간 +29%', trend: '강세장 재개', tone: 'positive' },
+      { label: '코스피', value: '2,000~2,200', trend: '박스권 횡보 지속', tone: 'mixed' },
+    ],
+    choices: [
+      '박스 상향 돌파 → 급등 (+30%+)',
+      '상단 돌파 → 추세 형성 (+10~30%)',
+      '박스권 지속 (±10%)',
+      '하단 이탈 → 하락 가속 (-10%+)',
+    ],
+    answer: 2,
+    odds: '횡보 지속 확률 40~50%. 특별한 촉매 없이 돌파하기 어려운 구간이다.',
+    explanation: '횡보 끝에 3개월 뒤 횡보 (+3%).',
+    reveal: {
+    title: '금 ETF (GLD)',
+    market: 'NYSE · 원자재·금',
+    period: '2019년 9월 ~ 2020년 3월',
+    result: '3개월 횡보 (+3%).',
+    macro: 'Fed 피벗 인하 전환, 미중 협상 1단계 합의, S&P500 연간 +29%, 코스피 2,000~2,200.',
+    lesson: '박스권이 계속됐다. 기다림에 지쳐 손절한 사람들이 가장 많이 나오는 패턴.',
+    },
+  },
+  {
+    id: 224, market: 'NYSE', ticker: 'GLD', pattern: 'sideways',
+    revealDay: 55, chartDays: 120, difficulty: 'hard',
     startDate: '2019-11-20',
-    question: '횡보 구간에서 돌파 시도를 이어가고 있다. 3개월 뒤 결과는?',
+    question: '박스권 내에서 방향성이 나타나지 않고 있다. 3개월 후 주가의 흐름으로 가장 적절한 것은?',
     macroHints: [
       { label: 'Fed 피벗', value: '인하 전환', trend: '긴축 종료 기대', tone: 'positive' },
       { label: '미중 협상', value: '1단계 합의', trend: '무역전쟁 완화', tone: 'positive' },
@@ -5457,10 +5486,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 224, market: 'NYSE', ticker: 'GLD', pattern: 'sideways',
+    id: 225, market: 'NYSE', ticker: 'GLD', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'hard',
     startDate: '2020-01-21',
-    question: '눌림목 구간에서 쉬어가고 있다. 3개월 후 방향은?',
+    question: '박스권 내에서 방향성이 나타나지 않고 있다. 3개월 후 주가의 흐름으로 가장 적절한 것은?',
     macroHints: [
       { label: 'COVID-19', value: '팬데믹 선언', trend: '전 세계 봉쇄 시작', tone: 'negative' },
       { label: 'Fed', value: '긴급 제로금리', trend: '무제한 QE 선언', tone: 'mixed' },
@@ -5486,10 +5515,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 225, market: 'KOSDAQ', ticker: '086520.KQ', pattern: 'uptrend',
+    id: 226, market: 'KOSDAQ', ticker: '086520.KQ', pattern: 'uptrend',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2022-01-04',
-    question: '이평선 위에서 강한 상승 흐름을 이어가는 중이다. 3개월 후 결과는?',
+    question: '신고가를 연속 갱신하며 상승세를 이어가고 있다. 3개월 후 주가의 흐름으로 적절한 것은?',
     macroHints: [
       { label: 'Fed 금리', value: '0→4.5%', trend: '40년래 최고속 긴축', tone: 'negative' },
       { label: '인플레이션', value: '9.1%', trend: '경기침체 공포 확산', tone: 'negative' },
@@ -5515,10 +5544,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 226, market: 'KOSDAQ', ticker: '086520.KQ', pattern: 'reversal',
+    id: 227, market: 'KOSDAQ', ticker: '086520.KQ', pattern: 'reversal',
     revealDay: 55, chartDays: 120, difficulty: 'easy',
     startDate: '2022-03-11',
-    question: '하락을 멈추고 바닥을 다지는 것 같다. 3개월 뒤 결과는?',
+    question: '과매도 구간에서 거래량을 동반한 반등이 시도되고 있다. 3개월 후 주가의 전개로 적절한 것은?',
     macroHints: [
       { label: 'Fed 금리', value: '0→4.5%', trend: '40년래 최고속 긴축', tone: 'negative' },
       { label: '인플레이션', value: '9.1%', trend: '경기침체 공포 확산', tone: 'negative' },
@@ -5544,10 +5573,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 227, market: 'KOSDAQ', ticker: '086520.KQ', pattern: 'breakout',
+    id: 228, market: 'KOSDAQ', ticker: '086520.KQ', pattern: 'breakout',
     revealDay: 55, chartDays: 120, difficulty: 'easy',
     startDate: '2022-05-13',
-    question: '52주 신고가를 경신하며 돌파에 성공했다. 3개월 뒤 결과는?',
+    question: '오랫동안 막혀 있던 저항선을 상향 돌파하였다. 3개월 후 결과로 알맞은 것은?',
     macroHints: [
       { label: 'Fed 금리', value: '0→4.5%', trend: '40년래 최고속 긴축', tone: 'negative' },
       { label: '인플레이션', value: '9.1%', trend: '경기침체 공포 확산', tone: 'negative' },
@@ -5573,10 +5602,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 228, market: 'KOSDAQ', ticker: '086520.KQ', pattern: 'reversal',
+    id: 229, market: 'KOSDAQ', ticker: '086520.KQ', pattern: 'reversal',
     revealDay: 55, chartDays: 120, difficulty: 'easy',
     startDate: '2022-09-19',
-    question: '과매도 구간에서 거래량을 동반한 반등 시도를 하고 있다. 3개월 후?',
+    question: '과매도 구간에서 거래량을 동반한 반등이 시도되고 있다. 3개월 후 주가의 전개로 적절한 것은?',
     macroHints: [
       { label: 'Fed 금리', value: '0→4.5%', trend: '40년래 최고속 긴축', tone: 'negative' },
       { label: '인플레이션', value: '9.1%', trend: '경기침체 공포 확산', tone: 'negative' },
@@ -5602,10 +5631,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 229, market: 'KOSDAQ', ticker: '086520.KQ', pattern: 'breakout',
+    id: 230, market: 'KOSDAQ', ticker: '086520.KQ', pattern: 'breakout',
     revealDay: 55, chartDays: 120, difficulty: 'easy',
     startDate: '2022-11-21',
-    question: '박스권 상단을 돌파하며 거래량이 터졌다. 3개월 뒤 어떻게 됐을까?',
+    question: '오랫동안 막혀 있던 저항선을 상향 돌파하였다. 3개월 후 결과로 알맞은 것은?',
     macroHints: [
       { label: 'Fed 금리', value: '0→4.5%', trend: '40년래 최고속 긴축', tone: 'negative' },
       { label: '인플레이션', value: '9.1%', trend: '경기침체 공포 확산', tone: 'negative' },
@@ -5631,10 +5660,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 230, market: 'KOSDAQ', ticker: '086520.KQ', pattern: 'sideways',
+    id: 231, market: 'KOSDAQ', ticker: '086520.KQ', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'hard',
     startDate: '2023-10-05',
-    question: '박스권에서 방향을 잡지 못하고 오르내리고 있다. 3개월 뒤 어디로 갔을까?',
+    question: '횡보 구간에서 돌파 시도가 이어지고 있다. 3개월 후 결과로 알맞은 것은?',
     macroHints: [
       { label: 'ChatGPT·AI', value: '폭발적 성장', trend: 'AI 투자 붐 시작', tone: 'positive' },
       { label: 'Fed 금리', value: '5.25% 고점', trend: '인상 종료 기대', tone: 'positive' },
@@ -5660,10 +5689,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 231, market: 'KOSDAQ', ticker: '086520.KQ', pattern: 'sideways',
+    id: 232, market: 'KOSDAQ', ticker: '086520.KQ', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2023-12-06',
-    question: '박스권에서 방향을 잡지 못하고 오르내리고 있다. 3개월 뒤 어디로 갔을까?',
+    question: '횡보 구간에서 돌파 시도가 이어지고 있다. 3개월 후 결과로 알맞은 것은?',
     macroHints: [
       { label: 'ChatGPT·AI', value: '폭발적 성장', trend: 'AI 투자 붐 시작', tone: 'positive' },
       { label: 'Fed 금리', value: '5.25% 고점', trend: '인상 종료 기대', tone: 'positive' },
@@ -5689,10 +5718,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 232, market: 'KOSDAQ', ticker: '086520.KQ', pattern: 'reversal',
+    id: 233, market: 'KOSDAQ', ticker: '086520.KQ', pattern: 'reversal',
     revealDay: 55, chartDays: 120, difficulty: 'hard',
     startDate: '2024-02-08',
-    question: '과매도 구간에서 거래량을 동반한 반등 시도를 하고 있다. 3개월 후?',
+    question: '급락 이후 저점에서 강한 양봉이 나타나기 시작하였다. 3개월 후 결과로 알맞은 것은?',
     macroHints: [
       { label: 'AI 인프라', value: '투자 급증', trend: 'NVDA 주도 AI 사이클', tone: 'positive' },
       { label: 'Fed', value: '인하 시작', trend: '연착륙 기대', tone: 'positive' },
@@ -5718,10 +5747,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 233, market: 'KOSDAQ', ticker: '086520.KQ', pattern: 'sideways',
+    id: 234, market: 'KOSDAQ', ticker: '086520.KQ', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2024-04-30',
-    question: '박스권에서 방향을 잡지 못하고 오르내리고 있다. 3개월 뒤 어디로 갔을까?',
+    question: '일정 범위 안에서 등락이 반복되고 있다. 3개월 후 주가의 방향으로 옳은 것은?',
     macroHints: [
       { label: 'AI 인프라', value: '투자 급증', trend: 'NVDA 주도 AI 사이클', tone: 'positive' },
       { label: 'Fed', value: '인하 시작', trend: '연착륙 기대', tone: 'positive' },
@@ -5747,10 +5776,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 234, market: 'KOSPI', ticker: '068270.KS', pattern: 'sideways',
+    id: 235, market: 'KOSPI', ticker: '068270.KS', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2020-01-02',
-    question: '박스권에서 방향을 잡지 못하고 오르내리고 있다. 3개월 뒤 어디로 갔을까?',
+    question: '박스권 내에서 방향성이 나타나지 않고 있다. 3개월 후 주가의 흐름으로 가장 적절한 것은?',
     macroHints: [
       { label: 'COVID-19', value: '팬데믹 선언', trend: '전 세계 봉쇄 시작', tone: 'negative' },
       { label: 'Fed', value: '긴급 제로금리', trend: '무제한 QE 선언', tone: 'mixed' },
@@ -5776,10 +5805,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 235, market: 'KOSPI', ticker: '068270.KS', pattern: 'sideways',
+    id: 236, market: 'KOSPI', ticker: '068270.KS', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2020-03-06',
-    question: '박스권에서 방향을 잡지 못하고 오르내리고 있다. 3개월 뒤 어디로 갔을까?',
+    question: '눌림목 구간에서 추세 재개를 대기하고 있다. 3개월 후 방향으로 적절한 것은?',
     macroHints: [
       { label: 'COVID-19', value: '팬데믹 선언', trend: '전 세계 봉쇄 시작', tone: 'negative' },
       { label: 'Fed', value: '긴급 제로금리', trend: '무제한 QE 선언', tone: 'mixed' },
@@ -5805,10 +5834,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 236, market: 'KOSPI', ticker: '068270.KS', pattern: 'breakout',
+    id: 237, market: 'KOSPI', ticker: '068270.KS', pattern: 'breakout',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2020-05-13',
-    question: '고점 저항을 돌파하는 강한 양봉이 나왔다. 3개월 후?',
+    question: '52주 신고가를 경신하며 돌파에 성공하였다. 3개월 후 결과로 가장 적절한 것은?',
     macroHints: [
       { label: 'QE·부양책', value: '역대 최대', trend: '유동성 폭발적 공급', tone: 'positive' },
       { label: '기준금리', value: '0.25%', trend: '초저금리·동학개미', tone: 'positive' },
@@ -5834,10 +5863,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 237, market: 'KOSPI', ticker: '068270.KS', pattern: 'reversal',
+    id: 238, market: 'KOSPI', ticker: '068270.KS', pattern: 'reversal',
     revealDay: 55, chartDays: 120, difficulty: 'easy',
     startDate: '2020-07-14',
-    question: '긴 하락 후 지지선에서 힘을 받는 모습이다. 3개월 뒤 어떻게 됐을까?',
+    question: '과매도 구간에서 거래량을 동반한 반등이 시도되고 있다. 3개월 후 주가의 전개로 적절한 것은?',
     macroHints: [
       { label: 'QE·부양책', value: '역대 최대', trend: '유동성 폭발적 공급', tone: 'positive' },
       { label: '기준금리', value: '0.25%', trend: '초저금리·동학개미', tone: 'positive' },
@@ -5863,10 +5892,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 238, market: 'KOSPI', ticker: '068270.KS', pattern: 'uptrend',
+    id: 239, market: 'KOSPI', ticker: '068270.KS', pattern: 'uptrend',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2020-09-15',
-    question: '이평선 위에서 강한 상승 흐름을 이어가는 중이다. 3개월 후 결과는?',
+    question: 'MA20 위에서 완만한 우상향이 나타나고 있다. 3개월 후 결과로 알맞은 것은?',
     macroHints: [
       { label: 'QE·부양책', value: '역대 최대', trend: '유동성 폭발적 공급', tone: 'positive' },
       { label: '기준금리', value: '0.25%', trend: '초저금리·동학개미', tone: 'positive' },
@@ -5892,10 +5921,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 239, market: 'KOSPI', ticker: '068270.KS', pattern: 'reversal',
+    id: 240, market: 'KOSPI', ticker: '068270.KS', pattern: 'reversal',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2020-11-20',
-    question: '과매도 구간에서 거래량을 동반한 반등 시도를 하고 있다. 3개월 후?',
+    question: '급락 이후 바닥에서 반등 신호가 출현하였다. 3개월 후 주가의 변화로 옳은 것은?',
     macroHints: [
       { label: 'QE·부양책', value: '역대 최대', trend: '유동성 폭발적 공급', tone: 'positive' },
       { label: '기준금리', value: '0.25%', trend: '초저금리·동학개미', tone: 'positive' },
@@ -5921,10 +5950,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 240, market: 'KOSPI', ticker: '068270.KS', pattern: 'sideways',
+    id: 241, market: 'KOSPI', ticker: '068270.KS', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2021-01-26',
-    question: '추세 없이 박스권을 유지 중이다. 3개월 뒤 어떻게 됐을까?',
+    question: '박스권 내에서 방향성이 나타나지 않고 있다. 3개월 후 주가의 흐름으로 가장 적절한 것은?',
     macroHints: [
       { label: '인플레이션', value: '급등 조짐', trend: '공급망 충격·유동성', tone: 'negative' },
       { label: 'QE·저금리', value: '지속', trend: '주식·코인 동반 강세', tone: 'positive' },
@@ -5950,39 +5979,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 241, market: 'KOSPI', ticker: '068270.KS', pattern: 'sideways',
-    revealDay: 55, chartDays: 120, difficulty: 'hard',
-    startDate: '2021-04-01',
-    question: '일정 범위 안에서만 움직이고 있다. 3개월 뒤 탈출에 성공했을까?',
-    macroHints: [
-      { label: '인플레이션', value: '급등 조짐', trend: '공급망 충격·유동성', tone: 'negative' },
-      { label: 'QE·저금리', value: '지속', trend: '주식·코인 동반 강세', tone: 'positive' },
-      { label: '비트코인', value: '6만달러 ATH', trend: '기관·ETF 자금 유입', tone: 'positive' },
-      { label: '코스피', value: '3,316 신고가', trend: '외국인·기관 동반 매수', tone: 'positive' },
-    ],
-    choices: [
-      '박스 상향 돌파 → 급등 (+30%+)',
-      '상단 돌파 → 추세 형성 (+10~30%)',
-      '박스권 지속 (±10%)',
-      '하단 이탈 → 하락 가속 (-10%+)',
-    ],
-    answer: 2,
-    odds: '횡보 지속 확률 40~50%. 특별한 촉매 없이 돌파하기 어려운 구간이다.',
-    explanation: '횡보 끝에 3개월 뒤 횡보 (+5%).',
-    reveal: {
-    title: '셀트리온 (068270.KS)',
-    market: 'KOSPI · 바이오·CMO',
-    period: '2021년 4월 ~ 2021년 9월',
-    result: '3개월 횡보 (+5%).',
-    macro: '인플레이션 급등 조짐, QE·저금리 지속, 비트코인 6만달러 ATH, 코스피 3,316 신고가.',
-    lesson: '박스권이 계속됐다. 기다림에 지쳐 손절한 사람들이 가장 많이 나오는 패턴.',
-    },
-  },
-  {
     id: 242, market: 'KOSPI', ticker: '068270.KS', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2021-06-04',
-    question: '박스권에서 방향을 잡지 못하고 오르내리고 있다. 3개월 뒤 어디로 갔을까?',
+    question: '일정 범위 안에서 등락이 반복되고 있다. 3개월 후 주가의 방향으로 옳은 것은?',
     macroHints: [
       { label: '인플레이션', value: '급등 조짐', trend: '공급망 충격·유동성', tone: 'negative' },
       { label: 'QE·저금리', value: '지속', trend: '주식·코인 동반 강세', tone: 'positive' },
@@ -6011,7 +6011,7 @@ export const GENERATED_PROBLEMS: Problem[] = [
     id: 243, market: 'KOSPI', ticker: '068270.KS', pattern: 'reversal',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2021-08-05',
-    question: '급락 이후 저점에서 강한 양봉이 나오기 시작했다. 3개월 후?',
+    question: '급락 이후 저점에서 강한 양봉이 나타나기 시작하였다. 3개월 후 결과로 알맞은 것은?',
     macroHints: [
       { label: '인플레이션', value: '급등 조짐', trend: '공급망 충격·유동성', tone: 'negative' },
       { label: 'QE·저금리', value: '지속', trend: '주식·코인 동반 강세', tone: 'positive' },
@@ -6040,7 +6040,7 @@ export const GENERATED_PROBLEMS: Problem[] = [
     id: 244, market: 'KOSPI', ticker: '068270.KS', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2021-10-14',
-    question: '추세 없이 박스권을 유지 중이다. 3개월 뒤 어떻게 됐을까?',
+    question: '일정 범위 안에서 등락이 반복되고 있다. 3개월 후 주가의 방향으로 옳은 것은?',
     macroHints: [
       { label: '인플레이션', value: '급등 조짐', trend: '공급망 충격·유동성', tone: 'negative' },
       { label: 'QE·저금리', value: '지속', trend: '주식·코인 동반 강세', tone: 'positive' },
@@ -6069,7 +6069,7 @@ export const GENERATED_PROBLEMS: Problem[] = [
     id: 245, market: 'KOSPI', ticker: '068270.KS', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'hard',
     startDate: '2021-12-15',
-    question: '박스권에서 방향을 잡지 못하고 오르내리고 있다. 3개월 뒤 어디로 갔을까?',
+    question: '눌림목 구간에서 추세 재개를 대기하고 있다. 3개월 후 방향으로 적절한 것은?',
     macroHints: [
       { label: '인플레이션', value: '급등 조짐', trend: '공급망 충격·유동성', tone: 'negative' },
       { label: 'QE·저금리', value: '지속', trend: '주식·코인 동반 강세', tone: 'positive' },
@@ -6098,7 +6098,7 @@ export const GENERATED_PROBLEMS: Problem[] = [
     id: 246, market: 'KOSPI', ticker: '068270.KS', pattern: 'sideways',
     revealDay: 55, chartDays: 120, difficulty: 'medium',
     startDate: '2022-02-22',
-    question: '횡보 구간에서 돌파 시도를 이어가고 있다. 3개월 뒤 결과는?',
+    question: '박스권 내에서 방향성이 나타나지 않고 있다. 3개월 후 주가의 흐름으로 가장 적절한 것은?',
     macroHints: [
       { label: 'Fed 금리', value: '0→4.5%', trend: '40년래 최고속 긴축', tone: 'negative' },
       { label: '인플레이션', value: '9.1%', trend: '경기침체 공포 확산', tone: 'negative' },
@@ -6124,10 +6124,10 @@ export const GENERATED_PROBLEMS: Problem[] = [
     },
   },
   {
-    id: 247, market: 'KOSPI', ticker: '068270.KS', pattern: 'reversal',
+    id: 247, market: 'KOSPI', ticker: '068270.KS', pattern: 'breakout',
     revealDay: 55, chartDays: 120, difficulty: 'hard',
-    startDate: '2022-07-04',
-    question: '긴 하락 후 지지선에서 힘을 받는 모습이다. 3개월 뒤 어떻게 됐을까?',
+    startDate: '2022-04-27',
+    question: '오랫동안 막혀 있던 저항선을 상향 돌파하였다. 3개월 후 결과로 알맞은 것은?',
     macroHints: [
       { label: 'Fed 금리', value: '0→4.5%', trend: '40년래 최고속 긴축', tone: 'negative' },
       { label: '인플레이션', value: '9.1%', trend: '경기침체 공포 확산', tone: 'negative' },
@@ -6135,21 +6135,21 @@ export const GENERATED_PROBLEMS: Problem[] = [
       { label: '미국채', value: '역사적 하락', trend: '60/40 포트 동반 하락', tone: 'negative' },
     ],
     choices: [
-      '강한 반등 → 추세 전환 (+30%+)',
-      '저점 확인 → 점진적 회복 (+10~30%)',
-      '단기 반등 후 재하락 (±10%)',
-      '반등 실패 → 추가 급락 (-10%+)',
+      '돌파 성공 → 강한 추세 지속 (+30%+)',
+      '돌파 후 점진적 상승 (+10~30%)',
+      '가짜 돌파 → 박스권 재진입 (±10%)',
+      '돌파 실패 → 되돌림 하락 (-10%+)',
     ],
     answer: 2,
-    odds: '단기 반등 후 재하락 확률 약 45%. 섣불리 매수하면 더 빠질 수도 있다.',
-    explanation: '반등 시도 후 3개월 뒤 횡보 (+2%).',
+    odds: '가짜 돌파(페이크아웃) 확률이 40~50%. 돌파 후 눌림목을 기다리는 전략이 유리하다.',
+    explanation: '돌파 이후 3개월 뒤 횡보 (-3%).',
     reveal: {
     title: '셀트리온 (068270.KS)',
     market: 'KOSPI · 바이오·CMO',
-    period: '2022년 7월 ~ 2022년 12월',
-    result: '3개월 횡보 (+2%).',
+    period: '2022년 4월 ~ 2022년 10월',
+    result: '3개월 횡보 (-3%).',
     macro: 'Fed 금리 0→4.5%, 인플레이션 9.1%, 코스피 2,200 저점, 미국채 역사적 하락.',
-    lesson: '반등 후 다시 지지부진. 진짜 전환인지 확인하려면 더 기다려야 했다.',
+    lesson: '돌파 시도가 무산되고 다시 박스권으로. 가짜 돌파 (페이크아웃)였다.',
     },
   }
 ];

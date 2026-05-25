@@ -5,7 +5,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
     id: 1, market: 'KOSPI', ticker: '005930.KS', pattern: 'breakout',
     revealDay: 40, chartDays: 120, difficulty: 'easy',
     startDate: '2020-09-01',
-    question: '삼성전자가 박스권을 돌파했습니다. 4개월 후?',
+    question: '박스권을 상향 돌파하였다. 4개월 후 주가의 변화로 가장 적절한 것은?',
     macroHints: [
       { label: '기준금리', value: '0.50%', trend: '초저금리·QE 진행', tone: 'positive' },
       { label: '반도체', value: '수요 급증', trend: '비대면 사이클 상승', tone: 'positive' },
@@ -30,7 +30,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
     id: 2, market: 'KOSPI', ticker: '051910.KS', pattern: 'uptrend',
     revealDay: 35, chartDays: 90, difficulty: 'easy',
     startDate: '2020-11-01',
-    question: 'LG화학이 2차전지 테마로 강한 추세. 3개월 후?',
+    question: '2차전지 테마로 강한 상승 추세를 이어가고 있다. 3개월 후 주가로 가장 적절한 것은?',
     macroHints: [
       { label: 'EV 테마', value: '폭발적 관심', trend: '2차전지 섹터 자금 집중', tone: 'positive' },
       { label: '분할 상장', value: 'LG에너지솔루션', trend: '상장 기대감 급부상', tone: 'positive' },
@@ -55,7 +55,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
     id: 3, market: 'KOSPI', ticker: '000660.KS', pattern: 'parabolic',
     revealDay: 85, chartDays: 200, difficulty: 'easy',
     startDate: '2018-01-02',
-    question: 'SK하이닉스 포물선 가속. 모든 지표가 최고치. 5개월 후?',
+    question: '포물선 가속 상승 중이며 모든 지표가 최고치를 기록하고 있다. 5개월 후 결과로 옳은 것은?',
     macroHints: [
       { label: 'DRAM 가격', value: '연간 +50%', trend: '슈퍼사이클 정점', tone: 'positive' },
       { label: '외국인', value: '지분 50%+', trend: '역대 최고 보유', tone: 'positive' },
@@ -80,7 +80,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
     id: 4, market: 'NASDAQ', ticker: 'NVDA', pattern: 'cup',
     revealDay: 80, chartDays: 175, difficulty: 'medium',
     startDate: '2022-10-03',
-    question: 'NVDA가 약세장 저점에서 컵 패턴 형성. AI 수요 태동. 4개월 후?',
+    question: '약세장 저점에서 컵 패턴이 형성되었다. AI 수요가 태동하고 있다. 4개월 후 결과로 옳은 것은?',
     macroHints: [
       { label: '연준 금리', value: '4.00%', trend: '인상 속도 둔화 신호', tone: 'positive' },
       { label: 'ChatGPT', value: '출시 임박', trend: '데이터센터 수요 태동', tone: 'positive' },
@@ -105,7 +105,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
     id: 5, market: 'NASDAQ', ticker: 'TSLA', pattern: 'doubletop',
     revealDay: 75, chartDays: 300, difficulty: 'medium',
     startDate: '2021-11-01',
-    question: '테슬라 ATH 부근 두 번째 봉우리. 금리 인상 시작. 10개월 후?',
+    question: 'ATH 부근에서 두 번째 봉우리가 출현하였다. 금리 인상이 시작되었다. 10개월 후 결과로 옳은 것은?',
     macroHints: [
       { label: '미 금리', value: '0.25%→인상', trend: '40년만의 급격한 긴축', tone: 'negative' },
       { label: 'TSLA PER', value: '200배+', trend: '성장주 멀티플 압축 우려', tone: 'negative' },
@@ -130,7 +130,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
     id: 6, market: 'KOSPI', ticker: '011170.KS', pattern: 'breakout',
     revealDay: 78, chartDays: 220, difficulty: 'medium',
     startDate: '2021-09-01',
-    question: '롯데케미칼 박스권 돌파 시도. 그런데 매크로는 역방향. 7개월 후?',
+    question: '박스권 돌파를 시도하고 있다. 매크로는 역방향이다. 7개월 후 주가로 가장 적절한 것은?',
     macroHints: [
       { label: '기준금리', value: '0.75%→인상', trend: '긴축 진입', tone: 'negative' },
       { label: '중국 수요', value: '부동산 위기', trend: '화학 수요 둔화 신호', tone: 'negative' },
@@ -155,7 +155,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
     id: 7, market: 'KOSDAQ', ticker: '247540.KQ', pattern: 'fakebreakout',
     revealDay: 78, chartDays: 200, difficulty: 'hard',
     startDate: '2023-09-01',
-    question: '에코프로비엠이 돌파처럼 보이지만 외국인은 6주 연속 매도. 6개월 후?',
+    question: '돌파처럼 보이나 외국인이 6주 연속 순매도하고 있다. 6개월 후 주가로 옳은 것은?',
     macroHints: [
       { label: '외국인', value: '6주 연속 순매도', trend: '코스닥 자금 이탈', tone: 'negative' },
       { label: '2차전지', value: '중국 LFP 경쟁', trend: '섹터 자금 유출', tone: 'negative' },
@@ -180,7 +180,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
     id: 8, market: 'CRYPTO', ticker: 'BTC-USD', pattern: 'reversal',
     revealDay: 82, chartDays: 205, difficulty: 'hard',
     startDate: '2022-05-01',
-    question: 'BTC 루나 붕괴 후 반등 중. Celsius·3AC 위기 진행 중. 6개월 후?',
+    question: '루나 붕괴 이후 반등 중이다. Celsius·3AC 위기가 진행 중이다. 6개월 후 결과로 옳은 것은?',
     macroHints: [
       { label: '연준', value: '75bp 연속', trend: '위험자산 자금 이탈', tone: 'negative' },
       { label: '업계 리스크', value: 'Celsius·3AC', trend: '시스템 리스크 진행 중', tone: 'negative' },
@@ -205,7 +205,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
     id: 9, market: 'NASDAQ', ticker: '^GSPC', pattern: 'vshape',
     revealDay: 45, chartDays: 120, difficulty: 'hard',
     startDate: '2020-03-01',
-    question: '코로나 폭락 후 강한 반등. 실물은 사상 최악. 연준 무제한 QE. 3개월 후?',
+    question: '코로나 폭락 이후 강한 반등이 나타나고 있다. 실물 경기는 사상 최악이며 연준이 무제한 QE를 선언하였다. 3개월 후 결과로 옳은 것은?',
     macroHints: [
       { label: '실업률', value: '14.7%', trend: '대공황 이후 최고', tone: 'negative' },
       { label: '연준', value: '제로금리+무제한 QE', trend: '사상 최대 유동성 공급', tone: 'positive' },
@@ -233,7 +233,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
     id: 10, market: 'CRYPTO', ticker: 'BTC-USD', pattern: 'parabolic',
     revealDay: 100, chartDays: 250, difficulty: 'medium',
     startDate: '2017-05-01',
-    question: 'BTC 포물선 상승 중. CME 선물 상장 예고. 주류 미디어 진입. 7개월 후?',
+    question: '포물선 상승 중이다. CME 선물 상장이 예고되었으며 주류 미디어에서 보도 중이다. 7개월 후 결과로 옳은 것은?',
     macroHints: [
       { label: '주류 미디어', value: '일반인 유입 급증', trend: 'BTC 인지도 폭발', tone: 'positive' },
       { label: 'CME 선물', value: '12월 상장 예고', trend: '기관 진입 첫 신호', tone: 'positive' },
@@ -259,7 +259,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
     id: 11, market: 'CRYPTO', ticker: 'BTC-USD', pattern: 'breakout',
     revealDay: 75, chartDays: 160, difficulty: 'hard',
     startDate: '2023-10-01',
-    question: 'BTC가 장기 박스권을 강하게 돌파. ETF 심사 중, 반감기 예정. 4개월 후?',
+    question: '장기 박스권을 강하게 돌파하였다. ETF 심사 중이며 반감기가 예정되어 있다. 4개월 후 결과로 옳은 것은?',
     macroHints: [
       { label: 'SEC ETF', value: '블랙록 등 신청', trend: '승인 여부 미확정', tone: 'neutral' },
       { label: '반감기', value: '2024년 4월 예정', trend: '공급 축소 이벤트', tone: 'positive' },
@@ -285,7 +285,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
     id: 12, market: 'NYSE', ticker: '^GSPC', pattern: 'breakdown',
     revealDay: 40, chartDays: 150, difficulty: 'medium',
     startDate: '2023-02-01',
-    question: 'SVB 파산. 금융 위기 공포로 S&P 급락 중. 5개월 후?',
+    question: 'SVB가 파산하였다. 금융 위기 공포로 S&P가 급락 중이다. 5개월 후 결과로 옳은 것은?',
     macroHints: [
       { label: 'SVB 파산', value: '3월 10일', trend: '예금 인출 사태', tone: 'negative' },
       { label: '연준 BTFP', value: '즉각 가동', trend: '긴급 유동성 공급', tone: 'positive' },
@@ -311,7 +311,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
     id: 13, market: 'NYSE', ticker: 'GSPC2007', pattern: 'breakdown',
     revealDay: 30, chartDays: 165, difficulty: 'hard',
     startDate: '2008-08-01',
-    question: '리만 브라더스 파산. 금융 시스템 붕괴 시작. 6개월 후?',
+    question: '리먼 브라더스가 파산하였다. 금융 시스템 붕괴가 시작되었다. 6개월 후 결과로 옳은 것은?',
     macroHints: [
       { label: '리만', value: '4,000억달러 부채', trend: '개별→시스템 리스크로 전염', tone: 'negative' },
       { label: '신용 시장', value: 'TED 스프레드 역대급', trend: '단기자금 경색', tone: 'negative' },
@@ -337,7 +337,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
     id: 14, market: 'KOSPI', ticker: 'KS11', pattern: 'breakdown',
     revealDay: 60, chartDays: 220, difficulty: 'hard',
     startDate: '1997-07-01',
-    question: '코스피 하락 중. "한국은 다르다"는 믿음 지배적. 7개월 후?',
+    question: '코스피가 하락 중이다. 시장에는 "한국은 다르다"는 믿음이 지배적이다. 7개월 후 코스피의 변화로 옳은 것은?',
     macroHints: [
       { label: '태국 위기', value: '아시아 전염 중', trend: '외환 불안 확산', tone: 'negative' },
       { label: '대기업 부채', value: '400%+', trend: '한보·기아·삼미 부도', tone: 'negative' },
@@ -363,7 +363,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
     id: 15, market: 'SSE', ticker: 'SSE', pattern: 'doubletop',
     revealDay: 55, chartDays: 160, difficulty: 'medium',
     startDate: '2015-04-01',
-    question: '상하이지수 1년에 두 배. 레버리지 사상 최대. 5개월 후?',
+    question: '상하이지수가 1년 만에 두 배 상승하였다. 레버리지 잔고가 사상 최대이다. 5개월 후 결과로 옳은 것은?',
     macroHints: [
       { label: '마진 잔액', value: '2조 위안', trend: '사상 최대 레버리지', tone: 'negative' },
       { label: 'PER', value: '80~100배', trend: '역사적 고점 밸류', tone: 'negative' },
@@ -389,7 +389,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
     id: 16, market: 'NASDAQ', ticker: 'IXIC', pattern: 'parabolic',
     revealDay: 90, chartDays: 180, difficulty: 'hard',
     startDate: '1999-07-01',
-    question: '나스닥 포물선 상승. 적자 인터넷 기업도 폭등. 금리 인상 중. 4개월 후?',
+    question: '나스닥이 포물선 상승 중이다. 적자 인터넷 기업도 폭등하고 있으며 금리 인상이 진행 중이다. 4개월 후 결과로 옳은 것은?',
     macroHints: [
       { label: '닷컴 IPO', value: '상장 첫날 +100~200%', trend: '적자도 수백억 밸류', tone: 'positive' },
       { label: '연준 금리', value: '5.50%', trend: '과열 억제 인상 중', tone: 'negative' },
@@ -415,7 +415,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
     id: 17, market: 'TSE', ticker: 'N225', pattern: 'doubletop',
     revealDay: 60, chartDays: 280, difficulty: 'hard',
     startDate: '1989-10-01',
-    question: '니케이 사상최고가 부근. "일본은 세계 최강경제." 10개월 후?',
+    question: '사상 최고가 부근에 있다. 시장에서는 "세계 최강 경제"라는 평가가 지배적이다. 10개월 후 결과로 옳은 것은?',
     macroHints: [
       { label: '일본 금리', value: '3.75%→인상 예고', trend: '버블 억제 긴축', tone: 'negative' },
       { label: '닛케이 PBR', value: '5배+', trend: '국제 비교 역대 최고', tone: 'negative' },
@@ -441,7 +441,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
     id: 18, market: 'NYSE', ticker: 'GME', pattern: 'squeeze',
     revealDay: 45, chartDays: 100, difficulty: 'hard',
     startDate: '2020-11-01',
-    question: 'GME 공매도 140%. 레딧에서 집단 매수 전략 확산 중. 3개월 후?',
+    question: '공매도 잔고가 발행 주식의 140%이다. 온라인 커뮤니티에서 집단 매수 전략이 확산되고 있다. 3개월 후 결과로 옳은 것은?',
     macroHints: [
       { label: '공매도', value: '유통주식 140%', trend: '역대 최고 숏 포지션', tone: 'positive' },
       { label: 'WSB', value: '구독자 폭발 증가', trend: '개인 집단 매수 전략', tone: 'positive' },
@@ -467,7 +467,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
     id: 19, market: 'KOSDAQ', ticker: 'SEEGENE', pattern: 'breakout',
     revealDay: 60, chartDays: 200, difficulty: 'easy',
     startDate: '2020-01-02',
-    question: '코로나 확산 초입. 씨젠(PCR 진단키트)이 상승 초입. 7개월 후?',
+    question: '코로나 확산 초입에 PCR 진단키트 관련 종목이 상승을 시작하였다. 7개월 후 결과로 옳은 것은?',
     macroHints: [
       { label: '코로나', value: '국내 확산 초기', trend: 'WHO 팬데믹 선언 임박', tone: 'negative' },
       { label: 'PCR 키트', value: '150개국 수출', trend: 'K-방역 글로벌 수요', tone: 'positive' },
@@ -495,7 +495,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
     id: 20, market: 'NYSE', ticker: '^GSPC', pattern: 'vshape',
     revealDay: 46, chartDays: 200, difficulty: 'medium',
     startDate: '2018-10-01',
-    question: 'S&P가 무역전쟁·긴축으로 급락. 12월 연저점. 7개월 후?',
+    question: '무역전쟁과 긴축 우려로 급락하여 연저점에 도달하였다. 7개월 후 결과로 옳은 것은?',
     macroHints: [
       { label: '파월 발언', value: '"금리 인상 신중"', trend: '피벗 신호 예고', tone: 'positive' },
       { label: '미중 협상', value: '1단계 합의 기대', trend: '관세 불확실성 일부 해소', tone: 'positive' },
@@ -521,7 +521,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
     id: 21, market: 'NYSE', ticker: '^GSPC', pattern: 'downtrend',
     revealDay: 60, chartDays: 200, difficulty: 'medium',
     startDate: '2022-01-03',
-    question: 'S&P 역대 고점에서 하락 시작. 40년만의 인플레. 7개월 후?',
+    question: '역대 고점에서 하락이 시작되었다. 40년 만의 인플레이션 국면이다. 7개월 후 결과로 옳은 것은?',
     macroHints: [
       { label: 'CPI', value: '7.0%', trend: '40년래 최고, 상승 중', tone: 'negative' },
       { label: '연준', value: '3월 첫 인상 예고', trend: '속도·폭 불확실', tone: 'negative' },
@@ -547,7 +547,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
     id: 22, market: 'NASDAQ', ticker: 'NVDA', pattern: 'breakdown',
     revealDay: 45, chartDays: 220, difficulty: 'medium',
     startDate: '2018-09-01',
-    question: 'NVDA 고점 이탈. 채굴 수요 증발, 재고 과잉. 8개월 후?',
+    question: '고점을 이탈하였다. 채굴 수요가 사라지고 재고가 과잉 상태이다. 8개월 후 결과로 옳은 것은?',
     macroHints: [
       { label: '채굴 GPU', value: '수요 소멸', trend: '채굴 수익성 마이너스', tone: 'negative' },
       { label: '게이밍 재고', value: '유통 과잉', trend: '출하량 급감 예고', tone: 'negative' },
@@ -573,7 +573,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
     id: 23, market: 'NASDAQ', ticker: 'TSLA', pattern: 'breakout',
     revealDay: 80, chartDays: 320, difficulty: 'medium',
     startDate: '2019-06-01',
-    question: '테슬라 모델3 양산 성공, 중국 진출. 공매도 25%. 11개월 후?',
+    question: '주력 모델 양산에 성공하고 중국 시장에 진출하였다. 공매도 잔고가 25%이다. 11개월 후 결과로 옳은 것은?',
     macroHints: [
       { label: '흑자 전환', value: '2019 Q3 예상', trend: '연속 흑자 가능성', tone: 'positive' },
       { label: '공매도', value: '유통주식 25%+', trend: '숏 스퀴즈 잠재력', tone: 'positive' },
@@ -599,7 +599,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
     id: 24, market: 'CRYPTO', ticker: 'BTC-USD', pattern: 'bottom',
     revealDay: 65, chartDays: 280, difficulty: 'hard',
     startDate: '2018-11-15',
-    question: 'BTC 극단적 저점. 패닉 셀 지속. 언론 "비트코인은 끝났다". 10개월 후?',
+    question: '극단적 저점에 있다. 패닉 셀이 지속되며 언론에서 "끝났다"고 보도하고 있다. 10개월 후 결과로 옳은 것은?',
     macroHints: [
       { label: '거래량', value: '역대 최저', trend: '투자자 관심 소멸', tone: 'negative' },
       { label: '주류 미디어', value: '"BTC 사망 선고"', trend: '비관론 극대화', tone: 'negative' },
@@ -625,7 +625,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
     id: 25, market: 'CRYPTO', ticker: 'BTC-USD', pattern: 'vshape',
     revealDay: 45, chartDays: 150, difficulty: 'hard',
     startDate: '2020-03-01',
-    question: 'BTC가 이틀 만에 -58% 폭락. 연준 무제한 QE 발표. 5개월 후?',
+    question: '이틀 만에 -58% 폭락하였다. 연준이 무제한 QE를 발표하였다. 5개월 후 결과로 옳은 것은?',
     macroHints: [
       { label: '코로나 목요일', value: 'BTC 단일 최대 하락', trend: '공황 매도', tone: 'negative' },
       { label: '연준', value: '제로금리+무제한 QE', trend: '3월 15일 발표', tone: 'positive' },
@@ -651,7 +651,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
     id: 26, market: 'CRYPTO', ticker: 'BTC-USD', pattern: 'breakdown',
     revealDay: 60, chartDays: 230, difficulty: 'hard',
     startDate: '2021-04-01',
-    question: 'BTC $65k→$29k 폭락 후 반등. 중국 채굴 금지로 해시율 반토막. 8개월 후?',
+    question: '$65k에서 $29k로 폭락한 이후 반등 중이다. 채굴 금지 조치로 해시율이 반토막 났다. 8개월 후 결과로 옳은 것은?',
     macroHints: [
       { label: '해시율', value: '-50% 급락', trend: '중국 채굴 65% 강제 이전', tone: 'negative' },
       { label: '기관 매수', value: '마이크로스트래티지', trend: '엘살바도르 법정화폐 채택', tone: 'positive' },
@@ -677,7 +677,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
     id: 27, market: 'KOSPI', ticker: '005930.KS', pattern: 'recovery',
     revealDay: 60, chartDays: 130, difficulty: 'easy',
     startDate: '2019-08-01',
-    question: '삼성전자 다운사이클 저점. DRAM 낙폭 둔화, 5G 수요 본격화. 3개월 후?',
+    question: '다운사이클 저점에 있다. DRAM 낙폭이 둔화되고 5G 수요가 본격화되고 있다. 3개월 후 결과로 옳은 것은?',
     macroHints: [
       { label: 'DRAM 가격', value: '낙폭 둔화', trend: '공급 조정 효과 발현', tone: 'positive' },
       { label: '5G 인프라', value: '투자 본격화', trend: '통신장비 수요 급증', tone: 'positive' },
@@ -703,7 +703,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
     id: 28, market: 'NASDAQ', ticker: 'META', pattern: 'recovery',
     revealDay: 50, chartDays: 280, difficulty: 'hard',
     startDate: '2022-10-01',
-    question: 'META -74% 폭락 후 바닥. 저커버그 "효율의 해" 선언. 11개월 후?',
+    question: '-74% 폭락 이후 바닥에 있다. CEO가 "효율의 해"를 선언하였다. 11개월 후 결과로 옳은 것은?',
     macroHints: [
       { label: 'PER', value: '12배', trend: '빅테크 역대 최저', tone: 'positive' },
       { label: '구조조정', value: '21,000명 감원', trend: '"효율의 해" 비용 절감', tone: 'positive' },
@@ -729,7 +729,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
     id: 29, market: 'KOSPI', ticker: '035720.KS', pattern: 'doubletop',
     revealDay: 65, chartDays: 280, difficulty: 'medium',
     startDate: '2021-06-01',
-    question: '카카오 강한 추세 고점. 플랫폼 규제 입법, 금리 인상 시작. 10개월 후?',
+    question: '강한 상승 추세의 고점 부근에 있다. 플랫폼 규제 입법과 금리 인상이 시작되었다. 10개월 후 결과로 옳은 것은?',
     macroHints: [
       { label: '플랫폼 규제', value: '국회 입법 추진', trend: '골목상권 침해 논란', tone: 'negative' },
       { label: '금리 인상', value: '0.5%→인상 시작', trend: '고PER 멀티플 압축', tone: 'negative' },
@@ -755,7 +755,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
     id: 30, market: 'KOSPI', ticker: '035420.KS', pattern: 'recovery',
     revealDay: 60, chartDays: 220, difficulty: 'medium',
     startDate: '2022-10-01',
-    question: '네이버 2022년 급락 후 저점. ChatGPT 충격. 자체 LLM 개발 중. 7개월 후?',
+    question: '2022년 급락 이후 저점에 있다. ChatGPT 충격이 발생하였으며 자체 LLM을 개발 중이다. 7개월 후 결과로 옳은 것은?',
     macroHints: [
       { label: 'ChatGPT', value: '검색 패러다임 위협', trend: '구글·빙 AI 공세', tone: 'negative' },
       { label: 'HyperCLOVA', value: '자체 LLM 개발', trend: '한국 시장 방어 가능성', tone: 'positive' },
@@ -781,7 +781,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
     id: 31, market: 'KOSPI', ticker: '005380.KS', pattern: 'breakout',
     revealDay: 65, chartDays: 220, difficulty: 'easy',
     startDate: '2020-09-01',
-    question: '현대차 IONIQ EV 브랜드 출범. 강하게 상승 중. 7개월 후?',
+    question: 'EV 브랜드를 출범하고 강하게 상승 중이다. 7개월 후 결과로 옳은 것은?',
     macroHints: [
       { label: 'IONIQ', value: '전용 EV 플랫폼', trend: '글로벌 EV 전략 공식화', tone: 'positive' },
       { label: 'EV 보조금', value: '미국·유럽 확대', trend: '내연기관 퇴출 정책', tone: 'positive' },
@@ -807,7 +807,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
     id: 32, market: 'NASDAQ', ticker: 'AAPL', pattern: 'breakdown',
     revealDay: 45, chartDays: 200, difficulty: 'medium',
     startDate: '2018-10-01',
-    question: '애플 중국 매출 경고·공급망 리스크로 급락 중. 7개월 후?',
+    question: '중국 매출 경고와 공급망 리스크로 급락 중이다. 7개월 후 결과로 옳은 것은?',
     macroHints: [
       { label: '중국 매출', value: '역성장 경고', trend: '화웨이 제재 역풍', tone: 'negative' },
       { label: '서비스 매출', value: '고성장 지속', trend: '하드웨어→서비스 전환', tone: 'positive' },
@@ -833,7 +833,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
     id: 33, market: 'NASDAQ', ticker: 'AMD', pattern: 'cup',
     revealDay: 60, chartDays: 250, difficulty: 'medium',
     startDate: '2022-10-01',
-    question: 'AMD가 반도체 다운사이클 저점. AI 칩 경쟁 직전. 9개월 후?',
+    question: '반도체 다운사이클 저점에 있다. AI 칩 경쟁이 시작되기 직전이다. 9개월 후 결과로 옳은 것은?',
     macroHints: [
       { label: 'PC 수요', value: '역대 최대 역성장', trend: '재고 과잉 정점', tone: 'negative' },
       { label: 'AI 데이터센터', value: 'EPYC CPU 수주', trend: 'MI300 GPU 출시 예정', tone: 'positive' },
@@ -859,7 +859,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
     id: 34, market: 'ETF', ticker: 'GLD', pattern: 'breakout',
     revealDay: 30, chartDays: 130, difficulty: 'easy',
     startDate: '2020-03-01',
-    question: '코로나 패닉 + 연준 무제한 QE. 금 ETF(GLD)는? 5개월 후?',
+    question: '코로나 패닉과 연준의 무제한 QE가 동시에 발생하였다. 이 ETF, 5개월 후 결과로 옳은 것은?',
     macroHints: [
       { label: '연준', value: '제로금리+무제한 QE', trend: '실질 금리 마이너스 전환', tone: 'positive' },
       { label: '달러', value: 'DXY 급등', trend: '안전자산 수요', tone: 'neutral' },
@@ -885,7 +885,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
     id: 35, market: 'KOSDAQ', ticker: '086520.KQ', pattern: 'parabolic',
     revealDay: 130, chartDays: 230, difficulty: 'hard',
     startDate: '2023-01-02',
-    question: '에코프로 6개월에 수배 상승. PER 수백 배. 5개월 후?',
+    question: '6개월 만에 수배 상승하였다. PER이 수백 배 수준이다. 5개월 후 결과로 옳은 것은?',
     macroHints: [
       { label: '개인 비중', value: '90%+', trend: '코스닥 시총 1위·열풍', tone: 'negative' },
       { label: 'PER', value: '수백 배', trend: '이익 대비 주가 극단적 괴리', tone: 'negative' },
