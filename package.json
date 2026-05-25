@@ -14,7 +14,6 @@
   "dependencies": {
     "@capacitor/cli": "^8.3.4",
     "@capacitor/core": "^8.3.4",
-    "howler": "^2.2.4",
     "lightweight-charts": "^5.2.0",
     "papaparse": "^5.5.3",
     "react": "^19.2.6",
@@ -23,7 +22,6 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@types/howler": "^2.2.13",
     "@types/node": "^24.12.3",
     "@types/papaparse": "^5.5.2",
     "@types/react": "^19.2.14",

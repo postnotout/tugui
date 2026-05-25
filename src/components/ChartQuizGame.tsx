@@ -11,7 +11,6 @@ import { generateChart } from '../utils/chartGenerator';
 import { loadChartData } from '../utils/dataLoader';
 import { formatPrice, formatVolume, getNicePriceScale, getPriceUnit } from '../utils/chartFormat';
 import { useGameStorage } from '../hooks/useGameStorage';
-import { useSound } from '../hooks/useSound';
 import type { ChartDataPoint, Problem } from '../types';
 import EvolutionFigure from './EvolutionFigure';
 import { GlossaryText, GlossaryModal } from './GlossaryText';
@@ -125,7 +124,6 @@ interface Props {
 
 export default function ChartQuizGame({ onOpenWrongNote }: Props) {
   const { data: storage, save: saveStorage, reset: resetStorage } = useGameStorage();
-  const play = useSound(storage.settings.soundEnabled, storage.settings.volume);
 
   const [phase, setPhase] = useState<'intro' | 'playing' | 'levelup' | 'gameover' | 'ending'>('intro');
   const [tutorialStep, setTutorialStep] = useState<number | null>(null);
@@ -137,7 +135,6 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
   const [runCount, setRunCount] = useState(1);
   const [pendingLevelUp, setPendingLevelUp] = useState(false);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
-  const [showSettings, setShowSettings] = useState(false);
 
   const [problemQueue, setProblemQueue] = useState<Problem[]>(() => difficultyShuffle(PROBLEM_POOL));
   const [problemIdx, setProblemIdx] = useState(0);
@@ -245,7 +242,6 @@ const baseMin = pastZoneData.length ? Math.min(...pastZoneData.map(d => d.종가
   };
 
   const startGame = () => {
-    play('click');
     const newRunCount = runCount + (phase !== 'intro' ? 1 : 0);
     const queue = difficultyShuffle(PROBLEM_POOL);
     setPhase('playing');
@@ -267,7 +263,6 @@ const baseMin = pastZoneData.length ? Math.min(...pastZoneData.map(d => d.종가
   };
 
   const resumeGame = () => {
-    play('click');
     const s = storage.savedSession!;
     const queue = s.problemQueueIds
       .map(id => PROBLEM_POOL.find(p => p.id === id))
@@ -294,7 +289,6 @@ const baseMin = pastZoneData.length ? Math.min(...pastZoneData.map(d => d.종가
 
     // ── Tutorial problem: no account/storage effects ───────────────────────
     if (problem.isTutorial) {
-      play(correct ? 'correct' : 'incorrect');
       setLastReturnPct(0);
       setLastCapitalDelta(0);
       return;
@@ -314,7 +308,6 @@ const baseMin = pastZoneData.length ? Math.min(...pastZoneData.map(d => d.종가
 
     if (correct) {
       const newCombo = combo + 1;
-      play(newCombo >= 3 ? 'combo' : 'correct');
       const returnPct = getTradeReturn(problem, true, newCombo, 0);
       const delta = capital * returnPct;
       const newCapital = Math.round(capital + delta);
@@ -345,10 +338,7 @@ const baseMin = pastZoneData.length ? Math.min(...pastZoneData.map(d => d.종가
       setLastCapitalDelta(delta);
       if (newCapital <= GAMEOVER_CAPITAL) {
         saveStorage({ savedSession: null });
-        play('gameover');
         setTimeout(() => setPhase('gameover'), 1500);
-      } else {
-        play('incorrect');
       }
     }
   };
@@ -356,7 +346,6 @@ const baseMin = pastZoneData.length ? Math.min(...pastZoneData.map(d => d.종가
   const handleNext = () => {
     // ── Tutorial complete: save flag → go to intro ─────────────────────────
     if (problem.isTutorial) {
-      play('click');
       localStorage.setItem('tutorialCompleted', 'true');
       setTutorialStep(null);
       setPhase('intro');
@@ -370,11 +359,9 @@ const baseMin = pastZoneData.length ? Math.min(...pastZoneData.map(d => d.종가
     if (pendingLevelUp) {
       if (rank >= MAX_RANK_IDX) {
         saveStorage({ clearCount: storage.clearCount + 1, savedSession: null });
-        play('ending');
         setPhase('ending');
       } else {
         persistSession({ problemIdx: problemIdx + 1 });
-        play('levelup');
         setPhase('levelup');
       }
       return;
@@ -385,7 +372,6 @@ const baseMin = pastZoneData.length ? Math.min(...pastZoneData.map(d => d.종가
   };
 
   const continueAfterLevelup = () => {
-    play('click');
     setPendingLevelUp(false);
     setPhase('playing');
     setProblemIdx(problemIdx + 1);
@@ -396,7 +382,6 @@ const baseMin = pastZoneData.length ? Math.min(...pastZoneData.map(d => d.종가
 
   // ─── Tutorial controls ────────────────────────────────────────────────────
   const startTutorialGame = () => {
-    play('click');
     localStorage.removeItem('tutorialCompleted');
     setTutorialStep(0);
     setPhase('playing');
@@ -404,12 +389,10 @@ const baseMin = pastZoneData.length ? Math.min(...pastZoneData.map(d => d.종가
     setProblemIdx(0);
     setSelected(null); setSubmitted(false); setRevealed(false);
     resetAccount(); setPendingLevelUp(false);
-    setShowSettings(false);
   };
 
   const advanceTutorialStep = () => {
     if (tutorialStep === null) return;
-    play('tick');
     if (tutorialStep < 4) {
       setTutorialStep(tutorialStep + 1);
     } else {
@@ -419,7 +402,6 @@ const baseMin = pastZoneData.length ? Math.min(...pastZoneData.map(d => d.종가
   };
 
   const skipTutorial = () => {
-    play('click');
     localStorage.setItem('tutorialCompleted', 'true');
     setTutorialStep(null);
     setPhase('intro');
@@ -430,7 +412,6 @@ const baseMin = pastZoneData.length ? Math.min(...pastZoneData.map(d => d.종가
   };
 
   const handleReset = () => {
-    play('click');
     resetStorage();
     setShowResetConfirm(false);
     setPhase('intro');
@@ -438,75 +419,6 @@ const baseMin = pastZoneData.length ? Math.min(...pastZoneData.map(d => d.종가
     setProblemQueue(difficultyShuffle(PROBLEM_POOL));
     setProblemIdx(0);
   };
-
-  // ─── Settings modal (shared between intro and playing phases) ───────────────
-  const settingsModal = showSettings ? (
-    <div
-      onClick={() => setShowSettings(false)}
-      style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.75)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 2000, padding: 20 }}
-    >
-      <div
-        onClick={e => e.stopPropagation()}
-        style={{ maxWidth: 280, width: '100%', background: COLORS.bgPanel, border: `3px solid ${COLORS.border}`, boxShadow: `4px 4px 0 0 ${COLORS.border}`, padding: '22px 20px', fontFamily: KOREAN_FONT }}
-      >
-        <div style={{ textAlign: 'center', fontSize: 13, fontWeight: 700, color: COLORS.textBright, fontFamily: TITLE_FONT, letterSpacing: '0.3em', marginBottom: 20 }}>
-          ⚙ 설 정
-        </div>
-
-        {/* Sound on/off */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
-          <span style={{ fontSize: 13, color: COLORS.text }}>🔊 효과음</span>
-          <button
-            onClick={() => {
-              const next = !storage.settings.soundEnabled;
-              saveStorage({ settings: { ...storage.settings, soundEnabled: next } });
-              if (next) play('click');
-            }}
-            style={{
-              padding: '4px 16px', fontSize: 12, fontWeight: 700,
-              background: storage.settings.soundEnabled ? COLORS.green : COLORS.bgDeep,
-              color: storage.settings.soundEnabled ? '#fff' : COLORS.textDim,
-              border: `2px solid ${storage.settings.soundEnabled ? COLORS.green : COLORS.border}`,
-              boxShadow: storage.settings.soundEnabled ? `2px 2px 0 0 ${COLORS.green}` : 'none',
-              cursor: 'pointer', letterSpacing: '0.15em', fontFamily: TITLE_FONT,
-            }}
-          >{storage.settings.soundEnabled ? 'ON' : 'OFF'}</button>
-        </div>
-
-        {/* Volume slider */}
-        <div style={{ marginBottom: 22 }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
-            <span style={{ fontSize: 13, color: COLORS.text }}>음량</span>
-            <span style={{ fontSize: 12, color: COLORS.textDim, fontFamily: TITLE_FONT, fontWeight: 700 }}>
-              {Math.round(storage.settings.volume * 100)}%
-            </span>
-          </div>
-          <input
-            type="range" min="0" max="1" step="0.05"
-            value={storage.settings.volume}
-            onChange={e => saveStorage({ settings: { ...storage.settings, volume: parseFloat(e.target.value) } })}
-            style={{ width: '100%', accentColor: COLORS.border, cursor: 'pointer' }}
-          />
-        </div>
-
-        {/* Tutorial replay */}
-        <div style={{ borderTop: `1px solid ${COLORS.borderDark}`, paddingTop: 14, marginBottom: 14 }}>
-          <button
-            onClick={startTutorialGame}
-            style={{
-              width: '100%', padding: '8px 0',
-              background: COLORS.bgDeep, color: COLORS.textBright,
-              border: `1px solid ${COLORS.border}`,
-              fontFamily: KOREAN_FONT, fontSize: 12, fontWeight: 700,
-              letterSpacing: '0.1em', cursor: 'pointer',
-            }}
-          >🎓 튜토리얼 다시 보기</button>
-        </div>
-
-        <GlowBtn onClick={() => { play('click'); setShowSettings(false); }}>닫기</GlowBtn>
-      </div>
-    </div>
-  ) : null;
 
   // ─── Intro ─────────────────────────────────────────────────────────────────
   if (phase === 'intro') {
@@ -526,24 +438,7 @@ const baseMin = pastZoneData.length ? Math.min(...pastZoneData.map(d => d.종가
           <div style={{ position: 'absolute', top: 10, left: 0, right: 0, borderTop: `2px solid ${COLORS.red}` }}/>
           <div style={{ position: 'absolute', top: 14, left: 0, right: 0, borderTop: `1px solid ${COLORS.blue}` }}/>
 
-          {/* Gear icon */}
-          <button
-            onClick={() => { play('click'); setShowSettings(true); }}
-            title="설정"
-            style={{
-              position: 'absolute', top: 30, right: 10,
-              width: 28, height: 28,
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              background: COLORS.bgPanelLight,
-              border: `2px solid ${COLORS.borderDark}`,
-              borderRadius: 3,
-              fontSize: 14, cursor: 'pointer', color: COLORS.textBright,
-              padding: 0,
-              lineHeight: 1,
-              boxShadow: `2px 2px 0 0 ${COLORS.border}`,
-              fontFamily: TITLE_FONT,
-            }}
-          >⚙</button>
+          <div style={{ position: 'absolute', top: 20, right: 10, fontSize: 9, color: COLORS.textMute, fontFamily: TITLE_FONT, letterSpacing: '0.1em' }}>#3</div>
 
           <div style={{ textAlign: 'center', marginBottom: 7, marginTop: 24, fontSize: 9, color: COLORS.textDim, letterSpacing: '0.28em' }}>
             ANALYZING · BUYING · PRAYING
@@ -681,7 +576,7 @@ const baseMin = pastZoneData.length ? Math.min(...pastZoneData.map(d => d.종가
 
             <div style={{ display: 'flex', gap: 6 }}>
               <button
-                onClick={() => { play('click'); onOpenWrongNote(); }}
+                onClick={() => { onOpenWrongNote(); }}
                 style={{
                   flex: 1, padding: '8px 4px',
                   background: COLORS.bgPanel, color: COLORS.red,
@@ -693,7 +588,7 @@ const baseMin = pastZoneData.length ? Math.min(...pastZoneData.map(d => d.종가
                 }}
               >✗ 오답노트</button>
               <button
-                onClick={() => { play('click'); setShowResetConfirm(true); }}
+                onClick={() => { setShowResetConfirm(true); }}
                 style={{
                   flex: 1, padding: '8px 4px',
                   background: COLORS.bgPanel, color: COLORS.text,
@@ -721,13 +616,12 @@ const baseMin = pastZoneData.length ? Math.min(...pastZoneData.map(d => d.종가
               </div>
               <div style={{ display: 'flex', gap: 8 }}>
                 <GlowBtn onClick={handleReset} color={COLORS.red} style={{ fontSize: 13 }}>초기화</GlowBtn>
-                <GlowBtn onClick={() => { play('click'); setShowResetConfirm(false); }} style={{ fontSize: 13 }}>취소</GlowBtn>
+                <GlowBtn onClick={() => { setShowResetConfirm(false); }} style={{ fontSize: 13 }}>취소</GlowBtn>
               </div>
             </div>
           </div>
         )}
 
-        {settingsModal}
         <style>{GLOBAL_STYLES}</style>
       </Screen>
     );
@@ -871,14 +765,9 @@ const baseMin = pastZoneData.length ? Math.min(...pastZoneData.map(d => d.종가
               )}
             </div>
             <button
-              onClick={() => { play('click'); setPhase('intro'); }}
+              onClick={() => { setPhase('intro'); }}
               style={{ padding: '2px 7px', fontSize: 10, background: 'none', border: `1px solid ${COLORS.borderDark}`, cursor: 'pointer', fontFamily: TITLE_FONT, color: COLORS.textDim, letterSpacing: '0.05em', flexShrink: 0 }}
             >메뉴</button>
-            <button
-              onClick={() => { play('click'); setShowSettings(true); }}
-              title="설정"
-              style={{ padding: '2px 6px', fontSize: 12, background: 'none', border: `1px solid ${COLORS.borderDark}`, cursor: 'pointer', color: COLORS.textDim, flexShrink: 0, lineHeight: 1 }}
-            >⚙</button>
           </div>
           <div style={{ height: 4, background: COLORS.bgDeep, border: `1px solid ${COLORS.border}` }}>
             <div style={{ height: '100%', width: `${progressPct}%`, background: COLORS.border, transition: 'width 0.5s' }}/>
@@ -1128,7 +1017,6 @@ const baseMin = pastZoneData.length ? Math.min(...pastZoneData.map(d => d.종가
         )}
       </div>
 
-      {settingsModal}
       <style>{GLOBAL_STYLES}</style>
       <GlossaryModal term={activeTerm} onClose={() => setActiveTerm(null)} />
 
