@@ -30,7 +30,69 @@ function toKoMonth(d){ const y=d.slice(0,4),m=parseInt(d.slice(5,7)); return `${
 function toAns(p){ if(p>=0.15)return 0; if(p>=0.05)return 1; if(p>-0.05)return 2; return 3; }
 const AL=['급등','상승','횡보','하락'];
 
-// [id, ticker, oldStartDate, oldRevealDay]
+// Direction label based purely on pct (for explanation/result text)
+function pctLabel(pct) {
+  if (pct >= 0.15) return '급등';
+  if (pct >= 0.05) return '상승';
+  if (pct > -0.05) return '횡보';
+  return '하락';
+}
+
+// Find the correct answer index using category-specific keyword matching
+function toAnsFromChoices(pct, choices) {
+  if (!choices || choices.length === 0) return toAns(pct);
+
+  // Primary keyword match — exact pct category
+  let primaryKw;
+  if (pct >= 0.15)      primaryKw = ['급등','폭등'];
+  else if (pct >= 0.05) primaryKw = ['상승','오른다','우상향','회복','반등','전환된다','추가 상승'];
+  else if (pct > -0.05) primaryKw = ['횡보','유지','박스','눌림','숨 고르기','완만','점진적'];
+  else                  primaryKw = ['하락','급락','폭락','빠진다','이탈','추가 하락','추가 급락'];
+
+  for (let i = 0; i < choices.length; i++) {
+    if (primaryKw.some(k => choices[i].includes(k))) return i;
+  }
+
+  // Secondary: any directional match
+  const upKw   = ['급등','폭등','상승','오른다','회복','반등','전환된다'];
+  const downKw = ['하락','급락','폭락','빠진다','이탈'];
+  if (pct >= 0.05) {
+    for (let i = 0; i < choices.length; i++) {
+      if (upKw.some(k => choices[i].includes(k))) return i;
+    }
+  } else if (pct <= -0.05) {
+    for (let i = 0; i < choices.length; i++) {
+      if (downKw.some(k => choices[i].includes(k))) return i;
+    }
+  }
+
+  return toAns(pct); // final fallback
+}
+
+// Load choices from the handcrafted TS file
+const SRC = path.join(__dirname,'../src/data/problems.handcrafted.ts');
+
+function loadHandcraftedChoices(file) {
+  let content = fs.readFileSync(file, 'utf8');
+  content = content
+    .replace(/^import type .*$/gm, '')
+    .replace(/: Problem\[\]/g, '')
+    .replace(/export const \w+\s*=\s*/, 'return ');
+  try {
+    const problems = new Function(content)();
+    const map = {};
+    for (const p of problems) map[p.id] = p.choices;
+    return map;
+  } catch(e) {
+    console.error('choices 로드 실패:', e.message);
+    return {};
+  }
+}
+
+const choicesMap = loadHandcraftedChoices(SRC);
+
+// [id, ticker, anchorStartDate, oldRevealDay]
+// For new problems (IDs 36+): oldRevealDay=1 means anchorStartDate IS the reveal key date
 const probs=[
   [1,'005930.KS','2020-09-01',40],[2,'051910.KS','2020-11-01',35],
   [3,'000660.KS','2018-01-02',85],[4,'NVDA','2022-10-03',80],
@@ -50,6 +112,23 @@ const probs=[
   [31,'005380.KS','2020-09-01',65],[32,'AAPL','2018-10-01',45],
   [33,'AMD','2022-10-01',60],[34,'GLD','2020-03-01',30],
   [35,'086520.KQ','2023-01-02',130],
+  // New handcrafted problems (oldRev=1 → anchorDate is the reveal key date)
+  [36,'TSLA','2020-07-09',1],
+  [37,'^GSPC','2020-03-23',1],
+  [38,'META','2022-11-04',1],
+  [40,'AAPL','2019-01-14',1],
+  [42,'BTC-USD','2020-05-15',1],
+  [43,'^GSPC','2023-01-06',1],
+  [44,'005930.KS','2017-04-03',1],
+  [45,'035420.KS','2020-04-03',1],
+  [46,'035720.KS','2021-06-28',1],
+  [47,'GLD','2020-06-05',1],
+  [48,'NVDA','2023-05-26',1],
+  [50,'BTC-USD','2024-01-12',1],
+  [51,'051910.KS','2020-08-14',1],
+  [52,'GME','2021-01-08',1],
+  [54,'AMD','2023-01-20',1],
+  [55,'000660.KS','2023-05-12',1],
 ];
 
 // 각 문제의 새 파라미터 계산
@@ -59,52 +138,39 @@ for(const [id,ticker,startDate,oldRev] of probs){
   const fp=path.join(DATA_DIR,`${fname}.csv`);
   const rows=parseCSV(fp);
   const si=rows.findIndex(r=>r.date>=startDate);
+  if(si===-1){ console.warn(`⚠️  ID ${id}: ${startDate} CSV에 없음 (${ticker}), 건너뜀`); continue; }
   const keyIdx=Math.min(si+oldRev-1,rows.length-1);
   const newStartIdx=Math.max(0,keyIdx-125);
   const endIdx=Math.min(keyIdx+21,rows.length-1);
-  const chartEndIdx=Math.min(keyIdx+21,rows.length-1); // same as endIdx for period calc
   const pct=(rows[endIdx].close-rows[keyIdx].close)/rows[keyIdx].close;
+  const choices = choicesMap[id] || [];
+  const ans = toAnsFromChoices(pct, choices);
   computed[id]={
     newStartDate: rows[newStartIdx].date,
-    endDate: rows[chartEndIdx].date,
+    endDate: rows[endIdx].date,
     pct,
     pctStr: (pct>=0?'+':'')+(pct*100).toFixed(0)+'%',
-    ans: toAns(pct),
-    ansLabel: AL[toAns(pct)],
+    ans,
+    ansLabel: pctLabel(pct),  // direction label for explanation/result text
   };
 }
 
 // 문자열 치환 헬퍼
 function replaceNMonths(q){
-  // "N개월 후" → "1개월 후"
   return q.replace(/\d+개월\s*후/g,'1개월 후');
 }
 
-// explanation 재생성
-function makeExplanation(id, pctStr, ans, oldExpl){
-  // 기존 설명의 첫 부분(패턴 설명)을 살리고 결과만 교체
-  // "패턴설명. N개월 +/-X%." 형태 → "패턴설명. 1개월 뒤 결과(±pct)."
-  const label = AL[ans];
-  // 기존 설명에서 뒷부분(숫자/월 참조) 제거하고 새 결과 붙임
-  const base = oldExpl.replace(/\.\s*\d+개월[^.]+\.?\s*$/, '');
-  return `${base}. 1개월 뒤 ${label} (${pctStr}).`;
-}
-
-// reveal.result 재생성
-function makeResult(ans, pctStr){
-  return `1개월 후 ${AL[ans]} (${pctStr}).`;
+// reveal.result 재생성 (ansLabel = pct 방향 레이블)
+function makeResult(ansLabel, pctStr){
+  return `1개월 후 ${ansLabel} (${pctStr}).`;
 }
 
 // problems.handcrafted.ts 파일을 블록 단위로 처리
-const SRC = path.join(__dirname,'../src/data/problems.handcrafted.ts');
 let src = fs.readFileSync(SRC,'utf8');
 
 for(const [id] of probs){
   const c = computed[id];
   if(!c) continue;
-
-  // ID 기반으로 해당 블록 위치 찾기 (id: N, 으로 시작하는 블록)
-  // 각 필드를 개별 regex로 치환
 
   // 1) startDate
   src = src.replace(
@@ -112,10 +178,7 @@ for(const [id] of probs){
     (m,pre,old,post) => pre + c.newStartDate + post
   );
 
-  // 2) revealDay & chartDays (같은 줄에 있음)
-  // "revealDay: XX, chartDays: XX, difficulty" 패턴
-  // 블록 내에서 해당 id 앞부분부터만 처리하기 위해 순차 치환
-  // 더 안전한 방법: id 위치를 찾아서 그 이후 첫 revealDay만 교체
+  // 2) revealDay & chartDays
   const idPos = src.indexOf(`id: ${id},`);
   if(idPos !== -1){
     const nextId = src.indexOf(`id: ${id+1},`, idPos);
@@ -153,7 +216,7 @@ for(const [id] of probs){
     const newBlock = block.replace(
       /(explanation: ')(.*?)(')/s,
       (_,a,old,d) => {
-        const base = old.replace(/[\.,]\s*\d+개월[^.]*\.*$/, '').trim();
+        const base = old.replace(/[\.,]\s*1?개월[^.]*\.*$/, '').trim();
         return `${a}${base}. 1개월 뒤 ${c.ansLabel} (${c.pctStr}).${d}`;
       }
     );
@@ -165,7 +228,7 @@ for(const [id] of probs){
     const idPos5 = src.indexOf(`id: ${id},`);
     const nextId5 = src.indexOf(`id: ${id+1},`, idPos5);
     const block = nextId5 !== -1 ? src.slice(idPos5, nextId5) : src.slice(idPos5);
-    const newBlock = block.replace(/(result: ')(.*?)(')/, `$1${makeResult(c.ans, c.pctStr)}$3`);
+    const newBlock = block.replace(/(result: ')(.*?)(')/, `$1${makeResult(c.ansLabel, c.pctStr)}$3`);
     src = src.slice(0,idPos5) + newBlock + (nextId5 !== -1 ? src.slice(nextId5) : '');
   }
 

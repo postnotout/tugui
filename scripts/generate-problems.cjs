@@ -749,3 +749,12 @@ ${allProblems.map(serializeProblem).join(',\n')}
 
 fs.writeFileSync(OUTPUT, ts, 'utf8');
 console.log(`\n✅ 총 ${allProblems.length}개 문제 생성 → ${OUTPUT}`);
+
+// 생성 후 자동 검증
+const { execSync } = require('child_process');
+try {
+  execSync('node ' + path.join(__dirname, 'validate-problems.cjs'), { stdio: 'inherit' });
+} catch (e) {
+  console.error('\n⚠️  생성 후 검증 실패 — 위 이슈를 확인하세요.');
+  process.exit(1);
+}

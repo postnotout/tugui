@@ -66,7 +66,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
       '하락한다',
       '급락한다',
     ],
-    answer: 1,
+    answer: 0,
     odds: '"주가는 실적을 6개월 선행한다." 사이클 정점엔 이미 반영.',
     explanation: '포물선 가속 + RSI·거래량 과열 = 사이클 정점 경고. 1개월 뒤 상승 (+10%).',
     reveal: {
@@ -116,7 +116,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
       '하락한다',
       '폭락한다',
     ],
-    answer: 2,
+    answer: 1,
     odds: '쌍봉 단독 적중률 ~60%. 긴축+고PER 동반 시 훨씬 위험.',
     explanation: '쌍봉 + 긴축 + 극단적 밸류 = 복합 하락 신호. 1개월 뒤 횡보 (-2%).',
     reveal: {
@@ -141,7 +141,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
       '하락한다',
       '급락한다',
     ],
-    answer: 3,
+    answer: 2,
     odds: '차트·매크로 충돌 시 매크로가 더 자주 이긴다.',
     explanation: '차트 돌파처럼 보였지만 수급이 없었다 — 7개월 -22%. 1개월 뒤 하락 (-9%).',
     reveal: {
@@ -166,7 +166,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
       '하락한다',
       '급락한다',
     ],
-    answer: 3,
+    answer: 2,
     odds: '수급 없는 돌파는 가짜일 확률이 높다.',
     explanation: '외국인 매도 중 차트 돌파 = 가짜 신호. 1개월 뒤 하락 (-22%).',
     reveal: {
@@ -191,7 +191,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
       '하락한다',
       '급락한다',
     ],
-    answer: 2,
+    answer: 1,
     odds: '시스템 리스크 진행 중 반등 = 데드캣 확률 높음.',
     explanation: '시스템 리스크 중 반등 = 데드캣. FTX 사태로 6개월 -32%. 1개월 뒤 횡보 (+3%).',
     reveal: {
@@ -322,7 +322,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
       '횡보한다',
       '상승한다',
     ],
-    answer: 3,
+    answer: 0,
     odds: '시스템 위기는 전염 속도가 예측을 초과한다.',
     explanation: '시스템 위기 = 개별 충격이 전염으로 확산. 속도는 예측 불가. 1개월 뒤 하락 (-20%).',
     reveal: {
@@ -348,7 +348,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
       '횡보한다',
       '상승한다',
     ],
-    answer: 3,
+    answer: 0,
     odds: '외환위기는 자기실현적 — "부족하다"는 인식이 실제 위기를 만든다.',
     explanation: '"우리는 다르다" = 위기 전 가장 위험한 말. 1개월 뒤 하락 (-19%).',
     reveal: {
@@ -374,7 +374,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
       '하락한다',
       '급락한다',
     ],
-    answer: 3,
+    answer: 2,
     odds: '레버리지 청산은 연쇄적이다 — 시작되면 빠르게 진행.',
     explanation: '레버리지 버블 붕괴 → 청산 연쇄. 정부 개입도 한계. 1개월 뒤 하락 (-17%).',
     reveal: {
@@ -532,7 +532,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
       '하락한다',
       '급락한다',
     ],
-    answer: 3,
+    answer: 2,
     odds: '금리 인상 초입 + 고PER = 멀티플 압축 패턴.',
     explanation: '금리 인상 초입 + 고PER = 멀티플 압축. 1개월 뒤 하락 (-7%).',
     reveal: {
@@ -558,7 +558,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
       '하락한다',
       '급락한다',
     ],
-    answer: 3,
+    answer: 2,
     odds: '반도체 사이클 저점은 뉴스가 최악일 때 온다.',
     explanation: '사이클 하락 + 재고 과잉 = 단기 하락. 8개월 -20%. (저점은 -55%). 1개월 뒤 하락 (-25%).',
     reveal: {
@@ -740,7 +740,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
       '횡보한다',
       '상승한다',
     ],
-    answer: 3,
+    answer: 0,
     odds: '고PER + 규제 + 금리 = 멀티플 압축 삼중 압박.',
     explanation: '고PER + 규제 + 금리 = 멀티플 압축 삼중 압박. 1개월 뒤 하락 (-28%).',
     reveal: {
@@ -912,7 +912,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
   {
     id: 36, market: 'NASDAQ', ticker: 'TSLA', pattern: 'breakout',
     revealDay: 126, chartDays: 147, difficulty: 'easy',
-    startDate: '2020-07-09',
+    startDate: '2020-01-09',
     question: '장기 박스권을 강하게 상향 돌파하였다. EV 보조금 정책이 확정되고 S&P500 편입이 거론되고 있다. 1개월 후 결과로 옳은 것은?',
     macroHints: [
       { label: 'S&P500 편입', value: '가능성 부각', trend: '지수 추종 펀드 강제 매수 기대', tone: 'positive' },
@@ -924,12 +924,12 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
       '횡보한다',
       '하락한다',
     ],
-    answer: 0,
+    answer: 2,
     odds: '구조적 수요 변화(지수 편입 강제 매수)와 산업 전환 테마가 동시에 작동하면 단기 모멘텀이 매우 강해진다.',
-    explanation: 'S&P500 편입 기대 + EV 테마 = 기관 강제 매수 예고. 1개월 뒤 급등 (+85%). 편입 전 FOMO 매수가 추가 가속시켰다.',
+    explanation: 'S&P500 편입 기대 + EV 테마 = 기관 강제 매수 예고. 1개월 뒤 급등 (+85%). 편입 전 FOMO 매수가 추가 가속시켰다.. 1개월 뒤 횡보 (+4%).',
     reveal: {
-      title: 'Tesla (TSLA)', market: 'NASDAQ · 전기차', period: '2020년 7월 ~ 2020년 12월',
-      result: '1개월 후 급등 (+85%).',
+      title: 'Tesla (TSLA)', market: 'NASDAQ · 전기차', period: '2020년 1월 ~ 2020년 8월',
+      result: '1개월 후 횡보 (+4%).',
       macro: '2020년 12월 S&P500 정식 편입, 기관 강제 매수 + EV 보조금 + 초저금리.',
       lesson: '지수 편입은 기계적 매수를 부른다. 편입 확정 후 오히려 "Sell the news"가 나오는 경우도 있으니 타이밍을 구분해야 한다.',
     },
@@ -938,7 +938,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
   {
     id: 37, market: 'NYSE', ticker: '^GSPC', pattern: 'vshape',
     revealDay: 126, chartDays: 147, difficulty: 'easy',
-    startDate: '2020-03-20',
+    startDate: '2019-09-23',
     question: '33일 만에 -34% 폭락하였다. 역사상 가장 빠른 하락이다. 연준이 무제한 QE를 선언하고 정부가 5조 달러 부양책을 예고하였다. 1개월 후 결과로 옳은 것은?',
     macroHints: [
       { label: '연준', value: '무제한 QE 선언', trend: '역대 최대 속도 유동성 공급', tone: 'positive' },
@@ -952,10 +952,10 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
     ],
     answer: 0,
     odds: '실물 경기와 주가는 다르게 움직인다. "유동성이 이긴다"는 원칙이 가장 극단적으로 작동한 사례다.',
-    explanation: '연준 무제한 QE + 5조 달러 부양 = 유동성 폭발. 1개월 뒤 급등 (+26%). 실업률 14.7%에도 주가는 V자를 그렸다.',
+    explanation: '연준 무제한 QE + 5조 달러 부양 = 유동성 폭발. 1개월 뒤 급등 (+26%). 실업률 14.7%에도 주가는 V자를 그렸다.. 1개월 뒤 급등 (+25%).',
     reveal: {
-      title: 'S&P 500 (^GSPC)', market: 'NYSE · 미국 대형주', period: '2020년 3월 ~ 2020년 8월',
-      result: '1개월 후 급등 (+26%).',
+      title: 'S&P 500 (^GSPC)', market: 'NYSE · 미국 대형주', period: '2019년 9월 ~ 2020년 4월',
+      result: '1개월 후 급등 (+25%).',
       macro: '연준 제로금리+무제한 QE, 정부 CARES Act 2.2조달러, 백신 개발 경쟁 시작.',
       lesson: '주가는 실물 경기가 아닌 유동성과 기대를 6개월 앞서 반영한다. 공포 극대화 시점이 역발상 매수 기회다.',
     },
@@ -964,7 +964,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
   {
     id: 38, market: 'NASDAQ', ticker: 'META', pattern: 'recovery',
     revealDay: 126, chartDays: 147, difficulty: 'medium',
-    startDate: '2022-11-04',
+    startDate: '2022-05-09',
     question: '-74% 폭락 후 바닥에 있다. CEO가 대규모 구조조정과 "효율의 해"를 선언하며 비용 절감에 나섰다. 1개월 후 결과로 옳은 것은?',
     macroHints: [
       { label: 'PER', value: '12배', trend: '빅테크 역대 최저 밸류', tone: 'positive' },
@@ -978,45 +978,19 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
     ],
     answer: 0,
     odds: '역대 최저 밸류에이션 + 경영 피벗은 역발상 투자의 교과서적 조합이다. 단, 구조조정 의지가 실제로 이어지는지가 관건이다.',
-    explanation: '경영 피벗 + 역대 저밸류 + AI 광고 수익화 = 역발상 기회. 1개월 뒤 급등 (+23%). 감원 발표 후 이익률이 빠르게 회복됐다.',
+    explanation: '경영 피벗 + 역대 저밸류 + AI 광고 수익화 = 역발상 기회. 1개월 뒤 급등 (+23%). 감원 발표 후 이익률이 빠르게 회복됐다.. 1개월 뒤 급등 (+26%).',
     reveal: {
-      title: 'Meta Platforms (META)', market: 'NASDAQ · 소셜미디어·AI', period: '2022년 11월 ~ 2023년 6월',
-      result: '1개월 후 급등 (+23%).',
+      title: 'Meta Platforms (META)', market: 'NASDAQ · 소셜미디어·AI', period: '2022년 5월 ~ 2022년 12월',
+      result: '1개월 후 급등 (+26%).',
       macro: '대규모 감원으로 영업이익률 29%→40% 회복, AI 광고 추천 시스템 성공, Fed 금리 인상 속도 둔화.',
       lesson: '경영진이 스스로 실패를 인정하고 구체적으로 실행하면 주가는 빠르게 반응한다. "효율의 해"는 투자자 신뢰를 되찾는 신호였다.',
     },
   },
 
   {
-    id: 39, market: 'KOSPI', ticker: '068270.KS', pattern: 'breakout',
-    revealDay: 126, chartDays: 147, difficulty: 'easy',
-    startDate: '2020-02-07',
-    question: '장기 박스권을 상향 돌파하였다. 코로나19 치료제 파이프라인에 대한 기대감이 급격히 높아지고 있다. 1개월 후 결과로 옳은 것은?',
-    macroHints: [
-      { label: '코로나19', value: '팬데믹 선언 임박', trend: '치료제·항체치료 수요 급증', tone: 'positive' },
-      { label: '항체치료제', value: '임상 3상 진입', trend: 'K-바이오 글로벌 주목', tone: 'positive' },
-    ],
-    choices: [
-      '급등한다',
-      '상승한다',
-      '횡보한다',
-      '하락한다',
-    ],
-    answer: 0,
-    odds: '실제 임상 데이터가 동반되는 바이오 테마는 단순 기대감보다 지속력이 훨씬 강하다.',
-    explanation: '실제 치료제 파이프라인 + 글로벌 수요 폭발 = 실적 동반 테마. 1개월 뒤 급등 (+80%). 항체치료제 수출 계약이 폭발적으로 증가했다.',
-    reveal: {
-      title: '셀트리온 (068270.KS)', market: 'KOSPI · 바이오·CMO', period: '2020년 2월 ~ 2020년 9월',
-      result: '1개월 후 급등 (+80%).',
-      macro: '코로나19 팬데믹 선언, 항체치료제 렉키로나 임상 진행, K-방역 글로벌 주목.',
-      lesson: '바이오 테마는 임상 단계와 실제 수요가 동반될 때 가장 강하다. 테마만 있고 실적이 없으면 오래가지 못한다.',
-    },
-  },
-
-  {
     id: 40, market: 'NASDAQ', ticker: 'AAPL', pattern: 'recovery',
     revealDay: 126, chartDays: 147, difficulty: 'medium',
-    startDate: '2019-01-14',
+    startDate: '2018-07-16',
     question: '중국 매출 경고로 -35% 폭락한 이후 저점에 있다. CEO가 하드웨어에서 서비스 중심으로 사업 구조를 전환하겠다고 선언하였다. 1개월 후 결과로 옳은 것은?',
     macroHints: [
       { label: '서비스 매출', value: '연간 +20% 성장', trend: '앱스토어·구독 매출 확대', tone: 'positive' },
@@ -1028,47 +1002,21 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
       '횡보한다',
       '하락한다',
     ],
-    answer: 0,
+    answer: 1,
     odds: '사업 구조 전환이 시장에서 재평가받으면 밸류에이션이 빠르게 재편된다. 하드웨어 PER에서 소프트웨어 PER로 리레이팅이 핵심이다.',
-    explanation: '하드웨어→서비스 전환 + Fed 피벗 = 밸류 리레이팅 촉매. 1개월 뒤 급등 (+22%). 서비스 매출 비중이 처음으로 20%를 돌파했다.',
+    explanation: '하드웨어→서비스 전환 + Fed 피벗 = 밸류 리레이팅 촉매. 1개월 뒤 급등 (+22%). 서비스 매출 비중이 처음으로 20%를 돌파했다.. 1개월 뒤 상승 (+14%).',
     reveal: {
-      title: 'Apple (AAPL)', market: 'NASDAQ · 빅테크', period: '2019년 1월 ~ 2019년 8월',
-      result: '1개월 후 급등 (+22%).',
+      title: 'Apple (AAPL)', market: 'NASDAQ · 빅테크', period: '2018년 7월 ~ 2019년 2월',
+      result: '1개월 후 상승 (+14%).',
       macro: '2019년 서비스 스트래티지 발표, Fed 금리 인상 중단, 중국 무역협상 1단계 기대.',
       lesson: '사업 구조 전환을 시장이 믿기 시작하면 밸류에이션이 한 단계 뛰어오른다. 전환 초기가 가장 강한 진입 시점이다.',
     },
   },
 
   {
-    id: 41, market: 'NASDAQ', ticker: 'AMD', pattern: 'breakout',
-    revealDay: 126, chartDays: 147, difficulty: 'medium',
-    startDate: '2019-06-21',
-    question: '장기 박스권을 돌파하였다. Zen2 아키텍처 출시가 임박하였으며 인텔 대비 가격·성능 우위가 부각되고 있다. 1개월 후 결과로 옳은 것은?',
-    macroHints: [
-      { label: 'Zen2 출시', value: '7nm 공정', trend: '인텔 대비 IPC +15% 우위', tone: 'positive' },
-      { label: '서버 CPU', value: 'EPYC 점유율 확대', trend: '데이터센터 채용 급증', tone: 'positive' },
-    ],
-    choices: [
-      '급등한다',
-      '상승한다',
-      '횡보한다',
-      '하락한다',
-    ],
-    answer: 0,
-    odds: '기술적 우위 + 점유율 확대가 실적으로 이어지면 멀티플 확장이 동반된다. 오랜 만년 2위에서 1위 도전자로 인식이 바뀌는 것이 핵심이다.',
-    explanation: 'Zen2 기술 우위 + 서버 점유율 확대 = 멀티플 재평가. 1개월 뒤 급등 (+30%). 인텔의 10nm 지연이 AMD에 절호의 기회를 줬다.',
-    reveal: {
-      title: 'AMD', market: 'NASDAQ · 반도체', period: '2019년 6월 ~ 2019년 12월',
-      result: '1개월 후 급등 (+30%).',
-      macro: 'Zen2 라이젠 3000 출시, EPYC 로마 서버 CPU 출시, 인텔 10nm 지속 지연.',
-      lesson: '기술적 우위가 시장점유율로 이어지면 주가는 점유율 확대 속도보다 빠르게 반응한다.',
-    },
-  },
-
-  {
     id: 42, market: 'CRYPTO', ticker: 'BTC-USD', pattern: 'sideways',
     revealDay: 126, chartDays: 147, difficulty: 'medium',
-    startDate: '2020-05-15',
+    startDate: '2020-01-11',
     question: '반감기 직후 횡보가 이어지고 있다. 공급이 절반으로 줄었으나 즉각적인 가격 반응은 없다. 1개월 후 결과로 옳은 것은?',
     macroHints: [
       { label: '반감기', value: '2020년 5월 완료', trend: '채굴 보상 12.5→6.25BTC', tone: 'positive' },
@@ -1080,12 +1028,12 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
       '횡보한다',
       '하락한다',
     ],
-    answer: 1,
+    answer: 2,
     odds: '반감기 효과는 즉각이 아니라 3~6개월 후에 나타나는 경향이 있다. 단기 기대감이 소진된 후 실제 공급 감소 효과가 가격에 반영된다.',
-    explanation: '반감기 후 공급 감소 효과는 지연 반영된다. 1개월 뒤 상승 (+14%). 이후 12개월 동안 +500% 이상 상승이 이어졌다.',
+    explanation: '반감기 후 공급 감소 효과는 지연 반영된다. 1개월 뒤 상승 (+14%). 이후 12개월 동안 +500% 이상 상승이 이어졌다.. 1개월 뒤 횡보 (+4%).',
     reveal: {
-      title: 'Bitcoin (BTC/USD)', market: 'Crypto · 가상자산', period: '2020년 5월 ~ 2020년 12월',
-      result: '1개월 후 상승 (+14%).',
+      title: 'Bitcoin (BTC/USD)', market: 'Crypto · 가상자산', period: '2020년 1월 ~ 2020년 6월',
+      result: '1개월 후 횡보 (+4%).',
       macro: '반감기 공급 쇼크, 연준 QE, 마이크로스트래티지 첫 BTC 매수(8월), 페이팔 지원 선언.',
       lesson: '반감기 효과는 즉각 반영되지 않는다. 3번 모두 반감기 후 6~18개월이 최대 상승 구간이었다.',
     },
@@ -1094,7 +1042,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
   {
     id: 43, market: 'NYSE', ticker: '^GSPC', pattern: 'uptrend',
     revealDay: 126, chartDays: 147, difficulty: 'easy',
-    startDate: '2023-01-06',
+    startDate: '2022-07-11',
     question: '2022년 약세장 저점에서 반등하여 강한 상승 추세가 이어지고 있다. AI 투자 붐과 함께 인플레이션이 둔화 중이다. 1개월 후 결과로 옳은 것은?',
     macroHints: [
       { label: 'AI 붐', value: 'ChatGPT 출시 직후', trend: '나스닥 빅테크 주도 상승', tone: 'positive' },
@@ -1106,12 +1054,12 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
       '횡보한다',
       '하락한다',
     ],
-    answer: 0,
+    answer: 1,
     odds: 'AI라는 새 성장 동력 + 인플레이션 둔화 = 강세장 재개의 교과서적 조합이다.',
-    explanation: 'AI 테마 + 인플레이션 둔화 = 강세장 재개. 1개월 뒤 급등 (+16%). 엔비디아가 지수 상승을 주도했다.',
+    explanation: 'AI 테마 + 인플레이션 둔화 = 강세장 재개. 1개월 뒤 급등 (+16%). 엔비디아가 지수 상승을 주도했다.. 1개월 뒤 상승 (+7%).',
     reveal: {
-      title: 'S&P 500 (^GSPC)', market: 'NYSE · 미국 대형주', period: '2023년 1월 ~ 2023년 8월',
-      result: '1개월 후 급등 (+16%).',
+      title: 'S&P 500 (^GSPC)', market: 'NYSE · 미국 대형주', period: '2022년 7월 ~ 2023년 2월',
+      result: '1개월 후 상승 (+7%).',
       macro: 'ChatGPT 충격 이후 AI 투자 붐, Fed 인상 종료 기대, S&P500 2023년 연간 +24%.',
       lesson: '새로운 기술 패러다임 + 매크로 개선이 겹치면 시장은 빠르게 재평가한다. 약세장 직후 새 강세장 초기가 가장 공격적인 투자 시점이다.',
     },
@@ -1120,7 +1068,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
   {
     id: 44, market: 'KOSPI', ticker: '005930.KS', pattern: 'uptrend',
     revealDay: 126, chartDays: 147, difficulty: 'easy',
-    startDate: '2017-04-03',
+    startDate: '2016-10-04',
     question: 'DRAM 가격이 급등하며 강한 상승 추세가 이어지고 있다. 1개월 후 결과로 옳은 것은?',
     macroHints: [
       { label: 'DRAM 가격', value: '연간 +70%', trend: '서버·모바일 동반 수요 급증', tone: 'positive' },
@@ -1132,12 +1080,12 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
       '횡보한다',
       '하락한다',
     ],
-    answer: 0,
+    answer: 1,
     odds: '반도체 슈퍼사이클은 공급이 수요를 따라가지 못할 때 발생한다. 이 구간은 가격과 실적이 동반 상승하는 가장 강한 구간이다.',
-    explanation: 'DRAM 슈퍼사이클 + 클라우드 서버 수요 = 실적 동반 급등. 1개월 뒤 급등 (+20%). 분기 영업이익이 사상 최초 10조를 돌파했다.',
+    explanation: 'DRAM 슈퍼사이클 + 클라우드 서버 수요 = 실적 동반 급등. 1개월 뒤 급등 (+20%). 분기 영업이익이 사상 최초 10조를 돌파했다.. 1개월 뒤 상승 (+10%).',
     reveal: {
-      title: '삼성전자 (005930.KS)', market: 'KOSPI · 반도체', period: '2017년 4월 ~ 2017년 11월',
-      result: '1개월 후 급등 (+20%).',
+      title: '삼성전자 (005930.KS)', market: 'KOSPI · 반도체', period: '2016년 10월 ~ 2017년 5월',
+      result: '1개월 후 상승 (+10%).',
       macro: 'DRAM 현물가 +70%, 서버·모바일 동반 수요, 외국인 지분 역대 최고.',
       lesson: '반도체 슈퍼사이클은 가격 상승이 실적을 직접 끌어올린다. 사이클 확인 후 진입해도 충분한 수익을 낼 수 있다.',
     },
@@ -1146,7 +1094,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
   {
     id: 45, market: 'KOSPI', ticker: '035420.KS', pattern: 'breakout',
     revealDay: 126, chartDays: 147, difficulty: 'easy',
-    startDate: '2020-04-03',
+    startDate: '2019-10-02',
     question: '코로나 봉쇄로 인한 비대면 수요 폭발로 강하게 돌파하였다. 1개월 후 결과로 옳은 것은?',
     macroHints: [
       { label: '비대면', value: '수요 폭발', trend: '쇼핑·광고·교육 모두 온라인 전환', tone: 'positive' },
@@ -1160,10 +1108,10 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
     ],
     answer: 0,
     odds: '위기가 구조적 수요 변화를 가속시킬 때, 수혜 기업은 가장 강하게 오른다.',
-    explanation: '비대면 가속 + 광고·커머스 폭발 = 실적 서프라이즈. 1개월 뒤 급등 (+32%). 광고 매출이 전년 대비 30% 급증했다.',
+    explanation: '비대면 가속 + 광고·커머스 폭발 = 실적 서프라이즈. 1개월 뒤 급등 (+32%). 광고 매출이 전년 대비 30% 급증했다.. 1개월 뒤 급등 (+24%).',
     reveal: {
-      title: '네이버 (035420.KS)', market: 'KOSPI · 인터넷·플랫폼', period: '2020년 4월 ~ 2020년 11월',
-      result: '1개월 후 급등 (+32%).',
+      title: '네이버 (035420.KS)', market: 'KOSPI · 인터넷·플랫폼', period: '2019년 10월 ~ 2020년 5월',
+      result: '1개월 후 급등 (+24%).',
       macro: 'COVID 비대면 수요, 스마트스토어 거래액 +60%, 동학개미 유입으로 금융 트래픽 급증.',
       lesson: '위기는 디지털 전환을 5년 앞당겼다. 수혜 기업을 찾아 집중하는 것이 핵심이다.',
     },
@@ -1172,7 +1120,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
   {
     id: 46, market: 'KOSPI', ticker: '035720.KS', pattern: 'doubletop',
     revealDay: 126, chartDays: 147, difficulty: 'medium',
-    startDate: '2021-06-28',
+    startDate: '2020-12-23',
     question: '고점 부근에서 두 번째 봉우리가 형성되고 있다. 플랫폼 규제 압박이 심화되고 있다. 1개월 후 결과로 옳은 것은?',
     macroHints: [
       { label: '플랫폼 규제', value: '국회 입법 추진', trend: '공정거래·골목상권 침해 논란', tone: 'negative' },
@@ -1184,12 +1132,12 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
       '하락한다',
       '급락한다',
     ],
-    answer: 3,
+    answer: 1,
     odds: '쌍봉 + 규제 리스크 + 고PER 이 세 가지가 겹치면 멀티플 압축이 빠르게 진행된다.',
-    explanation: '규제 현실화 + 고PER 멀티플 압축 = 급락 시작. 1개월 뒤 하락 (-18%). 6개월 후에는 고점 대비 -60%를 기록했다.',
+    explanation: '규제 현실화 + 고PER 멀티플 압축 = 급락 시작. 1개월 뒤 하락 (-18%). 6개월 후에는 고점 대비 -60%를 기록했다.. 1개월 뒤 횡보 (-5%).',
     reveal: {
-      title: '카카오 (035720.KS)', market: 'KOSPI · 인터넷·플랫폼', period: '2021년 6월 ~ 2022년 1월',
-      result: '1개월 후 하락 (-18%).',
+      title: '카카오 (035720.KS)', market: 'KOSPI · 인터넷·플랫폼', period: '2020년 12월 ~ 2021년 7월',
+      result: '1개월 후 횡보 (-5%).',
       macro: '금융위원회 카카오페이 제재, 오너 직접 사과, 한국은행 금리 인상 사이클 시작.',
       lesson: '국내 플랫폼 독점 기업에는 정치 리스크 할인이 필수다. 규제는 기대보다 빠르게 현실화된다.',
     },
@@ -1198,7 +1146,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
   {
     id: 47, market: 'NYSE', ticker: 'GLD', pattern: 'breakout',
     revealDay: 126, chartDays: 147, difficulty: 'easy',
-    startDate: '2020-06-05',
+    startDate: '2019-12-05',
     question: '9년 만에 전 고점을 돌파하였다. 코로나 부양책으로 실질 금리가 마이너스로 전환되었다. 1개월 후 결과로 옳은 것은?',
     macroHints: [
       { label: '실질 금리', value: '-1%대', trend: 'QE + 인플레이션 기대 = 마이너스 전환', tone: 'positive' },
@@ -1210,12 +1158,12 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
       '횡보한다',
       '하락한다',
     ],
-    answer: 0,
+    answer: 1,
     odds: '금 가격은 실질 금리와 역의 상관관계가 매우 강하다. 실질 금리가 마이너스면 금 보유의 기회비용이 소멸된다.',
-    explanation: '9년 전 고점 돌파 + 실질 금리 마이너스 = 금 강세장 재개. 1개월 뒤 급등 (+11%). 8월에는 사상 최고가 $2,075를 기록했다.',
+    explanation: '9년 전 고점 돌파 + 실질 금리 마이너스 = 금 강세장 재개. 1개월 뒤 급등 (+11%). 8월에는 사상 최고가 $2,075를 기록했다.. 1개월 뒤 상승 (+7%).',
     reveal: {
-      title: 'SPDR Gold Shares (GLD)', market: 'NYSE · 금 ETF', period: '2020년 6월 ~ 2020년 11월',
-      result: '1개월 후 급등 (+11%).',
+      title: 'SPDR Gold Shares (GLD)', market: 'NYSE · 금 ETF', period: '2019년 12월 ~ 2020년 7월',
+      result: '1개월 후 상승 (+7%).',
       macro: '연준 QE로 실질금리 마이너스, 달러 약세, 인플레이션 기대 상승, 지정학적 불확실성.',
       lesson: '금의 적(敵)은 실질 금리다. 실질 금리가 오르면 금은 약해지고, 내리면 강해진다. 이 원칙 하나만 기억해도 금 투자의 절반은 성공이다.',
     },
@@ -1224,7 +1172,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
   {
     id: 48, market: 'NASDAQ', ticker: 'NVDA', pattern: 'breakout',
     revealDay: 126, chartDays: 147, difficulty: 'easy',
-    startDate: '2023-05-26',
+    startDate: '2022-11-25',
     question: '전 고점을 강하게 돌파하였다. AI 데이터센터 GPU 수요가 예상을 3배 상회하는 실적 가이던스가 발표되었다. 1개월 후 결과로 옳은 것은?',
     macroHints: [
       { label: 'ChatGPT 수요', value: 'GPU 주문 폭발', trend: '데이터센터 GPU 대기 6~9개월', tone: 'positive' },
@@ -1236,47 +1184,21 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
       '횡보한다',
       '하락한다',
     ],
-    answer: 0,
+    answer: 1,
     odds: '실적 가이던스 대폭 상향 + 구조적 AI 수요 = 가장 강력한 상승 조합이다.',
-    explanation: '가이던스 +53% 상향 = 시장 기대의 3배. 1개월 뒤 급등 (+35%). 이 발표 이후 엔비디아는 반년 만에 시가총액 1조 달러를 돌파했다.',
+    explanation: '가이던스 +53% 상향 = 시장 기대의 3배. 1개월 뒤 급등 (+35%). 이 발표 이후 엔비디아는 반년 만에 시가총액 1조 달러를 돌파했다.. 1개월 뒤 상승 (+6%).',
     reveal: {
-      title: 'NVIDIA (NVDA)', market: 'NASDAQ · AI 반도체', period: '2023년 5월 ~ 2023년 11월',
-      result: '1개월 후 급등 (+35%).',
+      title: 'NVIDIA (NVDA)', market: 'NASDAQ · AI 반도체', period: '2022년 11월 ~ 2023년 6월',
+      result: '1개월 후 상승 (+6%).',
       macro: 'ChatGPT 출시 후 H100 GPU 수요 폭발, 빅테크 AI 인프라 투자 경쟁, 가이던스 연속 상향.',
       lesson: '구조적 수요 변화는 일반 사이클과 다르다. AI 인프라 투자는 단기 트렌드가 아닌 장기 인프라 사이클이었다.',
     },
   },
 
   {
-    id: 49, market: 'TSE', ticker: 'N225', pattern: 'uptrend',
-    revealDay: 126, chartDays: 147, difficulty: 'medium',
-    startDate: '2023-04-14',
-    question: '버핏이 일본 종합상사 5개를 동시에 추가 매수한다고 공개하였다. 이후 강한 상승 추세가 이어지고 있다. 1개월 후 결과로 옳은 것은?',
-    macroHints: [
-      { label: '버핏 매수', value: '5대 종합상사 5→7%+', trend: '추가 매수 의향 공개', tone: 'positive' },
-      { label: '엔화', value: '약세 지속', trend: '수출 기업 이익 개선', tone: 'positive' },
-    ],
-    choices: [
-      '급등한다',
-      '상승한다',
-      '횡보한다',
-      '하락한다',
-    ],
-    answer: 0,
-    odds: '버핏 효과는 단순 매수 소식이 아니라 "이 시장이 저평가됐다"는 글로벌 검증 신호로 작동한다.',
-    explanation: '버핏 신뢰 효과 + 엔화 약세 = 외국인 자금 유입 가속. 1개월 뒤 급등 (+14%). 닛케이225는 이후 34년 만에 사상 최고가를 경신했다.',
-    reveal: {
-      title: '니케이 225 (^N225)', market: '도쿄증권거래소', period: '2023년 4월 ~ 2023년 10월',
-      result: '1개월 후 급등 (+14%).',
-      macro: '버핏 일본 주식 추가 매수 공개, 엔화 약세로 수출 기업 이익 급증, PBR 1배 미만 기업 개혁 압박.',
-      lesson: '워런 버핏의 공개 매수는 시장에 대한 글로벌 검증 도장이다. 거물의 행동을 따라가는 것이 때로는 최선의 전략이다.',
-    },
-  },
-
-  {
     id: 50, market: 'CRYPTO', ticker: 'BTC-USD', pattern: 'breakout',
     revealDay: 126, chartDays: 147, difficulty: 'medium',
-    startDate: '2024-01-12',
+    startDate: '2023-09-09',
     question: '현물 ETF가 역대 최초로 승인된 직후이다. 장기 박스권을 강하게 돌파하였다. 1개월 후 결과로 옳은 것은?',
     macroHints: [
       { label: '현물 ETF', value: '1월 10일 승인', trend: '블랙록·피델리티 등 11개 동시 상장', tone: 'positive' },
@@ -1288,12 +1210,12 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
       '횡보한다',
       '하락한다',
     ],
-    answer: 0,
+    answer: 2,
     odds: '기관 접근성 확대는 구조적 수요 변화다. ETF 승인 후 첫 한 달 순유입 규모가 역대 모든 ETF 기록을 갱신할 수 있다.',
-    explanation: 'ETF 구조적 수요 + 반감기 공급 감소 = 이중 호재. 1개월 뒤 급등 (+22%). 첫 달 순유입 $40억으로 ETF 역대 최고 기록을 세웠다.',
+    explanation: 'ETF 구조적 수요 + 반감기 공급 감소 = 이중 호재. 1개월 뒤 급등 (+22%). 첫 달 순유입 $40억으로 ETF 역대 최고 기록을 세웠다.. 1개월 뒤 횡보 (+1%).',
     reveal: {
-      title: 'Bitcoin (BTC/USD)', market: 'Crypto · 가상자산', period: '2024년 1월 ~ 2024년 5월',
-      result: '1개월 후 급등 (+22%).',
+      title: 'Bitcoin (BTC/USD)', market: 'Crypto · 가상자산', period: '2023년 9월 ~ 2024년 2월',
+      result: '1개월 후 횡보 (+1%).',
       macro: '블랙록 IBIT 상장 후 순유입 역대 최고, 반감기(4월) 후 공급 감소, Fed 금리 인하 기대.',
       lesson: '기관 접근성 확대는 일회성 이벤트가 아니라 구조적 수요 증가다. ETF 승인 이후 BTC는 3개월 내 사상 최고가를 경신했다.',
     },
@@ -1302,7 +1224,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
   {
     id: 51, market: 'KOSPI', ticker: '051910.KS', pattern: 'breakout',
     revealDay: 126, chartDays: 147, difficulty: 'medium',
-    startDate: '2020-08-14',
+    startDate: '2020-02-17',
     question: '배터리 사업 분할 상장 기대감으로 박스권을 돌파하였다. EV 수요가 폭발적으로 증가하고 있다. 1개월 후 결과로 옳은 것은?',
     macroHints: [
       { label: 'LG에너지솔루션', value: '상장 기대감', trend: '배터리 사업 분리 = 화학+배터리 재평가', tone: 'positive' },
@@ -1314,12 +1236,12 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
       '횡보한다',
       '하락한다',
     ],
-    answer: 0,
+    answer: 2,
     odds: '배터리 사업 분리 = 숨겨진 가치 발견이다. 화학 PER에서 배터리 PER로 리레이팅이 일어난다.',
-    explanation: '분할 상장 기대 + EV 수주 = 숨겨진 가치 발견. 1개월 뒤 급등 (+25%). 이후 LG에너지솔루션 IPO는 당시 역대 최대 규모였다.',
+    explanation: '분할 상장 기대 + EV 수주 = 숨겨진 가치 발견. 1개월 뒤 급등 (+25%). 이후 LG에너지솔루션 IPO는 당시 역대 최대 규모였다.. 1개월 뒤 횡보 (+4%).',
     reveal: {
-      title: 'LG화학 (051910.KS)', market: 'KOSPI · 화학·배터리', period: '2020년 8월 ~ 2021년 1월',
-      result: '1개월 후 급등 (+25%).',
+      title: 'LG화학 (051910.KS)', market: 'KOSPI · 화학·배터리', period: '2020년 2월 ~ 2020년 9월',
+      result: '1개월 후 횡보 (+4%).',
       macro: 'LG에너지솔루션 분할 상장 공식화, GM 얼티엄 배터리 공급 계약, 초저금리 EV 투자 붐.',
       lesson: '사업 분리는 숨겨진 가치를 드러내는 촉매다. 복합 기업의 핵심 자산이 독립할 때 리레이팅 기회가 생긴다.',
     },
@@ -1328,7 +1250,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
   {
     id: 52, market: 'NYSE', ticker: 'GME', pattern: 'parabolic',
     revealDay: 126, chartDays: 147, difficulty: 'hard',
-    startDate: '2021-01-08',
+    startDate: '2020-07-13',
     question: '공매도 140%에서 개인 집단 매수로 포물선 급등이 진행 중이다. 증권사들이 매수를 제한하기 시작하였다. 1개월 후 결과로 옳은 것은?',
     macroHints: [
       { label: '로빈후드', value: '매수 제한 조치', trend: '개인 매수 인위적 차단', tone: 'negative' },
@@ -1340,47 +1262,21 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
       '하락한다',
       '급락한다',
     ],
-    answer: 3,
+    answer: 0,
     odds: '숏 스퀴즈의 연료(공매도 잔고)가 소진되면 주가를 지지할 매수 주체가 사라진다. 이후 주가는 펀더멘털로 회귀한다.',
-    explanation: '매수 제한 + 공매도 청산 완료 = 연료 소진. 1개월 뒤 급락 (-67%). 기업 가치와 괴리된 가격은 반드시 회귀한다.',
+    explanation: '매수 제한 + 공매도 청산 완료 = 연료 소진. 1개월 뒤 급락 (-67%). 기업 가치와 괴리된 가격은 반드시 회귀한다.. 1개월 뒤 급등 (+184%).',
     reveal: {
-      title: 'GameStop (GME)', market: 'NYSE · 게임 소매', period: '2021년 1월 ~ 2021년 3월',
-      result: '1개월 후 급락 (-67%).',
+      title: 'GameStop (GME)', market: 'NYSE · 게임 소매', period: '2020년 7월 ~ 2021년 2월',
+      result: '1개월 후 급등 (+184%).',
       macro: '로빈후드 매수 제한(1/28), 의회 청문회 소환, 공매도 잔고 소진으로 숏 스퀴즈 종료.',
       lesson: '숏 스퀴즈는 예측하고 진입하는 게 아니라 관찰하고 빠져나오는 것이다. FOMO로 고점 진입 시 손실 확률이 극도로 높다.',
     },
   },
 
   {
-    id: 53, market: 'NASDAQ', ticker: 'AAPL', pattern: 'uptrend',
-    revealDay: 126, chartDays: 147, difficulty: 'easy',
-    startDate: '2020-06-05',
-    question: '코로나 충격에서 빠르게 회복하며 신고가를 향해 상승 중이다. 주식 분할이 예정되어 있다. 1개월 후 결과로 옳은 것은?',
-    macroHints: [
-      { label: '주식 분할', value: '4:1 분할 예정', trend: '소액 투자자 접근성 확대', tone: 'positive' },
-      { label: '실적', value: 'Q3 EPS 서프라이즈', trend: '아이폰·서비스 동반 성장', tone: 'positive' },
-    ],
-    choices: [
-      '급등한다',
-      '상승한다',
-      '횡보한다',
-      '하락한다',
-    ],
-    answer: 0,
-    odds: '주식 분할은 가치를 변화시키지 않지만, 심리적 접근성을 높여 매수 수요를 늘리는 효과가 있다.',
-    explanation: '실적 서프라이즈 + 주식 분할 기대 = 단기 모멘텀 가속. 1개월 뒤 급등 (+20%). 분할 전 FOMO 매수가 추가 상승을 만들었다.',
-    reveal: {
-      title: 'Apple (AAPL)', market: 'NASDAQ · 빅테크', period: '2020년 6월 ~ 2020년 11월',
-      result: '1개월 후 급등 (+20%).',
-      macro: '2020년 8월 4:1 주식 분할, 서비스 매출 최초 150억달러 돌파, 초저금리.',
-      lesson: '주식 분할 자체는 가치를 만들지 않지만, 심리적 접근성이 단기 매수 수요를 강하게 자극한다.',
-    },
-  },
-
-  {
     id: 54, market: 'NASDAQ', ticker: 'AMD', pattern: 'cup',
     revealDay: 126, chartDays: 147, difficulty: 'medium',
-    startDate: '2023-01-20',
+    startDate: '2022-07-22',
     question: '반도체 다운사이클 저점에서 컵 패턴이 형성되었다. MI300 AI GPU 출시가 예정되어 있다. 1개월 후 결과로 옳은 것은?',
     macroHints: [
       { label: 'MI300 GPU', value: 'NVIDIA 대안 수요', trend: 'AI 데이터센터 공급 부족', tone: 'positive' },
@@ -1392,12 +1288,12 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
       '횡보한다',
       '하락한다',
     ],
-    answer: 0,
+    answer: 1,
     odds: 'NVIDIA가 공급을 독점할 수 없는 구조에서 AMD는 AI GPU 수혜 2순위가 된다. 사이클 저점 + 신제품 라인업 = 강한 반등 조합.',
-    explanation: 'AI GPU 대안 + 사이클 저점 = 이중 상승 동력. 1개월 뒤 급등 (+25%). MI300 출시 후 AMD의 데이터센터 매출이 분기 $10억을 돌파했다.',
+    explanation: 'AI GPU 대안 + 사이클 저점 = 이중 상승 동력. 1개월 뒤 급등 (+25%). MI300 출시 후 AMD의 데이터센터 매출이 분기 $10억을 돌파했다.. 1개월 뒤 상승 (+10%).',
     reveal: {
-      title: 'AMD', market: 'NASDAQ · AI 반도체', period: '2023년 1월 ~ 2023년 8월',
-      result: '1개월 후 급등 (+25%).',
+      title: 'AMD', market: 'NASDAQ · AI 반도체', period: '2022년 7월 ~ 2023년 2월',
+      result: '1개월 후 상승 (+10%).',
       macro: 'ChatGPT 수요 폭증으로 NVDA H100 품귀, AMD MI300 AI GPU 사전 수주 폭발, PC 재고 정상화.',
       lesson: '산업 변곡점에서는 1등만 오르지 않는다. 1등이 공급을 따라가지 못할 때 2등은 더 빠르게 성장하기도 한다.',
     },
@@ -1406,7 +1302,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
   {
     id: 55, market: 'KOSPI', ticker: '000660.KS', pattern: 'breakout',
     revealDay: 126, chartDays: 147, difficulty: 'easy',
-    startDate: '2023-05-12',
+    startDate: '2022-11-10',
     question: 'HBM(고대역폭 메모리) 공급 계약 소식으로 장기 저항선을 돌파하였다. AI 반도체 수요가 폭발적으로 증가하고 있다. 1개월 후 결과로 옳은 것은?',
     macroHints: [
       { label: 'HBM 수요', value: 'NVDA H100·H200', trend: 'AI GPU당 HBM 8개 이상 탑재', tone: 'positive' },
@@ -1420,10 +1316,10 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
     ],
     answer: 0,
     odds: 'AI GPU 1개당 HBM 메모리 8개 이상이 필요하다. AI 인프라 투자가 늘수록 HBM 수요는 곱절로 증가하는 구조다.',
-    explanation: 'HBM 독점 공급 + AI 인프라 투자 폭증 = 구조적 수요. 1개월 뒤 급등 (+23%). SK하이닉스는 HBM 시장점유율 50%를 확보했다.',
+    explanation: 'HBM 독점 공급 + AI 인프라 투자 폭증 = 구조적 수요. 1개월 뒤 급등 (+23%). SK하이닉스는 HBM 시장점유율 50%를 확보했다.. 1개월 뒤 급등 (+36%).',
     reveal: {
-      title: 'SK하이닉스 (000660.KS)', market: 'KOSPI · 반도체·HBM', period: '2023년 5월 ~ 2023년 11월',
-      result: '1개월 후 급등 (+23%).',
+      title: 'SK하이닉스 (000660.KS)', market: 'KOSPI · 반도체·HBM', period: '2022년 11월 ~ 2023년 6월',
+      result: '1개월 후 급등 (+36%).',
       macro: 'NVDA H100 HBM 단독 공급 계약, AI 데이터센터 투자 $1,000억 돌파, 삼성 대비 HBM 기술 우위.',
       lesson: 'AI 인프라 사이클에서 가장 중요한 부품의 독점 공급자를 찾는 것이 핵심이다. HBM은 AI 반도체의 병목이었다.',
     },
