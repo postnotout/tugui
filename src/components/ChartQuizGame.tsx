@@ -47,7 +47,7 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
   const [revealed, setRevealed] = useState(false);
   const [lastGain, setLastGain] = useState(0);
   const [showRSI, setShowRSI] = useState(false);
-  const [showMacroDetail, setShowMacroDetail] = useState(false);
+  // macro is always visible — toggle removed
   const [activeTerm, setActiveTerm] = useState<string | null>(null);
   const [chartData, setChartData] = useState<ChartDataPoint[]>([]);
   const [chartLoading, setChartLoading] = useState(true);
@@ -808,33 +808,30 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
           const toneColor = overallTone === 'positive' ? COLORS.green : overallTone === 'negative' ? COLORS.red : COLORS.textDim;
           return (
             <div id="tut-macro" style={{ marginBottom: 6 }}>
-              <button onClick={() => setShowMacroDetail(!showMacroDetail)} style={{ width: '100%', background: COLORS.bgPanel, border: `2px solid ${COLORS.border}`, boxShadow: `2px 2px 0 0 ${COLORS.border}`, padding: '5px 10px', fontFamily: TITLE_FONT, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8, flex: 1, minWidth: 0 }}>
-                  <span style={{ fontSize: 11, color: COLORS.textDim, letterSpacing: '0.15em', fontWeight: 700 }}>매크로</span>
-                  <span style={{ display: 'flex', gap: 3 }}>
-                    {problem.macroHints.map((h, i) => {
-                      const c = h.tone === 'positive' ? COLORS.green : h.tone === 'negative' ? COLORS.red : COLORS.textDim;
-                      return <span key={i} style={{ width: 8, height: 8, background: c, display: 'inline-block', border: `1px solid ${COLORS.border}` }}/>;
-                    })}
-                  </span>
-                  <span style={{ fontSize: 12, color: toneColor, fontWeight: 700, letterSpacing: '0.1em' }}>{toneLabel}</span>
-                </div>
-                <span style={{ fontSize: 10, color: COLORS.textDim }}>{showMacroDetail ? '▲ 접기' : '▼ 상세'}</span>
-              </button>
-              {showMacroDetail && (
-                <div style={{ marginTop: 6, display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 6 }}>
+              {/* 매크로 헤더 */}
+              <div style={{ background: COLORS.bgPanel, border: `2px solid ${COLORS.border}`, boxShadow: `2px 2px 0 0 ${COLORS.border}`, padding: '5px 10px', display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
+                <span style={{ fontSize: 11, color: COLORS.textDim, letterSpacing: '0.15em', fontWeight: 700 }}>매크로</span>
+                <span style={{ display: 'flex', gap: 3 }}>
                   {problem.macroHints.map((h, i) => {
                     const c = h.tone === 'positive' ? COLORS.green : h.tone === 'negative' ? COLORS.red : COLORS.textDim;
-                    return (
-                      <div key={i} style={{ background: COLORS.bgPanel, border: `1px solid ${c}`, borderLeft: `4px solid ${c}`, padding: '6px 9px' }}>
-                        <div style={{ fontSize: 10, color: COLORS.textDim, fontFamily: TITLE_FONT }}><GlossaryText text={h.label} onTerm={setActiveTerm} /></div>
-                        <div style={{ fontSize: 13, fontWeight: 700, color: c, fontFamily: KOREAN_FONT }}>{h.value}</div>
-                        <div style={{ fontSize: 11, color: COLORS.text, lineHeight: 1.35, fontFamily: KOREAN_FONT }}><GlossaryText text={h.trend} onTerm={setActiveTerm} /></div>
-                      </div>
-                    );
+                    return <span key={i} style={{ width: 8, height: 8, background: c, display: 'inline-block', border: `1px solid ${COLORS.border}` }}/>;
                   })}
-                </div>
-              )}
+                </span>
+                <span style={{ fontSize: 12, color: toneColor, fontWeight: 700, letterSpacing: '0.1em' }}>{toneLabel}</span>
+              </div>
+              {/* 매크로 카드 — 항상 표시 */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 6 }}>
+                {problem.macroHints.map((h, i) => {
+                  const c = h.tone === 'positive' ? COLORS.green : h.tone === 'negative' ? COLORS.red : COLORS.textDim;
+                  return (
+                    <div key={i} style={{ background: COLORS.bgPanel, border: `1px solid ${c}`, borderLeft: `4px solid ${c}`, padding: '6px 9px' }}>
+                      <div style={{ fontSize: 10, color: COLORS.textDim, fontFamily: TITLE_FONT }}><GlossaryText text={h.label} onTerm={setActiveTerm} /></div>
+                      <div style={{ fontSize: 13, fontWeight: 700, color: c, fontFamily: KOREAN_FONT }}>{h.value}</div>
+                      <div style={{ fontSize: 11, color: COLORS.text, lineHeight: 1.35, fontFamily: KOREAN_FONT }}><GlossaryText text={h.trend} onTerm={setActiveTerm} /></div>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           );
         })()}
