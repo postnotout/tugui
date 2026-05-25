@@ -108,8 +108,13 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
 
   const visibleDataWithReveal = visibleData.map(d => {
     const pi = d.day - (problem.revealDay - 1);
+    const isFuture = d.day >= problem.revealDay;
     return {
       ...d,
+      // 미래 구간 이동평균선 숨김 (답 노출 방지)
+      MA5:  isFuture ? null : d.MA5,
+      MA20: isFuture ? null : d.MA20,
+      MA60: isFuture ? null : d.MA60,
       종가_past:    d.day < problem.revealDay ? d.종가 : null,
       종가_미래:    (showActualFuture && d.day >= problem.revealDay - 1) ? d.종가 : null,
       종가_preview: (previewPath && pi >= 0 && pi < previewPath.length) ? previewPath[pi] : null,
