@@ -12,10 +12,10 @@ const DATA_DIR   = path.join(__dirname, '../public/data');
 const OUTPUT     = path.join(__dirname, '../src/data/problems.generated.ts');
 const MAX_PER_TICKER = 14;  // 티커당 최대 문제 수
 const MIN_STEP = 40;        // 최소 시작일 간격 (거래일)
-const MIN_CHANGE = 0.08;    // 최소 |%변화|
-const REVEAL_DAY = 55;      // 차트 절단 지점 (거래일)
-const AFTER_DAYS = 65;      // 절단 후 표시 기간
-const CHART_DAYS = REVEAL_DAY + AFTER_DAYS; // = 120
+const MIN_CHANGE = 0.05;    // 최소 |%변화| (1개월 기준 완화)
+const REVEAL_DAY = 126;     // 과거 6개월 (≈ 21 거래일 × 6)
+const AFTER_DAYS = 21;      // 예측 1개월 (≈ 21 거래일)
+const CHART_DAYS = REVEAL_DAY + AFTER_DAYS; // = 147
 
 // ---------- 티커 메타 ----------
 const TICKER_META = {
@@ -243,18 +243,30 @@ function getMacroHints(dateStr) {
 }
 
 // ---------- 패턴 감지 ----------
+// ※ 구간 평균이 아닌 종가 직접 비교:
+//   평균 방식은 "급등 후 급락" 시 평균이 상쇄돼 uptrend로 오분류하는 버그 발생.
+//   현재가(revealDay-1) vs 20일 전/40일 전 종가를 직접 비교한다.
 function detectPattern(closes, revealDay) {
-  const w = 20;
-  const recent  = closes.slice(Math.max(0, revealDay - w), revealDay);
-  const earlier = closes.slice(Math.max(0, revealDay - w*2), revealDay - w);
-  if (!recent.length || !earlier.length) return 'sideways';
-  const rAvg = recent.reduce((s, v) => s + v, 0) / recent.length;
-  const eAvg = earlier.reduce((s, v) => s + v, 0) / earlier.length;
-  const chg = (rAvg - eAvg) / eAvg;
-  if (chg > 0.20) return 'uptrend';
-  if (chg < -0.20) return 'downtrend';
-  if (chg > 0.05) return 'breakout';
-  if (chg < -0.05) return 'reversal';
+  const cur = closes[revealDay - 1];
+  const p20 = closes[Math.max(0, revealDay - 20)];
+  const p40 = closes[Math.max(0, revealDay - 40)];
+  if (!cur || !p20 || !p40) return 'sideways';
+
+  const chg20 = (cur - p20) / p20;  // 최근 20일 등락
+  const chg40 = (cur - p40) / p40;  // 최근 40일 등락
+
+  // 추세적 상승: 단기·중기 모두 양수이며, 중기 상승이 단기보다 커야 함
+  //   (chg40 > chg20*1.2: 상승이 20일 이전부터 이어진 경우만 uptrend로 인정)
+  if (chg20 > 0.04 && chg40 > 0.12 && chg40 > chg20 * 1.2) return 'uptrend';
+  // 추세적 하락: 단기·중기 모두 음(-)
+  if (chg20 < -0.04 && chg40 < -0.12) return 'downtrend';
+  // 최근 급등: 하락 추세 중이면 reversal(반등), 아니면 breakout
+  if (chg20 > 0.08) return chg40 < -0.05 ? 'reversal' : 'breakout';
+  // 최근 급락 (← 급등 후 급락 케이스가 여기로 올바르게 분류)
+  if (chg20 < -0.08) return 'reversal';
+  // 중기 방향성만 존재
+  if (chg40 > 0.10) return 'breakout';
+  if (chg40 < -0.10) return 'reversal';
   return 'sideways';
 }
 
@@ -282,11 +294,11 @@ const TEMPLATES = {
     (_n, m) => `중요 저항선을 상향 돌파하였다. ${m}개월 후 추세의 전개로 알맞은 것은?`,
   ],
   reversal: [
-    (_n, m) => `급락 이후 바닥에서 반등 신호가 출현하였다. ${m}개월 후 주가의 변화로 옳은 것은?`,
-    (_n, m) => `급락 이후 저점에서 강한 양봉이 나타나기 시작하였다. ${m}개월 후 결과로 알맞은 것은?`,
+    (_n, m) => `최근 하락세가 둔화되며 저점에서 반등 신호가 나타나고 있다. ${m}개월 후 주가의 변화로 옳은 것은?`,
+    (_n, m) => `이평선 하방에서 하락하던 주가가 저점에서 강한 양봉을 형성하고 있다. ${m}개월 후 결과로 알맞은 것은?`,
     (_n, m) => `하락세가 멈추고 바닥을 다지는 흐름이 나타나고 있다. ${m}개월 후 결과로 옳은 것은?`,
     (_n, m) => `과매도 구간에서 거래량을 동반한 반등이 시도되고 있다. ${m}개월 후 주가의 전개로 적절한 것은?`,
-    (_n, m) => `장기 하락 후 지지선에서 반등 조짐이 나타나고 있다. ${m}개월 후 결과로 알맞은 것은?`,
+    (_n, m) => `하락 이후 지지선에서 반등 조짐이 나타나고 있다. ${m}개월 후 결과로 알맞은 것은?`,
   ],
   sideways: [
     (_n, m) => `박스권 내에서 방향성이 나타나지 않고 있다. ${m}개월 후 주가의 흐름으로 가장 적절한 것은?`,
@@ -302,12 +314,12 @@ function pickQ(pattern, name, months) {
   return list[Math.floor(Math.random() * list.length)](name, months);
 }
 
-// ---------- 정답 범주 ----------
+// ---------- 정답 범주 (1개월 기준 임계값) ----------
 function toAnswer(pct) {
-  if (pct >= 0.30) return 0; // 급등
-  if (pct >= 0.10) return 1; // 상승
-  if (pct > -0.10) return 2; // 횡보
-  return 3;                  // 하락
+  if (pct >= 0.15) return 0; // 급등 (1개월 +15%+)
+  if (pct >= 0.05) return 1; // 상승 (1개월 +5%~+15%)
+  if (pct > -0.05) return 2; // 횡보 (-5%~+5%)
+  return 3;                  // 하락 (1개월 -5%이하)
 }
 
 function answerLabel(ans) {
@@ -389,9 +401,36 @@ function makeLesson(ans, pattern, hints) {
 
 function makeExplanation(ans, pctStr, months, pattern) {
   const lbl = answerLabel(ans);
-  const verb = {
-    reversal: '반등 시도 후', downtrend: '하락 지속하며', breakout: '돌파 이후', uptrend: '상승 추세 이어가며', sideways: '횡보 끝에',
-  }[pattern] || '이후';
+  // 결과(answer) 기준으로 동사 선택 — 패턴이 아니라 실제 결과에 맞게
+  let verb;
+  if (ans === 0 || ans === 1) {
+    // 상승 결과
+    verb = {
+      reversal:  '반등에 성공하며',
+      downtrend: '예상 외 강하게 반등하며',
+      breakout:  '돌파에 성공하며',
+      uptrend:   '추세를 이어가며',
+      sideways:  '박스권을 돌파하며',
+    }[pattern] || '이후';
+  } else if (ans === 2) {
+    // 횡보 결과
+    verb = {
+      reversal:  '반등 시도 후 재차 눌리며',
+      downtrend: '하락이 일시 멈추며',
+      breakout:  '돌파 시도가 무산되며',
+      uptrend:   '상승 피로 누적 후',
+      sideways:  '방향성 없이',
+    }[pattern] || '이후';
+  } else {
+    // 하락 결과
+    verb = {
+      reversal:  '반등 실패 후',
+      downtrend: '하락을 이어가며',
+      breakout:  '돌파 실패로 되밀리며',
+      uptrend:   '추세가 꺾이며',
+      sideways:  '하단을 이탈하며',
+    }[pattern] || '이후';
+  }
   return `${verb} ${months}개월 뒤 ${lbl} (${pctStr}).`;
 }
 

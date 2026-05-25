@@ -11,10 +11,10 @@ export const TUTORIAL_PROBLEM: Problem = {
   market: 'KOSPI',
   ticker: '005930.KS',
   pattern: 'breakout',
-  revealDay: 55,
-  chartDays: 90,
+  revealDay: 126,
+  chartDays: 147,
   difficulty: 'easy',
-  startDate: '2020-04-06',
+  startDate: '2019-12-20',
   question: '[연습] 코로나 급락 이후 회복 중입니다. 이 종목은 이후 어떻게 됐을까요?',
   macroHints: [
     { label: '한국 기준금리', value: '0.75%', trend: '코로나 긴급 인하 (↓0.5%p)', tone: 'positive' },
@@ -37,7 +37,7 @@ export const TUTORIAL_PROBLEM: Problem = {
   reveal: {
     title: '삼성전자 (005930.KS)',
     market: 'KOSPI · 반도체',
-    period: '2020년 4월 ~ 2020년 8월',
+    period: '2019년 12월 ~ 2020년 12월',
     result: '43,900원 저점 회복 후 박스권 상향 돌파. 이후 2021년 1월 96,800원 사상 최고가 달성.',
     macro:
       '연준 무제한 QE(2020년 3월), 한국 기준금리 0.5%p 긴급 인하(연 0.75%), ' +

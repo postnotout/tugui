@@ -6,6 +6,7 @@ export interface ChartDataPoint {
   MA5: number | null;
   MA20: number | null;
   MA60: number | null;
+  MA120: number | null;
   RSI: number | null;
 }
 

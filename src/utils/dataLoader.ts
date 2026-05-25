@@ -76,7 +76,9 @@ function rsi14(data: number[], idx: number): number | null {
 
 /**
  * ticker 종목의 startDate 기준 days개 봉을 로드.
- * startDate 이전 60일치를 추가로 읽어 MA/RSI 워밍업에 사용 후 제거.
+ * startDate 이전 최대 120개를 워밍업에 사용하되,
+ * CSV 시작일이 startDate와 같거나 가까워 이전 행이 부족할 경우
+ * 첫 종가로 합성 패딩을 추가해 MA60·MA120이 항상 유효하도록 한다.
  */
 export async function loadChartData(
   ticker: string,
@@ -88,25 +90,38 @@ export async function loadChartData(
   const startIdx = rows.findIndex(r => r.date >= startDate);
   if (startIdx === -1) throw new Error(`No data from ${startDate} for ${ticker}`);
 
-  // MA60 워밍업을 위해 최소 60개 이전 데이터 포함
-  const warmup = 60;
-  const sliceStart = Math.max(0, startIdx - warmup);
+  const WARMUP = 120;
+  const sliceStart = Math.max(0, startIdx - WARMUP);
   const sliceEnd   = Math.min(rows.length, startIdx + days);
   const slice = rows.slice(sliceStart, sliceEnd);
 
-  const closes = slice.map(r => parseFloat(r.close));
+  // CSV에 실제로 있는 워밍업 행 수
+  const actualWarmup  = startIdx - sliceStart;
+  // 부족한 만큼 합성 패딩 추가 (첫 가시 데이터 가격으로 평탄하게)
+  const syntheticPad  = WARMUP - actualWarmup;
+  const firstClose    = parseFloat(rows[sliceStart]?.close ?? rows[0].close);
 
-  const points: ChartDataPoint[] = slice.map((r, i) => ({
-    day:    i - (startIdx - sliceStart), // 0-base from startDate
-    date:   r.date.slice(5).replace('-', '/'), // MM/DD
-    종가:   parseFloat(r.close),
-    거래량: parseInt(r.volume, 10) || 0,
-    MA5:    sma(closes, i, 5),
-    MA20:   sma(closes, i, 20),
-    MA60:   sma(closes, i, 60),
-    RSI:    rsi14(closes, i),
-  }));
+  // closes[WARMUP + i] = slice[i] 의 종가
+  const closes: number[] = [
+    ...Array<number>(syntheticPad).fill(firstClose),
+    ...slice.map(r => parseFloat(r.close)),
+  ];
 
-  // 워밍업 구간 제거 (day < 0 のもの)
+  const points: ChartDataPoint[] = slice.map((r, i) => {
+    const ci = syntheticPad + i; // closes[] 내 인덱스
+    return {
+      day:    i - actualWarmup,  // 0-base from startDate
+      date:   r.date.slice(5).replace('-', '/'), // MM/DD
+      종가:   parseFloat(r.close),
+      거래량: parseInt(r.volume, 10) || 0,
+      MA5:    sma(closes, ci, 5),
+      MA20:   sma(closes, ci, 20),
+      MA60:   sma(closes, ci, 60),
+      MA120:  sma(closes, ci, 120),
+      RSI:    rsi14(closes, ci),
+    };
+  });
+
+  // 워밍업 구간 제거 (day < 0)
   return points.filter(p => p.day >= 0);
 }

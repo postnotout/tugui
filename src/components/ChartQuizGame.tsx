@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import {
   Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
-  ReferenceLine, ReferenceArea, Area, ComposedChart, Bar, Cell,
+  ReferenceLine, ReferenceArea, ComposedChart, Bar, Cell,
 } from 'recharts';
 
 import { COLORS } from '../constants/colors';
@@ -25,6 +25,14 @@ import {
 // 선택지 미리보기 색상 (0=급등 녹색, 1=상승 연녹, 2=횡보 노랑, 3=하락 빨강, 4=급락 보라)
 const CHOICE_PREVIEW_COLORS = ['#4caf50', '#8bc34a', '#ffc107', '#ef5350', '#9c27b0'];
 
+// 이동평균선 색상 — 각 기간이 명확히 구분되도록
+const MA_COLORS = {
+  MA5:   '#0ea5e9', // 하늘색 (단기 · 빠름)
+  MA20:  '#f59e0b', // 앰버 (중기)
+  MA60:  '#a855f7', // 보라 (장기)
+  MA120: '#ef4444', // 빨강 (중장기 · 반년선)
+} as const;
+
 /** 질문에서 종목명 제거 (답 노출 방지) */
 function anonymizeQ(question: string, revealTitle: string): string {
   const name = revealTitle.split(' (')[0];
@@ -39,23 +47,50 @@ function anonymizeQ(question: string, revealTitle: string): string {
 }
 
 /**
- * 선택지 미리보기용 합성 궤적 생성
+ * 선택지 미리보기용 합성 궤적 생성 — 명확한 방향성과 곡선 형태 차별화
  * choiceIdx 0 = 최상(급등), N-1 = 최하(급락)
+ *
+ * 곡선 형태:
+ *   0 (강한 상승) → 가속형: 완만하게 시작 후 후반에 급격히 치솟음
+ *   1 (완만 상승) → S자: 부드럽게 우상향
+ *   2 (횡보)     → 진동: 방향성 없이 오르내림
+ *   3 (하락)     → 폭포형: 초반에 빠르게 떨어지고 후반 완만
  */
 function generatePreviewPath(startPrice: number, choiceIdx: number, numPoints: number, numChoices = 4): number[] {
-  const targets4 = [0.42, 0.18, 0.01, -0.24];
-  const targets5 = [0.50, 0.24, 0.01, -0.20, -0.42];
+  // 충분한 변별력을 위해 큰 비율 간격 사용
+  const targets4 = [0.68,  0.28,  0.00, -0.45];
+  const targets5 = [0.75,  0.35,  0.00, -0.30, -0.58];
   const tgts = numChoices >= 5 ? targets5 : targets4;
   const targetPct = tgts[choiceIdx] ?? 0;
 
   return Array.from({ length: numPoints }, (_, i) => {
     const t = i / Math.max(numPoints - 1, 1);
-    const smooth = t * t * (3 - 2 * t); // smoothstep 0→1
-    if (Math.abs(targetPct) < 0.03) {
-      // 횡보: 약한 사인 진동
-      return startPrice * (1 + 0.03 * Math.sin(t * Math.PI * 3) * smooth);
+
+    // ── 횡보: 사인 진동 (방향성 없음) ─────────────────────────────────────
+    if (Math.abs(targetPct) < 0.02) {
+      const wave = 0.055 * Math.sin(t * Math.PI * 4.5)
+                 + 0.020 * Math.sin(t * Math.PI * 10.3);
+      return startPrice * (1 + wave);
     }
-    return startPrice * (1 + targetPct * smooth);
+
+    let progress: number;
+    if (targetPct >= 0.5) {
+      // 가속형: 처음엔 완만하다가 후반에 급등 (t^1.5 = 느리게→빠르게)
+      progress = Math.pow(t, 1.5);
+    } else if (targetPct > 0) {
+      // S자: 부드러운 우상향
+      progress = t * t * (3 - 2 * t);
+    } else if (targetPct > -0.25) {
+      // 완만 하락: 초반 빠르게, 후반 안정
+      progress = 1 - Math.pow(1 - t, 1.8);
+    } else {
+      // 폭포형: 초반 급락 후 완만 (t^(1/3.5) = 빠르게→느리게)
+      progress = 1 - Math.pow(1 - t, 3.5);
+    }
+
+    // 사실감을 위한 미세 노이즈 (초반에만, 후반에는 감쇠)
+    const noise = 0.014 * Math.sin(t * Math.PI * 6.3) * Math.exp(-t * 2);
+    return startPrice * (1 + targetPct * progress + noise);
   });
 }
 
@@ -152,24 +187,35 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
     const isFuture = d.day >= problem.revealDay;
     return {
       ...d,
-      // 미래 구간 이동평균선·RSI 숨김 (답 노출 방지)
-      MA5:  isFuture ? null : d.MA5,
-      MA20: isFuture ? null : d.MA20,
-      MA60: isFuture ? null : d.MA60,
-      RSI:  isFuture ? null : d.RSI,
+      // 미래 구간 이동평균선 숨김 (항상 — 정답 노출 방지)
+      MA5:   isFuture ? null : d.MA5,
+      MA20:  isFuture ? null : d.MA20,
+      MA60:  isFuture ? null : d.MA60,
+      MA120: isFuture ? null : d.MA120,
+      // 미래 구간 RSI·거래량: 제출 전 숨김, 제출 후 공개
+      RSI:    (isFuture && !submitted) ? null : d.RSI,
+      거래량: (isFuture && !submitted) ? null : d.거래량,
       종가_past:    d.day < problem.revealDay ? d.종가 : null,
       종가_미래:    (showActualFuture && d.day >= problem.revealDay - 1) ? d.종가 : null,
       종가_preview: (previewPath && pi >= 0 && pi < previewPath.length) ? previewPath[pi] : null,
     };
   });
 
-  // Y축 도메인: 미리보기 곡선이 실제 데이터 범위를 벗어날 수 있으므로 포함
-  const baseMin = fullData.length ? Math.min(...fullData.map(d => d.종가)) * 0.97 : 0;
-  const baseMax = fullData.length ? Math.max(...fullData.map(d => d.종가)) * 1.03 : 100;
-  const prevMin = previewPath ? Math.min(...previewPath) * 0.97 : baseMin;
-  const prevMax = previewPath ? Math.max(...previewPath) * 1.03 : baseMax;
-  const minPrice = showPreview ? Math.min(baseMin, prevMin) : baseMin;
-  const maxPrice = showPreview ? Math.max(baseMax, prevMax) : baseMax;
+  // Y축 도메인: 과거 구간(revealDay 이전)만 기준으로 계산
+  // → 실제 미래 가격(정답)이 Y축을 확장해 preview 궤적이 압축되는 문제 방지
+  const pastZoneData = fullData.slice(0, problem.revealDay);
+
+const baseMin = pastZoneData.length ? Math.min(...pastZoneData.map(d => d.종가)) * 0.96 : 0;
+  const baseMax = pastZoneData.length ? Math.max(...pastZoneData.map(d => d.종가)) * 1.04 : 100;
+  // 제출 후: 실제 미래 가격도 포함하여 Y축 확장
+  const fullMin = fullData.length ? Math.min(...fullData.map(d => d.종가)) * 0.96 : baseMin;
+  const fullMax = fullData.length ? Math.max(...fullData.map(d => d.종가)) * 1.04 : baseMax;
+  const domainMin = submitted ? Math.min(baseMin, fullMin) : baseMin;
+  const domainMax = submitted ? Math.max(baseMax, fullMax) : baseMax;
+  const prevMin = previewPath ? Math.min(...previewPath) * 0.97 : domainMin;
+  const prevMax = previewPath ? Math.max(...previewPath) * 1.03 : domainMax;
+  const minPrice = showPreview ? Math.min(domainMin, prevMin) : domainMin;
+  const maxPrice = showPreview ? Math.max(domainMax, prevMax) : domainMax;
   const priceUnit = getPriceUnit(problem);
   const priceScale = getNicePriceScale(minPrice, maxPrice, 4);
 
@@ -848,7 +894,6 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
             const sector = problem.reveal.market.split(' · ').slice(1).join(' · ');
             return sector ? <span style={{ padding: '3px 8px', background: COLORS.bgPanel, color: COLORS.textDim, border: `1px solid ${COLORS.border}`, letterSpacing: '0.05em', fontWeight: 700 }}>{sector}</span> : null;
           })()}
-          <span style={{ padding: '3px 8px', background: problem.difficulty === 'hard' ? COLORS.red : problem.difficulty === 'medium' ? COLORS.orange : COLORS.green, color: '#fff', letterSpacing: '0.1em', textTransform: 'uppercase', fontWeight: 700 }}>{problem.difficulty}</span>
           {problem.isTutorial && (
             <span style={{ padding: '3px 8px', background: COLORS.gold, color: '#fff', letterSpacing: '0.12em', fontWeight: 700, fontSize: 10, fontFamily: TITLE_FONT }}>✦ 연습</span>
           )}
@@ -863,27 +908,18 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
         <GlowBox id="tut-chart" color={COLORS.border} bg={COLORS.bgChart} style={{ padding: '6px 6px 2px', marginBottom: 6 }}>
           <div id="tut-legend" style={{ display: 'flex', gap: 10, marginBottom: 4, paddingLeft: 4, fontSize: 9, fontFamily: TITLE_FONT, fontWeight: 700, letterSpacing: '0.02em', flexWrap: 'wrap' }}>
             <LegendItem color={COLORS.blueBright} label={`종가(${priceUnit})`} />
-            <LegendItem color={COLORS.yellow} label="MA5" dashed />
-            <LegendItem color={COLORS.purple} label="MA20" dashed />
-            <LegendItem color={COLORS.orange} label="MA60" dashed />
+            <LegendItem color={MA_COLORS.MA5}   label="MA5"   dashed />
+            <LegendItem color={MA_COLORS.MA20}  label="MA20"  dashed />
+            <LegendItem color={MA_COLORS.MA60}  label="MA60"  dashed />
+            <LegendItem color={MA_COLORS.MA120} label="MA120" dashed />
             {showFutureZone && <LegendItem color={COLORS.gold} label="문제시점" vertical />}
             {showPreview && selected !== null && (
-              <LegendItem color={CHOICE_PREVIEW_COLORS[selected] ?? COLORS.textDim} label={`예측 ①-${['①','②','③','④','⑤'][selected]}`} dashed />
+              <LegendItem color={CHOICE_PREVIEW_COLORS[selected] ?? COLORS.textDim} label={`예측 ${['①','②','③','④','⑤'][selected]}`} dashed />
             )}
             {showActualFuture && <LegendItem color={COLORS.goldBright} label="실제결과" />}
           </div>
           <ResponsiveContainer width="100%" height={140}>
             <ComposedChart data={visibleDataWithReveal} margin={{ top: 5, right: 22, left: 0, bottom: 0 }}>
-              <defs>
-                <linearGradient id="pg" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor={COLORS.blueBright} stopOpacity={0.4}/>
-                  <stop offset="100%" stopColor={COLORS.blueBright} stopOpacity={0.05}/>
-                </linearGradient>
-                <linearGradient id="pg_reveal" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor={COLORS.gold} stopOpacity={0.25}/>
-                  <stop offset="100%" stopColor={COLORS.gold} stopOpacity={0.03}/>
-                </linearGradient>
-              </defs>
               <CartesianGrid strokeDasharray="2 4" stroke={COLORS.textMute} vertical={false} opacity={0.3}/>
               <XAxis dataKey="day" ticks={xTicks} tick={{ fontSize: 10, fill: COLORS.textDim, fontFamily: 'monospace' }}
                 tickFormatter={(d) => { const item = fullData[d]; return item ? item.date : ''; }}
@@ -902,8 +938,8 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
               {/* 문제시점 수직선 */}
               {showFutureZone && <ReferenceLine x={problem.revealDay} stroke={COLORS.gold} strokeWidth={2} strokeDasharray="4 4"
                 label={{ value: '◆ 문제시점', fill: COLORS.goldBright, fontSize: 11, position: 'top', fontFamily: 'monospace', fontWeight: 700 }}/>}
-              {/* 과거 구간 파란 Area (revealDay 이전만) */}
-              <Area type="monotone" dataKey="종가_past" stroke={COLORS.blueBright} strokeWidth={2} fill="url(#pg)" isAnimationActive={false} connectNulls={false}/>
+              {/* 과거 구간 파란 Line (revealDay 이전만) */}
+              <Line type="monotone" dataKey="종가_past" stroke={COLORS.blueBright} strokeWidth={2} dot={false} isAnimationActive={false} connectNulls={false}/>
               {/* 선택지 미리보기: 합성 dashed 컬러 선 (제출 전) */}
               {showPreview && selected !== null && (
                 <Line type="monotone" dataKey="종가_preview"
@@ -915,18 +951,23 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
               {showActualFuture && (
                 <Line type="monotone" dataKey="종가_미래" stroke={COLORS.goldBright} strokeWidth={2.5} dot={false} isAnimationActive={false} connectNulls={false}/>
               )}
-              <Line type="monotone" dataKey="MA5" stroke={COLORS.yellow} strokeWidth={1.2} strokeDasharray="3 3" dot={false} isAnimationActive={false}/>
-              <Line type="monotone" dataKey="MA20" stroke={COLORS.purple} strokeWidth={1.5} strokeDasharray="3 3" dot={false} isAnimationActive={false}/>
-              <Line type="monotone" dataKey="MA60" stroke={COLORS.orange} strokeWidth={1.5} strokeDasharray="3 3" dot={false} isAnimationActive={false}/>
+              {/* MA5: 하늘색 · 촘촘한 점선 (단기) */}
+              <Line type="monotone" dataKey="MA5"   stroke={MA_COLORS.MA5}   strokeWidth={0.8} strokeDasharray="2 2" dot={false} isAnimationActive={false}/>
+              {/* MA20: 앰버 · 중간 점선 (중기) */}
+              <Line type="monotone" dataKey="MA20"  stroke={MA_COLORS.MA20}  strokeWidth={0.9} strokeDasharray="4 2" dot={false} isAnimationActive={false}/>
+              {/* MA60: 보라 · 긴 점선 (장기) */}
+              <Line type="monotone" dataKey="MA60"  stroke={MA_COLORS.MA60}  strokeWidth={1.0} strokeDasharray="7 2" dot={false} isAnimationActive={false}/>
+              {/* MA120: 빨강 · 실선 (반년선 · 가장 느림) */}
+              <Line type="monotone" dataKey="MA120" stroke={MA_COLORS.MA120} strokeWidth={1.1} strokeDasharray="10 3" dot={false} isAnimationActive={false}/>
             </ComposedChart>
           </ResponsiveContainer>
 
           <div id="tut-volume">
             <div style={{ fontSize: 9, fontFamily: TITLE_FONT, color: COLORS.blueBright, letterSpacing: '0.1em', paddingLeft: 4, marginTop: 3, marginBottom: 1, fontWeight: 700 }}>거래량</div>
-            <ResponsiveContainer width="100%" height={50}>
+            <ResponsiveContainer width="100%" height={36}>
                 <ComposedChart data={visibleDataWithReveal} margin={{ top: 0, right: 22, left: 0, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="2 4" stroke={COLORS.textMute} vertical={false} opacity={0.2}/>
-                <XAxis dataKey="day" tick={false} axisLine={{ stroke: COLORS.borderDark }}/>
+                <XAxis dataKey="day" tick={false} height={0} axisLine={false}/>
                 <YAxis tick={{ fontSize: 8, fill: COLORS.textDim, fontFamily: 'monospace' }} tickLine={false} width={50}
                   tickFormatter={(v) => formatVolume(Number(v))}
                   axisLine={{ stroke: COLORS.borderDark }}/>
@@ -949,10 +990,10 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
             <>
               <div style={{ fontSize: 9, fontFamily: TITLE_FONT, color: COLORS.red, letterSpacing: '0.1em', paddingLeft: 4, marginTop: 3, marginBottom: 1, fontWeight: 700 }}>RSI(14) · 70↑과매수 / 30↓과매도</div>
               <ResponsiveContainer width="100%" height={50}>
-                <ComposedChart data={visibleDataWithReveal} margin={{ top: 0, right: 8, left: 0, bottom: 0 }}>
+                <ComposedChart data={visibleDataWithReveal} margin={{ top: 0, right: 22, left: 0, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="2 4" stroke={COLORS.textMute} vertical={false} opacity={0.2}/>
-                  <XAxis dataKey="day" tick={false} axisLine={{ stroke: COLORS.borderDark }}/>
-                  <YAxis domain={[0, 100]} ticks={[30, 50, 70]} tick={{ fontSize: 9, fill: COLORS.textDim, fontFamily: 'monospace' }} tickLine={false} width={42} axisLine={{ stroke: COLORS.borderDark }}/>
+                  <XAxis dataKey="day" tick={false} height={0} axisLine={false}/>
+                  <YAxis domain={[0, 100]} ticks={[30, 50, 70]} tick={{ fontSize: 9, fill: COLORS.textDim, fontFamily: 'monospace' }} tickLine={false} width={50} axisLine={{ stroke: COLORS.borderDark }}/>
                   <Tooltip contentStyle={{ background: COLORS.bgDeep, border: `2px solid ${COLORS.pink}`, fontSize: 11, fontFamily: 'monospace', color: COLORS.text }}
                     labelFormatter={(d) => { const item = fullData[d as number]; return item ? item.date : ''; }}/>
                   <ReferenceLine y={70} stroke={COLORS.red} strokeDasharray="2 3" opacity={0.6}/>
@@ -993,7 +1034,7 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
                   return (
                     <div key={i} style={{ background: COLORS.bgPanelLight, border: `1px solid ${c}`, borderLeft: `4px solid ${c}`, padding: '6px 9px', minHeight: 58 }}>
                       <div style={{ fontSize: 10, color: COLORS.textDim, fontFamily: TITLE_FONT }}><GlossaryText text={h.label} onTerm={setActiveTerm} /></div>
-                      <div style={{ fontSize: 13, fontWeight: 700, color: c, fontFamily: KOREAN_FONT }}>{h.value}</div>
+                      <div style={{ fontSize: 13, fontWeight: 700, color: c, fontFamily: KOREAN_FONT }}><GlossaryText text={h.value} onTerm={setActiveTerm} /></div>
                       <div style={{ fontSize: 11, color: COLORS.text, lineHeight: 1.35, fontFamily: KOREAN_FONT }}><GlossaryText text={h.trend} onTerm={setActiveTerm} /></div>
                     </div>
                   );
