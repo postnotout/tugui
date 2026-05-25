@@ -24,6 +24,19 @@ import {
 // 선택지 미리보기 색상 (0=급등 녹색, 1=상승 연녹, 2=횡보 노랑, 3=하락 빨강, 4=급락 보라)
 const CHOICE_PREVIEW_COLORS = ['#4caf50', '#8bc34a', '#ffc107', '#ef5350', '#9c27b0'];
 
+/** 질문에서 종목명 제거 (답 노출 방지) */
+function anonymizeQ(question: string, revealTitle: string): string {
+  const name = revealTitle.split(' (')[0];
+  if (!name) return question;
+  const esc = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return question
+    .replace(new RegExp(esc + '이\\(가\\)\\s?', 'g'), '')
+    .replace(new RegExp(esc + '[이가의은는]\\s?', 'g'), '')
+    .replace(new RegExp(esc + '\\s', 'g'), '')
+    .replace(new RegExp(esc, 'g'), '')
+    .replace(/^\s+/, '');
+}
+
 /**
  * 선택지 미리보기용 합성 궤적 생성
  * choiceIdx 0 = 최상(급등), N-1 = 최하(급락)
@@ -70,7 +83,7 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
   const [submitted, setSubmitted] = useState(false);
   const [revealed, setRevealed] = useState(false);
   const [lastGain, setLastGain] = useState(0);
-  const [showRSI, setShowRSI] = useState(false);
+  // RSI is always visible — toggle removed
   // macro is always visible — toggle removed
   const [activeTerm, setActiveTerm] = useState<string | null>(null);
   const [chartData, setChartData] = useState<ChartDataPoint[]>([]);
@@ -111,10 +124,11 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
     const isFuture = d.day >= problem.revealDay;
     return {
       ...d,
-      // 미래 구간 이동평균선 숨김 (답 노출 방지)
+      // 미래 구간 이동평균선·RSI 숨김 (답 노출 방지)
       MA5:  isFuture ? null : d.MA5,
       MA20: isFuture ? null : d.MA20,
       MA60: isFuture ? null : d.MA60,
+      RSI:  isFuture ? null : d.RSI,
       종가_past:    d.day < problem.revealDay ? d.종가 : null,
       종가_미래:    (showActualFuture && d.day >= problem.revealDay - 1) ? d.종가 : null,
       종가_preview: (previewPath && pi >= 0 && pi < previewPath.length) ? previewPath[pi] : null,
@@ -763,15 +777,14 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
         {/* 문제 메타 */}
         <div style={{ display: 'flex', gap: 4, marginBottom: 4, flexWrap: 'wrap', fontSize: 10, fontFamily: TITLE_FONT, alignItems: 'center' }}>
           <span style={{ padding: '3px 8px', background: COLORS.bgPanel, color: COLORS.textBright, border: `1px solid ${COLORS.border}`, letterSpacing: '0.1em', fontWeight: 700 }}>{problem.market}</span>
+          {(() => {
+            const sector = problem.reveal.market.split(' · ').slice(1).join(' · ');
+            return sector ? <span style={{ padding: '3px 8px', background: COLORS.bgPanel, color: COLORS.textDim, border: `1px solid ${COLORS.border}`, letterSpacing: '0.05em', fontWeight: 700 }}>{sector}</span> : null;
+          })()}
           <span style={{ padding: '3px 8px', background: problem.difficulty === 'hard' ? COLORS.red : problem.difficulty === 'medium' ? COLORS.orange : COLORS.green, color: '#fff', letterSpacing: '0.1em', textTransform: 'uppercase', fontWeight: 700 }}>{problem.difficulty}</span>
           {problem.isTutorial && (
             <span style={{ padding: '3px 8px', background: COLORS.gold, color: '#fff', letterSpacing: '0.12em', fontWeight: 700, fontSize: 10, fontFamily: TITLE_FONT }}>✦ 연습</span>
           )}
-          <div style={{ marginLeft: 'auto', display: 'flex', gap: 3 }}>
-            <button onClick={() => setShowRSI(!showRSI)} style={toggleBtn(showRSI, COLORS.red)}>
-              {showRSI ? '✓ RSI' : '+ RSI 보기'}
-            </button>
-          </div>
         </div>
 
         {/* 차트 */}
@@ -858,8 +871,7 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
             </ResponsiveContainer>
           </div>
 
-          {showRSI && (
-            <>
+          <>
               <div style={{ fontSize: 9, fontFamily: TITLE_FONT, color: COLORS.red, letterSpacing: '0.1em', paddingLeft: 4, marginTop: 3, marginBottom: 1, fontWeight: 700 }}>RSI(14) · 70↑과매수 / 30↓과매도</div>
               <ResponsiveContainer width="100%" height={50}>
                 <ComposedChart data={visibleDataWithReveal} margin={{ top: 0, right: 8, left: 0, bottom: 0 }}>
@@ -870,13 +882,12 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
                     labelFormatter={(d) => { const item = fullData[d as number]; return item ? item.date : ''; }}/>
                   <ReferenceLine y={70} stroke={COLORS.red} strokeDasharray="2 3" opacity={0.6}/>
                   <ReferenceLine y={30} stroke={COLORS.green} strokeDasharray="2 3" opacity={0.6}/>
-                  {showFuture && <ReferenceArea x1={problem.revealDay - 1} x2={fullData.length - 1} fill={COLORS.gold} fillOpacity={0.08} stroke="none"/>}
-                  {showFuture && <ReferenceLine x={problem.revealDay} stroke={COLORS.gold} strokeDasharray="4 4"/>}
+                  {showFutureZone && <ReferenceArea x1={problem.revealDay - 1} x2={fullData.length - 1} fill={COLORS.gold} fillOpacity={0.08} stroke="none"/>}
+                  {showFutureZone && <ReferenceLine x={problem.revealDay} stroke={COLORS.gold} strokeDasharray="4 4"/>}
                   <Line type="monotone" dataKey="RSI" stroke={COLORS.pink} strokeWidth={1.5} dot={false} isAnimationActive={false}/>
                 </ComposedChart>
               </ResponsiveContainer>
             </>
-          )}
         </GlowBox>
 
         {/* 매크로 */}
@@ -920,12 +931,12 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
         <div style={{ padding: '6px 10px', marginBottom: 6, borderLeft: `3px solid ${COLORS.red}`, background: COLORS.bgPanel }}>
           <div style={{ fontSize: 13, lineHeight: 1.45, color: COLORS.textBright, fontFamily: KOREAN_FONT }}>
             <span style={{ color: COLORS.red, fontWeight: 700, marginRight: 6, fontFamily: TITLE_FONT, fontSize: 12 }}>문.</span>
-            {problem.question}
+            {anonymizeQ(problem.question, problem.reveal.title)}
           </div>
         </div>
 
-        {/* 보기 */}
-        <div id="tut-choices" style={{ display: 'flex', flexDirection: 'column', gap: 4, marginBottom: 8 }}>
+        {/* 보기 — 2열 그리드 */}
+        <div id="tut-choices" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 4, marginBottom: 8 }}>
           {problem.choices.map((c, i) => {
             const isSel = selected === i;
             const isAns = submitted && i === problem.answer;

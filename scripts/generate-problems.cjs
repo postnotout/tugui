@@ -87,106 +87,158 @@ function getMacroHints(dateStr) {
   if (ym >= 198601 && ym <= 198812) return [
     { label: '일본 버블', value: '최고조', trend: '부동산·주식 동반 폭등', tone: 'positive' },
     { label: '엔화', value: '엔고 지속', trend: '플라자 합의 후 강세', tone: 'mixed' },
+    { label: '닛케이225', value: '연간 +40%', trend: '사상 최고가 갱신 행진', tone: 'positive' },
+    { label: '토지가격', value: '전국 폭등', trend: '담보대출 과열·투기 절정', tone: 'negative' },
   ];
   if (ym >= 198901 && ym <= 198912) return [
     { label: '일본 금리', value: '대폭 인상 예고', trend: 'BOJ 버블 억제 시작', tone: 'negative' },
     { label: '닛케이', value: '38,957 고점', trend: '버블 최고점 형성', tone: 'negative' },
+    { label: '부동산', value: '도쿄 폭등', trend: '대출 과잉·투기 극단', tone: 'negative' },
+    { label: '일본 GDP', value: '4% 성장', trend: '실물과 자산 괴리 극대', tone: 'mixed' },
   ];
   if (ym >= 199001 && ym <= 199312) return [
     { label: '닛케이', value: '급락 중', trend: '버블 붕괴 -60%+', tone: 'negative' },
     { label: '일본 경기', value: '침체 돌입', trend: '잃어버린 10년 시작', tone: 'negative' },
+    { label: '부동산', value: '30~50% 하락', trend: '담보가치 폭락·부실 급증', tone: 'negative' },
+    { label: '은행권', value: '부실채권 폭증', trend: '금융기관 연쇄 부실', tone: 'negative' },
   ];
   if (ym >= 199401 && ym <= 199606) return [
     { label: '미국 경기', value: '클린턴 호황', trend: '나스닥 IT 성장세', tone: 'positive' },
     { label: '금리', value: '안정적', trend: 'Fed 점진 인상 중', tone: 'mixed' },
+    { label: 'S&P500', value: '연간 +20%', trend: '기술주 주도 강세장', tone: 'positive' },
+    { label: '인플레이션', value: '2~3%', trend: '저물가·안정 성장', tone: 'positive' },
   ];
   if (ym >= 199607 && ym <= 199706) return [
     { label: '아시아', value: '위기 전야', trend: '태국 바트화 흔들림', tone: 'negative' },
     { label: '한국 경제', value: '경상적자', trend: '외환보유고 고갈', tone: 'negative' },
+    { label: '태국 바트', value: '고정환율 위기', trend: '경상적자 지속·외채 급증', tone: 'negative' },
+    { label: '한국 외채', value: '1,500억달러', trend: '단기외채 비중 과다', tone: 'negative' },
   ];
   if (ym >= 199707 && ym <= 199812) return [
     { label: 'IMF 외환위기', value: '구제금융', trend: '원화 -50% 이상 절하', tone: 'negative' },
     { label: 'USD/KRW', value: '2000원 돌파', trend: '기업 연쇄 부도', tone: 'negative' },
+    { label: '코스피', value: '저점 280', trend: '금융위기 패닉 셀링', tone: 'negative' },
+    { label: '기준금리', value: '30% 폭등', trend: 'IMF 고금리 조건 이행', tone: 'negative' },
   ];
   if (ym >= 199901 && ym <= 200003) return [
     { label: '닷컴 붐', value: '과열 극점', trend: '나스닥 PER 100x+', tone: 'negative' },
     { label: '기술주', value: '폭발적 상승', trend: '인터넷 기업 IPO 러시', tone: 'positive' },
+    { label: '나스닥', value: '5,000 돌파', trend: '3년간 +500% 상승', tone: 'positive' },
+    { label: '인터넷기업', value: 'PER 수백배', trend: '매출 없어도 주가 급등', tone: 'negative' },
   ];
   if (ym >= 200004 && ym <= 200206) return [
     { label: '닷컴버블', value: '붕괴', trend: '나스닥 -78% 하락', tone: 'negative' },
     { label: 'Fed', value: '금리 인하', trend: '경기 침체 대응', tone: 'positive' },
+    { label: '나스닥', value: '저점 1,114', trend: '2년간 급락 지속', tone: 'negative' },
+    { label: '실업률', value: '6% 상승', trend: 'IT업계 대규모 감원', tone: 'negative' },
   ];
   if (ym >= 200207 && ym <= 200612) return [
     { label: '미국 경기', value: '저금리 성장', trend: '주택 붐 + 소비 확대', tone: 'positive' },
     { label: 'Fed 금리', value: '1%→5.25%', trend: '점진적 정상화', tone: 'mixed' },
+    { label: '주택가격', value: '연간 10%+', trend: '서브프라임 대출 폭증', tone: 'negative' },
+    { label: '원자재', value: '슈퍼사이클', trend: '중국 수요 주도 강세', tone: 'positive' },
   ];
   if (ym >= 200701 && ym <= 200709) return [
     { label: '서브프라임', value: '균열 시작', trend: '주택시장 버블 경고', tone: 'negative' },
     { label: '시장', value: '사상 최고', trend: '위기 인식 부재', tone: 'negative' },
+    { label: '주택담보대출', value: '연체율 상승', trend: '저신용 대출 부실화', tone: 'negative' },
+    { label: 'CDO·MBS', value: '신용등급 의심', trend: '구조화상품 리스크 부각', tone: 'negative' },
   ];
   if (ym >= 200710 && ym <= 200903) return [
     { label: '글로벌 금융위기', value: '리먼 파산', trend: '시스템 붕괴 공포', tone: 'negative' },
     { label: 'Fed', value: '제로금리·QE', trend: '긴급 양적완화', tone: 'mixed' },
+    { label: 'S&P500', value: '저점 -56%', trend: '13개월 만에 반토막', tone: 'negative' },
+    { label: 'VIX', value: '80 이상', trend: '역대 최고 공포 지수', tone: 'negative' },
   ];
   if (ym >= 200904 && ym <= 201206) return [
     { label: 'QE 1·2차', value: '유동성 공급', trend: '위기 후 회복 국면', tone: 'positive' },
     { label: '미국 경기', value: '완만한 회복', trend: '실업률 서서히 하락', tone: 'positive' },
+    { label: '금값', value: '1,900달러 고점', trend: '안전자산 선호 강세', tone: 'mixed' },
+    { label: '신흥국', value: '자금 유입', trend: '달러 약세·캐리트레이드', tone: 'positive' },
   ];
   if (ym >= 201207 && ym <= 201412) return [
     { label: 'Fed 테이퍼링', value: 'QE 축소', trend: '신흥국 자금 이탈', tone: 'mixed' },
     { label: '미국 경기', value: '안정 성장', trend: 'S&P 강세 지속', tone: 'positive' },
+    { label: '달러', value: '강세 전환', trend: '신흥국 통화 압박', tone: 'mixed' },
+    { label: 'S&P500', value: '연간 +30%', trend: '버냉키 풋 기대 지속', tone: 'positive' },
   ];
   if (ym >= 201501 && ym <= 201509) return [
     { label: '중국 증시', value: '급락', trend: '상하이 -45% 폭락', tone: 'negative' },
     { label: '위안화', value: '평가절하', trend: '신흥국 불안 확산', tone: 'negative' },
+    { label: '원자재', value: '급락 지속', trend: '중국 수요 둔화 공포', tone: 'negative' },
+    { label: '코스피', value: '2000 지지', trend: '외국인 이탈 우려', tone: 'negative' },
   ];
   if (ym >= 201510 && ym <= 201609) return [
     { label: 'Fed 첫 인상', value: '0.25%', trend: '9년 만의 금리 인상', tone: 'mixed' },
     { label: '원자재', value: '약세', trend: '유가·광물 급락', tone: 'negative' },
+    { label: '달러', value: '강세 지속', trend: '신흥국 자금 이탈', tone: 'negative' },
+    { label: '브렉시트', value: '불확실성', trend: '영국 EU 탈퇴 투표', tone: 'negative' },
   ];
   if (ym >= 201610 && ym <= 201709) return [
     { label: '트럼프 효과', value: '감세 기대', trend: '인프라·규제 완화 기대', tone: 'positive' },
     { label: '글로벌 경기', value: '동반 회복', trend: '저물가·성장 동시', tone: 'positive' },
+    { label: '다우', value: '2만 돌파', trend: '사상 첫 2만 돌파', tone: 'positive' },
+    { label: '반도체', value: '사이클 상승', trend: '메모리 수요 급증', tone: 'positive' },
   ];
   if (ym >= 201710 && ym <= 201801) return [
     { label: '비트코인', value: '2만달러', trend: '암호화폐 투기 열풍', tone: 'positive' },
     { label: 'CME 선물', value: '상장', trend: '기관 참여 확대', tone: 'positive' },
+    { label: '알트코인', value: '폭발 상승', trend: '이더리움·리플 수백%', tone: 'positive' },
+    { label: '개인투자자', value: '대거 참여', trend: 'FOMO 극단적 과열', tone: 'negative' },
   ];
   if (ym >= 201802 && ym <= 201812) return [
     { label: 'Fed 금리', value: '연 4회 인상', trend: '긴축 가속', tone: 'negative' },
     { label: '미중 무역전쟁', value: '관세 충돌', trend: '성장 둔화 우려', tone: 'negative' },
+    { label: '신흥국', value: '통화위기', trend: '터키·아르헨 급락', tone: 'negative' },
+    { label: '나스닥', value: '연말 -20%', trend: '기술주 조정 가속', tone: 'negative' },
   ];
   if (ym >= 201901 && ym <= 201912) return [
     { label: 'Fed 피벗', value: '인하 전환', trend: '긴축 종료 기대', tone: 'positive' },
     { label: '미중 협상', value: '1단계 합의', trend: '무역전쟁 완화', tone: 'positive' },
+    { label: 'S&P500', value: '연간 +29%', trend: '강세장 재개', tone: 'positive' },
+    { label: '코스피', value: '2,000~2,200', trend: '박스권 횡보 지속', tone: 'mixed' },
   ];
   if (ym >= 202001 && ym <= 202003) return [
     { label: 'COVID-19', value: '팬데믹 선언', trend: '전 세계 봉쇄 시작', tone: 'negative' },
     { label: 'Fed', value: '긴급 제로금리', trend: '무제한 QE 선언', tone: 'mixed' },
+    { label: 'S&P500', value: '33일 -34%', trend: '역사상 가장 빠른 폭락', tone: 'negative' },
+    { label: '원유', value: '마이너스 거래', trend: '저장 공간 부족 초유 사태', tone: 'negative' },
   ];
   if (ym >= 202004 && ym <= 202012) return [
     { label: 'QE·부양책', value: '역대 최대', trend: '유동성 폭발적 공급', tone: 'positive' },
     { label: '기준금리', value: '0.25%', trend: '초저금리·동학개미', tone: 'positive' },
+    { label: '코스피', value: '3,000 돌파', trend: '동학개미 순매수 48조', tone: 'positive' },
+    { label: '백신', value: '개발 성공', trend: '리오프닝 기대감 급부상', tone: 'positive' },
   ];
   if (ym >= 202101 && ym <= 202112) return [
     { label: '인플레이션', value: '급등 조짐', trend: '공급망 충격·유동성', tone: 'negative' },
     { label: 'QE·저금리', value: '지속', trend: '주식·코인 동반 강세', tone: 'positive' },
+    { label: '비트코인', value: '6만달러 ATH', trend: '기관·ETF 자금 유입', tone: 'positive' },
+    { label: '코스피', value: '3,316 신고가', trend: '외국인·기관 동반 매수', tone: 'positive' },
   ];
   if (ym >= 202201 && ym <= 202212) return [
     { label: 'Fed 금리', value: '0→4.5%', trend: '40년래 최고속 긴축', tone: 'negative' },
     { label: '인플레이션', value: '9.1%', trend: '경기침체 공포 확산', tone: 'negative' },
+    { label: '코스피', value: '2,200 저점', trend: '외국인 대규모 이탈', tone: 'negative' },
+    { label: '미국채', value: '역사적 하락', trend: '60/40 포트 동반 하락', tone: 'negative' },
   ];
   if (ym >= 202301 && ym <= 202312) return [
     { label: 'ChatGPT·AI', value: '폭발적 성장', trend: 'AI 투자 붐 시작', tone: 'positive' },
     { label: 'Fed 금리', value: '5.25% 고점', trend: '인상 종료 기대', tone: 'positive' },
+    { label: '엔비디아', value: '연간 +240%', trend: 'AI 칩 독점 지위', tone: 'positive' },
+    { label: '나스닥', value: '반등 +43%', trend: '기술주 급반등', tone: 'positive' },
   ];
   if (ym >= 202401) return [
     { label: 'AI 인프라', value: '투자 급증', trend: 'NVDA 주도 AI 사이클', tone: 'positive' },
     { label: 'Fed', value: '인하 시작', trend: '연착륙 기대', tone: 'positive' },
+    { label: '비트코인', value: '신고가 경신', trend: '현물 ETF 승인·기관 매수', tone: 'positive' },
+    { label: '코스피', value: '불안정', trend: '환율·경기 불확실', tone: 'negative' },
   ];
   return [
     { label: '시장', value: '변동성', trend: '추세 불확실', tone: 'mixed' },
     { label: '경기', value: '중립', trend: '특이 이벤트 없음', tone: 'mixed' },
+    { label: '금리', value: '보통 수준', trend: '중립 스탠스', tone: 'mixed' },
+    { label: '환율', value: '안정적', trend: '특이 변동 없음', tone: 'mixed' },
   ];
 }
 
@@ -206,42 +258,42 @@ function detectPattern(closes, revealDay) {
   return 'sideways';
 }
 
-// ---------- 문제 텍스트 생성 (보통체) ----------
+// ---------- 문제 텍스트 생성 (보통체 · 종목명 제외) ----------
 const TEMPLATES = {
   uptrend: [
-    (n, m) => `${n}이(가) 꾸준히 우상향하며 매수세가 계속 몰리고 있다. ${m}개월 뒤 주가는 어떻게 됐을까?`,
-    (n, m) => `${n} 주가가 이평선 위에서 강한 상승 흐름을 이어가는 중이다. ${m}개월 후 결과는?`,
-    (n, m) => `${n}이(가) 정배열 상태에서 거래량까지 늘고 있다. 이 추세, ${m}개월 뒤에도 이어졌을까?`,
-    (n, m) => `${n}이 연속으로 신고가를 갱신하며 상승 중이에요. ${m}개월 뒤 어떻게 됐을까?`,
-    (n, m) => `${n} 주가가 MA20 위에서 완만하게 우상향 중입니다. ${m}개월 뒤 결과는?`,
+    (_n, m) => `꾸준히 우상향하며 매수세가 계속 몰리고 있다. ${m}개월 뒤 주가는 어떻게 됐을까?`,
+    (_n, m) => `이평선 위에서 강한 상승 흐름을 이어가는 중이다. ${m}개월 후 결과는?`,
+    (_n, m) => `정배열 상태에서 거래량까지 늘고 있다. 이 추세, ${m}개월 뒤에도 이어졌을까?`,
+    (_n, m) => `연속으로 신고가를 갱신하며 상승 중이다. ${m}개월 뒤 어떻게 됐을까?`,
+    (_n, m) => `MA20 위에서 완만하게 우상향하고 있다. ${m}개월 뒤 결과는?`,
   ],
   downtrend: [
-    (n, m) => `${n}이(가) 연속으로 신저가를 갱신하며 하락 중이에요. ${m}개월 뒤 주가는?`,
-    (n, m) => `${n} 주가가 이평선 아래에서 매도세가 이어지고 있다. ${m}개월 후 결과는?`,
-    (n, m) => `${n}이 계속 빠지고 있다. 이 하락세, ${m}개월 뒤에 어떻게 됐을까?`,
-    (n, m) => `${n}이(가) 역배열 상태에서 반등 없이 흘러내리고 있다. ${m}개월 후는?`,
-    (n, m) => `${n} 주가가 고점 대비 많이 빠진 상태다. 지금부터 ${m}개월, 어떻게 됐을까?`,
+    (_n, m) => `연속으로 신저가를 갱신하며 하락 중이다. ${m}개월 뒤 주가는?`,
+    (_n, m) => `이평선 아래에서 매도세가 이어지고 있다. ${m}개월 후 결과는?`,
+    (_n, m) => `계속 빠지고 있다. 이 하락세, ${m}개월 뒤에 어떻게 됐을까?`,
+    (_n, m) => `역배열 상태에서 반등 없이 흘러내리고 있다. ${m}개월 후는?`,
+    (_n, m) => `고점 대비 많이 빠진 상태다. 지금부터 ${m}개월, 어떻게 됐을까?`,
   ],
   breakout: [
-    (n, m) => `${n}이(가) 오랫동안 막혀 있던 저항선을 뚫었다. 이번엔 진짜일까요? ${m}개월 후?`,
-    (n, m) => `${n}이 박스권 상단을 돌파하며 거래량이 터졌다. ${m}개월 뒤 어떻게 됐을까?`,
-    (n, m) => `${n} 주가가 52주 신고가를 경신하며 돌파에 성공했다. ${m}개월 뒤 결과는?`,
-    (n, m) => `${n}이(가) 고점 저항을 돌파하는 강한 양봉이 나왔다. ${m}개월 후?`,
-    (n, m) => `${n}이 중요 저항선을 상향 돌파했다. 추세 전환이 시작된 걸까? ${m}개월 뒤는?`,
+    (_n, m) => `오랫동안 막혀 있던 저항선을 뚫었다. 이번엔 진짜일까? ${m}개월 후?`,
+    (_n, m) => `박스권 상단을 돌파하며 거래량이 터졌다. ${m}개월 뒤 어떻게 됐을까?`,
+    (_n, m) => `52주 신고가를 경신하며 돌파에 성공했다. ${m}개월 뒤 결과는?`,
+    (_n, m) => `고점 저항을 돌파하는 강한 양봉이 나왔다. ${m}개월 후?`,
+    (_n, m) => `중요 저항선을 상향 돌파했다. 추세 전환이 시작된 걸까? ${m}개월 뒤는?`,
   ],
   reversal: [
-    (n, m) => `${n}이(가) 크게 빠진 후 바닥에서 반등 신호가 나왔다. ${m}개월 뒤 어떻게 됐을까?`,
-    (n, m) => `${n} 주가가 급락 이후 저점에서 강한 양봉이 나오기 시작했습니다. ${m}개월 후?`,
-    (n, m) => `${n}이 하락을 멈추고 바닥을 다지는 것 같다. ${m}개월 뒤 결과는?`,
-    (n, m) => `${n}이(가) 과매도 구간에서 거래량을 동반한 반등 시도를 하고 있다. ${m}개월 후?`,
-    (n, m) => `${n} 주가가 긴 하락 후 지지선에서 힘을 받는 모습이다. ${m}개월 뒤 어떻게 됐을까?`,
+    (_n, m) => `크게 빠진 후 바닥에서 반등 신호가 나왔다. ${m}개월 뒤 어떻게 됐을까?`,
+    (_n, m) => `급락 이후 저점에서 강한 양봉이 나오기 시작했다. ${m}개월 후?`,
+    (_n, m) => `하락을 멈추고 바닥을 다지는 것 같다. ${m}개월 뒤 결과는?`,
+    (_n, m) => `과매도 구간에서 거래량을 동반한 반등 시도를 하고 있다. ${m}개월 후?`,
+    (_n, m) => `긴 하락 후 지지선에서 힘을 받는 모습이다. ${m}개월 뒤 어떻게 됐을까?`,
   ],
   sideways: [
-    (n, m) => `${n}이(가) 박스권에서 방향을 잡지 못하고 오르내리고 있다. ${m}개월 뒤 어디로 갔을까?`,
-    (n, m) => `${n} 주가가 일정 범위 안에서만 움직이고 있다. ${m}개월 뒤 탈출에 성공했을까?`,
-    (n, m) => `${n}이 횡보 구간에서 돌파 시도를 이어가고 있다. ${m}개월 뒤 결과는?`,
-    (n, m) => `${n} 주가가 추세 없이 박스권을 유지 중이에요. ${m}개월 뒤 어떻게 됐을까?`,
-    (n, m) => `${n}이(가) 눌림목 구간에서 쉬어가고 있다. ${m}개월 후 방향은?`,
+    (_n, m) => `박스권에서 방향을 잡지 못하고 오르내리고 있다. ${m}개월 뒤 어디로 갔을까?`,
+    (_n, m) => `일정 범위 안에서만 움직이고 있다. ${m}개월 뒤 탈출에 성공했을까?`,
+    (_n, m) => `횡보 구간에서 돌파 시도를 이어가고 있다. ${m}개월 뒤 결과는?`,
+    (_n, m) => `추세 없이 박스권을 유지 중이다. ${m}개월 뒤 어떻게 됐을까?`,
+    (_n, m) => `눌림목 구간에서 쉬어가고 있다. ${m}개월 후 방향은?`,
   ],
 };
 
