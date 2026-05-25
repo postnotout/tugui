@@ -21,6 +21,30 @@ import {
   toggleBtn, TITLE_FONT, KOREAN_FONT, GLOBAL_STYLES,
 } from './GameUI';
 
+// 선택지 미리보기 색상 (0=급등 녹색, 1=상승 연녹, 2=횡보 노랑, 3=하락 빨강, 4=급락 보라)
+const CHOICE_PREVIEW_COLORS = ['#4caf50', '#8bc34a', '#ffc107', '#ef5350', '#9c27b0'];
+
+/**
+ * 선택지 미리보기용 합성 궤적 생성
+ * choiceIdx 0 = 최상(급등), N-1 = 최하(급락)
+ */
+function generatePreviewPath(startPrice: number, choiceIdx: number, numPoints: number, numChoices = 4): number[] {
+  const targets4 = [0.42, 0.18, 0.01, -0.24];
+  const targets5 = [0.50, 0.24, 0.01, -0.20, -0.42];
+  const tgts = numChoices >= 5 ? targets5 : targets4;
+  const targetPct = tgts[choiceIdx] ?? 0;
+
+  return Array.from({ length: numPoints }, (_, i) => {
+    const t = i / Math.max(numPoints - 1, 1);
+    const smooth = t * t * (3 - 2 * t); // smoothstep 0→1
+    if (Math.abs(targetPct) < 0.03) {
+      // 횡보: 약한 사인 진동
+      return startPrice * (1 + 0.03 * Math.sin(t * Math.PI * 3) * smooth);
+    }
+    return startPrice * (1 + targetPct * smooth);
+  });
+}
+
 interface Props {
   onOpenWrongNote: () => void;
 }
@@ -70,16 +94,35 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
   }, [problem, phase, runCount]);
 
   const fullData = chartData;
-  // 답 선택 즉시 미래 구간 표시 (제출 전에도)
-  const showFuture = selected !== null || revealed;
-  const visibleData = showFuture ? fullData : fullData.slice(0, problem.revealDay);
-  // 미래 구간 오버레이용 데이터키 (revealDay 이후만 금색으로 표시)
-  const visibleDataWithReveal = visibleData.map(d => ({
-    ...d,
-    종가_미래: d.day >= problem.revealDay - 1 ? d.종가 : undefined,
-  }));
-  const minPrice = fullData.length ? Math.min(...fullData.map(d => d.종가)) * 0.97 : 0;
-  const maxPrice = fullData.length ? Math.max(...fullData.map(d => d.종가)) * 1.03 : 100;
+  // 선택: 합성 미리보기 / 제출 후: 실제 금색 선
+  const showPreview     = selected !== null && !submitted;
+  const showActualFuture = submitted;
+  const showFutureZone  = showPreview || showActualFuture;
+  const visibleData = showFutureZone ? fullData : fullData.slice(0, problem.revealDay);
+
+  // 미리보기 궤적 (선택지 인덱스 기반 합성 곡선)
+  const revealPrice = fullData[problem.revealDay - 1]?.종가 ?? 0;
+  const previewPath: number[] | null = (showPreview && selected !== null && revealPrice > 0)
+    ? generatePreviewPath(revealPrice, selected, fullData.length - problem.revealDay + 1, problem.choices.length)
+    : null;
+
+  const visibleDataWithReveal = visibleData.map(d => {
+    const pi = d.day - (problem.revealDay - 1);
+    return {
+      ...d,
+      종가_past:    d.day < problem.revealDay ? d.종가 : null,
+      종가_미래:    (showActualFuture && d.day >= problem.revealDay - 1) ? d.종가 : null,
+      종가_preview: (previewPath && pi >= 0 && pi < previewPath.length) ? previewPath[pi] : null,
+    };
+  });
+
+  // Y축 도메인: 미리보기 곡선이 실제 데이터 범위를 벗어날 수 있으므로 포함
+  const baseMin = fullData.length ? Math.min(...fullData.map(d => d.종가)) * 0.97 : 0;
+  const baseMax = fullData.length ? Math.max(...fullData.map(d => d.종가)) * 1.03 : 100;
+  const prevMin = previewPath ? Math.min(...previewPath) * 0.97 : baseMin;
+  const prevMax = previewPath ? Math.max(...previewPath) * 1.03 : baseMax;
+  const minPrice = showPreview ? Math.min(baseMin, prevMin) : baseMin;
+  const maxPrice = showPreview ? Math.max(baseMax, prevMax) : baseMax;
 
   const persistSession = (overrides: { problemIdx?: number; hp?: number; points?: number; rank?: number; combo?: number } = {}) => {
     saveStorage({
@@ -733,8 +776,11 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
             <LegendItem color={COLORS.yellow} label="MA5" dashed />
             <LegendItem color={COLORS.purple} label="MA20" dashed />
             <LegendItem color={COLORS.orange} label="MA60" dashed />
-            {showFuture && <LegendItem color={COLORS.gold} label="문제시점" vertical />}
-            {showFuture && <LegendItem color={COLORS.goldBright} label="실제결과" />}
+            {showFutureZone && <LegendItem color={COLORS.gold} label="문제시점" vertical />}
+            {showPreview && selected !== null && (
+              <LegendItem color={CHOICE_PREVIEW_COLORS[selected] ?? COLORS.textDim} label={`예측 ①-${['①','②','③','④','⑤'][selected]}`} dashed />
+            )}
+            {showActualFuture && <LegendItem color={COLORS.goldBright} label="실제결과" />}
           </div>
           <ResponsiveContainer width="100%" height={140}>
             <ComposedChart data={visibleDataWithReveal} margin={{ top: 5, right: 8, left: 0, bottom: 0 }}>
@@ -760,14 +806,23 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
                 labelStyle={{ color: COLORS.goldBright, fontSize: 11, fontWeight: 700 }}
               />
               {/* 미래 구간 배경 틴트 */}
-              {showFuture && <ReferenceArea x1={problem.revealDay - 1} x2={fullData.length - 1} fill={COLORS.gold} fillOpacity={0.08} stroke="none"/>}
+              {showFutureZone && <ReferenceArea x1={problem.revealDay - 1} x2={fullData.length - 1} fill={COLORS.gold} fillOpacity={0.07} stroke="none"/>}
               {/* 문제시점 수직선 */}
-              {showFuture && <ReferenceLine x={problem.revealDay} stroke={COLORS.gold} strokeWidth={2} strokeDasharray="4 4"
+              {showFutureZone && <ReferenceLine x={problem.revealDay} stroke={COLORS.gold} strokeWidth={2} strokeDasharray="4 4"
                 label={{ value: '◆ 문제시점', fill: COLORS.goldBright, fontSize: 11, position: 'top', fontFamily: 'monospace', fontWeight: 700 }}/>}
-              {/* 과거 구간 파란 Area */}
-              <Area type="monotone" dataKey="종가" stroke={COLORS.blueBright} strokeWidth={2} fill="url(#pg)" isAnimationActive={false}/>
-              {/* 미래 구간 금색 Line 오버레이 */}
-              {showFuture && <Line type="monotone" dataKey="종가_미래" stroke={COLORS.goldBright} strokeWidth={2.5} dot={false} isAnimationActive={false} connectNulls={false}/>}
+              {/* 과거 구간 파란 Area (revealDay 이전만) */}
+              <Area type="monotone" dataKey="종가_past" stroke={COLORS.blueBright} strokeWidth={2} fill="url(#pg)" isAnimationActive={false} connectNulls={false}/>
+              {/* 선택지 미리보기: 합성 dashed 컬러 선 (제출 전) */}
+              {showPreview && selected !== null && (
+                <Line type="monotone" dataKey="종가_preview"
+                  stroke={CHOICE_PREVIEW_COLORS[selected] ?? COLORS.textDim}
+                  strokeWidth={2.5} strokeDasharray="8 4"
+                  dot={false} isAnimationActive={false} connectNulls={false}/>
+              )}
+              {/* 실제 결과: 금색 선 (제출 후) */}
+              {showActualFuture && (
+                <Line type="monotone" dataKey="종가_미래" stroke={COLORS.goldBright} strokeWidth={2.5} dot={false} isAnimationActive={false} connectNulls={false}/>
+              )}
               <Line type="monotone" dataKey="MA5" stroke={COLORS.yellow} strokeWidth={1.2} strokeDasharray="3 3" dot={false} isAnimationActive={false}/>
               <Line type="monotone" dataKey="MA20" stroke={COLORS.purple} strokeWidth={1.5} strokeDasharray="3 3" dot={false} isAnimationActive={false}/>
               <Line type="monotone" dataKey="MA60" stroke={COLORS.orange} strokeWidth={1.5} strokeDasharray="3 3" dot={false} isAnimationActive={false}/>
@@ -786,8 +841,8 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
                 <Tooltip contentStyle={{ background: COLORS.bgDeep, border: `2px solid ${COLORS.blue}`, fontSize: 11, fontFamily: 'monospace', color: COLORS.text }}
                   formatter={(v) => [Number(v).toLocaleString(), '거래량']}
                   labelFormatter={(d) => { const item = fullData[d as number]; return item ? item.date : ''; }}/>
-                {showFuture && <ReferenceArea x1={problem.revealDay - 1} x2={fullData.length - 1} fill={COLORS.gold} fillOpacity={0.08} stroke="none"/>}
-                {showFuture && <ReferenceLine x={problem.revealDay} stroke={COLORS.gold} strokeDasharray="4 4"/>}
+                {showFutureZone && <ReferenceArea x1={problem.revealDay - 1} x2={fullData.length - 1} fill={COLORS.gold} fillOpacity={0.07} stroke="none"/>}
+                {showFutureZone && <ReferenceLine x={problem.revealDay} stroke={COLORS.gold} strokeDasharray="4 4"/>}
                 <Bar dataKey="거래량">
                   {visibleDataWithReveal.map((d, i) => {
                     const prev = i > 0 ? visibleDataWithReveal[i - 1].종가 : d.종가;
@@ -870,14 +925,16 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
             const isSel = selected === i;
             const isAns = submitted && i === problem.answer;
             const isWrong = submitted && isSel && i !== problem.answer;
+            const pColor = CHOICE_PREVIEW_COLORS[i] ?? COLORS.red;
             let bg: string = COLORS.bgPanel, bd: string = COLORS.border, col: string = COLORS.text;
             if (isAns) { bg = '#dcf5e0'; bd = COLORS.green; col = '#14532d'; }
             else if (isWrong) { bg = '#fde2e1'; bd = COLORS.red; col = '#7f1d1d'; }
-            else if (isSel) { bg = '#fff7d6'; bd = COLORS.red; col = COLORS.textBright; }
+            else if (isSel && !submitted) { bg = `${pColor}18`; bd = pColor; col = COLORS.textBright; }
+            else if (isSel && submitted) { bg = '#fff7d6'; bd = COLORS.red; col = COLORS.textBright; }
             return (
               <button key={i} onClick={() => !submitted && setSelected(i)} disabled={submitted}
                 style={{ display: 'flex', gap: 8, padding: '7px 10px', background: bg, border: `2px solid ${bd}`, boxShadow: isSel || isAns || isWrong ? `2px 2px 0 0 ${bd}` : `2px 2px 0 0 ${COLORS.border}`, borderRadius: 2, color: col, cursor: submitted ? 'default' : 'pointer', textAlign: 'left', fontSize: 12.5, lineHeight: 1.4, fontFamily: KOREAN_FONT, transition: 'all 0.1s' }}>
-                <span style={{ fontFamily: TITLE_FONT, color: isAns ? COLORS.green : COLORS.red, fontWeight: 700, flexShrink: 0, fontSize: 12.5 }}>{['①', '②', '③', '④'][i]}</span>
+                <span style={{ fontFamily: TITLE_FONT, color: isAns ? COLORS.green : isSel && !submitted ? pColor : COLORS.red, fontWeight: 700, flexShrink: 0, fontSize: 12.5 }}>{['①', '②', '③', '④', '⑤'][i]}</span>
                 <span><GlossaryText text={c} onTerm={setActiveTerm} /></span>
               </button>
             );
