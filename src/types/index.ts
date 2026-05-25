@@ -13,7 +13,7 @@ export interface MacroHint {
   label: string;
   value: string;
   trend: string;
-  tone: 'positive' | 'negative' | 'neutral';
+  tone: 'positive' | 'negative' | 'neutral' | 'mixed';
 }
 
 export interface RevealInfo {

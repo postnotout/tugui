@@ -2,7 +2,7 @@ import type { Problem } from '../types';
 
 /**
  * 튜토리얼 전용 연습 문제 (id: 0).
- * 정답을 맞춰도 HP·점수에 영향 없음.
+ * 정답을 맞춰도 시드머니에 영향 없음.
  * 삼성전자 2020년 코로나 회복 → 박스권 돌파 사례.
  */
 export const TUTORIAL_PROBLEM: Problem = {

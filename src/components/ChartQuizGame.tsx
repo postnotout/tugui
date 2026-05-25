@@ -5,10 +5,11 @@ import {
 } from 'recharts';
 
 import { COLORS } from '../constants/colors';
-import { RANKS, LEVEL_UP_POINTS, MAX_RANK_IDX } from '../constants/ranks';
+import { RANKS, RANK_CAPITALS, START_CAPITAL, GAMEOVER_CAPITAL, MAX_RANK_IDX } from '../constants/ranks';
 import { PROBLEM_POOL, difficultyShuffle } from '../data/problems';
 import { generateChart } from '../utils/chartGenerator';
 import { loadChartData } from '../utils/dataLoader';
+import { formatPrice, formatVolume, getNicePriceScale, getPriceUnit } from '../utils/chartFormat';
 import { useGameStorage } from '../hooks/useGameStorage';
 import { useSound } from '../hooks/useSound';
 import type { ChartDataPoint, Problem } from '../types';
@@ -58,6 +59,31 @@ function generatePreviewPath(startPrice: number, choiceIdx: number, numPoints: n
   });
 }
 
+function getRankByCapital(capital: number) {
+  let idx = 0;
+  for (let i = 0; i < RANK_CAPITALS.length; i++) {
+    if (capital >= RANK_CAPITALS[i]) idx = i;
+  }
+  return Math.min(MAX_RANK_IDX, idx);
+}
+
+function formatCapital(capital: number) {
+  if (capital >= 10000) {
+    const eok = capital / 10000;
+    return `${Number.isInteger(eok) ? eok : eok.toFixed(1)}억`;
+  }
+  return `${Math.round(capital).toLocaleString()}만`;
+}
+
+function getTradeReturn(problem: Problem, correct: boolean, combo: number, lossStreak: number) {
+  if (correct) {
+    const base = problem.difficulty === 'hard' ? 0.08 : problem.difficulty === 'medium' ? 0.065 : 0.05;
+    const bonus = combo >= 2 ? Math.min(0.03, (combo - 1) * 0.01) : 0;
+    return base + bonus;
+  }
+  return lossStreak >= 2 ? -0.15 : lossStreak === 1 ? -0.1 : -0.07;
+}
+
 interface Props {
   onOpenWrongNote: () => void;
 }
@@ -68,10 +94,11 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
 
   const [phase, setPhase] = useState<'intro' | 'playing' | 'levelup' | 'gameover' | 'ending'>('intro');
   const [tutorialStep, setTutorialStep] = useState<number | null>(null);
-  const [hp, setHp] = useState(3);
-  const [points, setPoints] = useState(0);
+  const [capital, setCapital] = useState(START_CAPITAL);
+  const [peakCapital, setPeakCapital] = useState(START_CAPITAL);
   const [rank, setRank] = useState(0);
   const [combo, setCombo] = useState(0);
+  const [lossStreak, setLossStreak] = useState(0);
   const [runCount, setRunCount] = useState(1);
   const [pendingLevelUp, setPendingLevelUp] = useState(false);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
@@ -81,9 +108,10 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
   const [problemIdx, setProblemIdx] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
   const [submitted, setSubmitted] = useState(false);
-  const [revealed, setRevealed] = useState(false);
-  const [lastGain, setLastGain] = useState(0);
-  // RSI is always visible — toggle removed
+  const [, setRevealed] = useState(false);
+  const [lastReturnPct, setLastReturnPct] = useState(0);
+  const [lastCapitalDelta, setLastCapitalDelta] = useState(0);
+  const [showRSI, setShowRSI] = useState(false);
   // macro is always visible — toggle removed
   const [activeTerm, setActiveTerm] = useState<string | null>(null);
   const [chartData, setChartData] = useState<ChartDataPoint[]>([]);
@@ -142,14 +170,27 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
   const prevMax = previewPath ? Math.max(...previewPath) * 1.03 : baseMax;
   const minPrice = showPreview ? Math.min(baseMin, prevMin) : baseMin;
   const maxPrice = showPreview ? Math.max(baseMax, prevMax) : baseMax;
+  const priceUnit = getPriceUnit(problem);
+  const priceScale = getNicePriceScale(minPrice, maxPrice, 4);
 
-  const persistSession = (overrides: { problemIdx?: number; hp?: number; points?: number; rank?: number; combo?: number } = {}) => {
+  const resetAccount = () => {
+    setCapital(START_CAPITAL);
+    setPeakCapital(START_CAPITAL);
+    setRank(0);
+    setCombo(0);
+    setLossStreak(0);
+    setLastReturnPct(0);
+    setLastCapitalDelta(0);
+  };
+
+  const persistSession = (overrides: { problemIdx?: number; capital?: number; peakCapital?: number; rank?: number; combo?: number; lossStreak?: number } = {}) => {
     saveStorage({
       savedSession: {
-        hp: overrides.hp ?? hp,
-        points: overrides.points ?? points,
+        capital: overrides.capital ?? capital,
+        peakCapital: overrides.peakCapital ?? peakCapital,
         rank: overrides.rank ?? rank,
         combo: overrides.combo ?? combo,
+        lossStreak: overrides.lossStreak ?? lossStreak,
         runCount,
         problemQueueIds: problemQueue.map(p => p.id),
         problemIdx: overrides.problemIdx ?? problemIdx,
@@ -162,7 +203,7 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
     const newRunCount = runCount + (phase !== 'intro' ? 1 : 0);
     const queue = difficultyShuffle(PROBLEM_POOL);
     setPhase('playing');
-    setHp(3); setPoints(0); setRank(0); setCombo(0);
+    resetAccount();
     setRunCount(newRunCount);
     setProblemQueue(queue);
     setProblemIdx(0);
@@ -171,7 +212,7 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
     saveStorage({
       totalRuns: storage.totalRuns + 1,
       savedSession: {
-        hp: 3, points: 0, rank: 0, combo: 0,
+        capital: START_CAPITAL, peakCapital: START_CAPITAL, rank: 0, combo: 0, lossStreak: 0,
         runCount: newRunCount,
         problemQueueIds: queue.map(p => p.id),
         problemIdx: 0,
@@ -185,7 +226,12 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
     const queue = s.problemQueueIds
       .map(id => PROBLEM_POOL.find(p => p.id === id))
       .filter(Boolean) as Problem[];
-    setHp(s.hp); setPoints(s.points); setRank(s.rank); setCombo(s.combo);
+    const restoredCapital = s.capital ?? START_CAPITAL + (s.points ?? 0);
+    setCapital(restoredCapital);
+    setPeakCapital(s.peakCapital ?? Math.max(START_CAPITAL, restoredCapital));
+    setRank(s.rank);
+    setCombo(s.combo);
+    setLossStreak(s.lossStreak ?? 0);
     setRunCount(s.runCount);
     setProblemQueue(queue);
     setProblemIdx(s.problemIdx);
@@ -200,10 +246,11 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
     setSubmitted(true);
     setRevealed(true);
 
-    // ── Tutorial problem: no HP/score/storage effects ──────────────────────
+    // ── Tutorial problem: no account/storage effects ───────────────────────
     if (problem.isTutorial) {
       play(correct ? 'correct' : 'incorrect');
-      setLastGain(0);
+      setLastReturnPct(0);
+      setLastCapitalDelta(0);
       return;
     }
 
@@ -222,27 +269,35 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
     if (correct) {
       const newCombo = combo + 1;
       play(newCombo >= 3 ? 'combo' : 'correct');
-      const base = problem.difficulty === 'hard' ? 35 : problem.difficulty === 'medium' ? 25 : 20;
-      const bonus = newCombo >= 3 ? (newCombo - 2) * 5 : 0;
-      const gain = base + bonus;
-      const newPoints = points + gain;
-      setLastGain(gain);
+      const returnPct = getTradeReturn(problem, true, newCombo, 0);
+      const delta = capital * returnPct;
+      const newCapital = Math.round(capital + delta);
+      const newPeakCapital = Math.max(peakCapital, newCapital);
+      setLastReturnPct(returnPct);
+      setLastCapitalDelta(delta);
       setCombo(newCombo);
-      setPoints(newPoints);
+      setLossStreak(0);
+      setCapital(newCapital);
+      setPeakCapital(newPeakCapital);
 
-      const newRank = Math.min(MAX_RANK_IDX, Math.floor(newPoints / LEVEL_UP_POINTS));
+      const newRank = getRankByCapital(newCapital);
       if (newRank > rank) {
         setRank(newRank);
         if (newRank > storage.bestRank) saveStorage({ bestRank: newRank });
         setPendingLevelUp(true);
       }
-      if (newPoints > storage.bestPoints) saveStorage({ bestPoints: newPoints });
+      if (newCapital > storage.bestPoints) saveStorage({ bestPoints: newCapital });
     } else {
-      const newHp = hp - 1;
-      setHp(newHp);
+      const newLossStreak = lossStreak + 1;
+      const returnPct = getTradeReturn(problem, false, combo, newLossStreak);
+      const delta = capital * returnPct;
+      const newCapital = Math.max(0, Math.round(capital + delta));
+      setCapital(newCapital);
       setCombo(0);
-      setLastGain(-1);
-      if (newHp <= 0) {
+      setLossStreak(newLossStreak);
+      setLastReturnPct(returnPct);
+      setLastCapitalDelta(delta);
+      if (newCapital <= GAMEOVER_CAPITAL) {
         saveStorage({ savedSession: null });
         play('gameover');
         setTimeout(() => setPhase('gameover'), 1500);
@@ -259,10 +314,10 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
       localStorage.setItem('tutorialCompleted', 'true');
       setTutorialStep(null);
       setPhase('intro');
-      setHp(3); setPoints(0); setRank(0); setCombo(0);
+      resetAccount();
       setProblemQueue(difficultyShuffle(PROBLEM_POOL));
       setProblemIdx(0);
-      setSelected(null); setSubmitted(false); setRevealed(false); setLastGain(0);
+      setSelected(null); setSubmitted(false); setRevealed(false);
       return;
     }
 
@@ -280,7 +335,7 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
     }
     persistSession({ problemIdx: problemIdx + 1 });
     setProblemIdx(problemIdx + 1);
-    setSelected(null); setSubmitted(false); setRevealed(false); setLastGain(0);
+    setSelected(null); setSubmitted(false); setRevealed(false); setLastReturnPct(0); setLastCapitalDelta(0);
   };
 
   const continueAfterLevelup = () => {
@@ -288,7 +343,7 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
     setPendingLevelUp(false);
     setPhase('playing');
     setProblemIdx(problemIdx + 1);
-    setSelected(null); setSubmitted(false); setRevealed(false); setLastGain(0);
+    setSelected(null); setSubmitted(false); setRevealed(false); setLastReturnPct(0); setLastCapitalDelta(0);
   };
 
   const retry = () => { startGame(); };
@@ -301,8 +356,8 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
     setPhase('playing');
     setProblemQueue([TUTORIAL_PROBLEM]);
     setProblemIdx(0);
-    setSelected(null); setSubmitted(false); setRevealed(false); setLastGain(0);
-    setHp(3); setPoints(0); setRank(0); setCombo(0); setPendingLevelUp(false);
+    setSelected(null); setSubmitted(false); setRevealed(false);
+    resetAccount(); setPendingLevelUp(false);
     setShowSettings(false);
   };
 
@@ -322,7 +377,7 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
     localStorage.setItem('tutorialCompleted', 'true');
     setTutorialStep(null);
     setPhase('intro');
-    setHp(3); setPoints(0); setRank(0); setCombo(0);
+    resetAccount();
     setProblemQueue(difficultyShuffle(PROBLEM_POOL));
     setProblemIdx(0);
     setSelected(null); setSubmitted(false); setRevealed(false);
@@ -333,7 +388,7 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
     resetStorage();
     setShowResetConfirm(false);
     setPhase('intro');
-    setHp(3); setPoints(0); setRank(0); setCombo(0); setRunCount(1);
+    resetAccount(); setRunCount(1);
     setProblemQueue(difficultyShuffle(PROBLEM_POOL));
     setProblemIdx(0);
   };
@@ -430,52 +485,62 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
             onClick={() => { play('click'); setShowSettings(true); }}
             title="설정"
             style={{
-              position: 'absolute', top: 20, right: 8,
-              background: COLORS.bgDeep, border: `1px solid ${COLORS.border}`,
-              borderRadius: 4,
-              fontSize: 16, cursor: 'pointer', color: COLORS.textBright, padding: '4px 7px',
-              lineHeight: 1, boxShadow: `1px 1px 0 0 ${COLORS.borderDark}`,
+              position: 'absolute', top: 30, right: 10,
+              width: 28, height: 28,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              background: COLORS.bgPanelLight,
+              border: `2px solid ${COLORS.borderDark}`,
+              borderRadius: 3,
+              fontSize: 14, cursor: 'pointer', color: COLORS.textBright,
+              padding: 0,
+              lineHeight: 1,
+              boxShadow: `2px 2px 0 0 ${COLORS.border}`,
+              fontFamily: TITLE_FONT,
             }}
           >⚙</button>
 
-          <div style={{ textAlign: 'center', marginBottom: 6, marginTop: 22, fontSize: 9, color: COLORS.textDim, letterSpacing: '0.25em' }}>
+          <div style={{ textAlign: 'center', marginBottom: 7, marginTop: 24, fontSize: 9, color: COLORS.textDim, letterSpacing: '0.28em' }}>
             ANALYZING · BUYING · PRAYING
           </div>
-          <div style={{ textAlign: 'center', marginBottom: 4, fontSize: 12, color: COLORS.red, fontWeight: 600, letterSpacing: '0.15em' }}>
+          <div style={{ textAlign: 'center', marginBottom: 7, fontSize: 12, color: COLORS.red, fontWeight: 600, letterSpacing: '0.17em' }}>
             ～ 이 론 편 ～
           </div>
 
-          <div style={{ position: 'relative', marginBottom: 6 }}>
-            <div style={{ textAlign: 'center', fontSize: 44, fontWeight: 900, color: COLORS.textBright, letterSpacing: '0.38em', lineHeight: 1.1, textShadow: `1px 1px 0 ${COLORS.bgDeep}` }}>
+          <div style={{ position: 'relative', marginBottom: 0 }}>
+            <div style={{ textAlign: 'center', fontSize: 41, fontWeight: 900, color: COLORS.textBright, letterSpacing: '0.48em', lineHeight: 1.18, textShadow: `1px 1px 0 ${COLORS.bgDeep}`, paddingLeft: '0.48em' }}>
               투기의<br/>정석
             </div>
-            <div style={{ position: 'absolute', right: 0, bottom: -28, textAlign: 'right' }}>
+            <div style={{ position: 'absolute', right: 2, bottom: -18, textAlign: 'right' }}>
               <div style={{ fontSize: 8, color: COLORS.textDim, letterSpacing: '0.25em' }}>저자</div>
               <div style={{ fontSize: 11, color: COLORS.textBright, fontWeight: 700, letterSpacing: '0.15em' }}>마자유</div>
             </div>
           </div>
 
-          <div style={{ marginBottom: 8, marginTop: 72 }}>
+          <div style={{ marginBottom: 5, marginTop: 46 }}>
             <div style={{ borderTop: `2px solid ${COLORS.border}` }}/>
             <div style={{ borderTop: `1px solid ${COLORS.red}`, marginTop: 2 }}/>
           </div>
 
-          <div style={{ marginBottom: 4, marginTop: 6, display: 'flex', justifyContent: 'center', alignItems: 'flex-end', gap: 0 }}>
+          <div style={{ marginBottom: 4, marginTop: -2, display: 'flex', justifyContent: 'center', alignItems: 'flex-end', gap: 0 }}>
             <div style={{ flex: 1, textAlign: 'center', paddingRight: 4 }}>
-              <div style={{ transform: 'scale(0.75)', transformOrigin: 'center bottom' }}>
-                <EvolutionFigure stage={0} color={COLORS.textBright} />
+              <div style={{ height: 78, overflow: 'hidden', display: 'flex', justifyContent: 'center', alignItems: 'flex-start' }}>
+                <div style={{ transform: 'scale(0.78) translateY(-8px)', transformOrigin: 'center top' }}>
+                  <EvolutionFigure stage={0} color={COLORS.textBright} />
+                </div>
               </div>
-              <div style={{ fontSize: 10, marginTop: 2, color: COLORS.textDim, letterSpacing: '0.12em', fontWeight: 600 }}>유인원</div>
+              <div style={{ fontSize: 10, marginTop: 0, color: COLORS.textDim, letterSpacing: '0.12em', fontWeight: 600 }}>유인원</div>
               <div style={{ fontSize: 8, marginTop: 1, color: COLORS.textMute, fontStyle: 'italic' }}>감으로 매매</div>
             </div>
             <div style={{ alignSelf: 'center', padding: '0 2px' }}>
               <div style={{ fontSize: 14, fontWeight: 900, color: COLORS.red, border: `2px solid ${COLORS.red}`, borderRadius: '50%', width: 26, height: 26, display: 'flex', alignItems: 'center', justifyContent: 'center', background: COLORS.bgPanel }}>VS</div>
             </div>
             <div style={{ flex: 1, textAlign: 'center', paddingLeft: 4 }}>
-              <div style={{ transform: 'scale(0.75)', transformOrigin: 'center bottom' }}>
-                <EvolutionFigure stage={4} color={COLORS.textBright} />
+              <div style={{ height: 78, overflow: 'hidden', display: 'flex', justifyContent: 'center', alignItems: 'flex-start' }}>
+                <div style={{ transform: 'scale(0.78) translateY(-8px)', transformOrigin: 'center top' }}>
+                  <EvolutionFigure stage={4} color={COLORS.textBright} />
+                </div>
               </div>
-              <div style={{ fontSize: 10, marginTop: 2, color: COLORS.textDim, letterSpacing: '0.12em', fontWeight: 600 }}>현자</div>
+              <div style={{ fontSize: 10, marginTop: 0, color: COLORS.textDim, letterSpacing: '0.12em', fontWeight: 600 }}>현자</div>
               <div style={{ fontSize: 8, marginTop: 1, color: COLORS.textMute, fontStyle: 'italic' }}>차트·매크로 분석</div>
             </div>
           </div>
@@ -491,9 +556,9 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
 
           <div style={{ fontSize: 11, color: COLORS.text, lineHeight: 1.7, marginBottom: 10, padding: '0 2px' }}>
             <div style={{ fontSize: 10, color: COLORS.red, fontWeight: 700, marginBottom: 3, letterSpacing: '0.15em' }}>● 학습 규칙</div>
-            <div>① HP 3 · 오답 1칸 차감 · 0이면 재시작</div>
-            <div>② 정답 시 +20~35점 · 콤보 보너스</div>
-            <div>③ 100점마다 진화 (7단계 도달 = 수료)</div>
+            <div>① 시드 1,000만원으로 시작 · 500만원 이하면 퇴장</div>
+            <div>② 정답은 수익 · 오답은 손실 · 연속 손실은 더 아픔</div>
+            <div>③ 계좌가 커질수록 진화 (1억원 도달 = 수료)</div>
           </div>
 
           {/* 기록 패널 */}
@@ -541,7 +606,7 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
                 onMouseUp={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = `3px 3px 0 0 ${COLORS.border}`; }}
                 onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = `3px 3px 0 0 ${COLORS.border}`; }}
               >
-                ▷ 이어하기 ({storage.savedSession!.points}점 · HP {storage.savedSession!.hp})
+                ▷ 이어하기 ({formatCapital(storage.savedSession!.capital ?? START_CAPITAL + (storage.savedSession!.points ?? 0))})
               </button>
             )}
             <button
@@ -656,12 +721,12 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
           <div style={{ position: 'absolute', top: 10, left: 0, right: 0, borderTop: `3px solid ${COLORS.red}` }}/>
           <div style={{ position: 'absolute', top: 17, left: 0, right: 0, borderTop: `1px solid ${COLORS.red}` }}/>
           <div style={{ fontSize: 13, fontFamily: TITLE_FONT, letterSpacing: '0.4em', color: COLORS.red, marginBottom: 8, marginTop: 14, fontWeight: 700 }}>학 습 중 단</div>
-          <div style={{ fontSize: 11, color: COLORS.textDim, letterSpacing: '0.25em', marginBottom: 20 }}>체력이 모두 소진되었습니다</div>
+          <div style={{ fontSize: 11, color: COLORS.textDim, letterSpacing: '0.25em', marginBottom: 20 }}>시드머니가 위험선 아래로 내려갔습니다</div>
           <div style={{ fontSize: 64, marginBottom: 14, filter: 'grayscale(0.4)' }}>💀</div>
           <div style={{ fontSize: 11, color: COLORS.textDim, marginBottom: 6, fontFamily: TITLE_FONT, letterSpacing: '0.15em' }}>최종 도달 단계</div>
           <div style={{ fontSize: 52, marginBottom: 4 }}>{r.emoji}</div>
           <div style={{ fontSize: 20, fontWeight: 700, marginBottom: 6, fontFamily: TITLE_FONT, color: COLORS.textBright, letterSpacing: '0.1em' }}>{r.name}</div>
-          <div style={{ display: 'inline-block', padding: '5px 14px', marginBottom: 22, border: `1px solid ${COLORS.border}`, fontSize: 11, fontFamily: TITLE_FONT, color: COLORS.textDim, letterSpacing: '0.15em' }}>{points}점 · {r.lv}단계</div>
+          <div style={{ display: 'inline-block', padding: '5px 14px', marginBottom: 22, border: `1px solid ${COLORS.border}`, fontSize: 11, fontFamily: TITLE_FONT, color: COLORS.textDim, letterSpacing: '0.15em' }}>{formatCapital(capital)} · {r.lv}단계</div>
           <div style={{ maxWidth: 280, margin: '0 auto' }}>
             <GlowBtn onClick={retry}>다시 학습하기 ▶</GlowBtn>
           </div>
@@ -689,7 +754,7 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
             『시장은 인내가 없는 사람으로부터<br/>인내가 있는 사람에게로<br/>재화가 흘러가는 곳이다』
           </div>
           <div style={{ fontSize: 11, fontFamily: TITLE_FONT, color: COLORS.textDim, letterSpacing: '0.2em', marginBottom: 22 }}>
-            최종 {points}점 · 누적 {storage.clearCount}회 수료
+            최종 {formatCapital(capital)} · 누적 {storage.clearCount}회 수료
           </div>
           <div style={{ maxWidth: 320, margin: '0 auto' }}>
             <GlowBtn onClick={retry}>다시 학습 ▶</GlowBtn>
@@ -703,8 +768,12 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
 
   // ─── Playing ───────────────────────────────────────────────────────────────
   const r = RANKS[rank];
-  const pointsInLevel = points - rank * LEVEL_UP_POINTS;
-  const progressPct = (pointsInLevel / LEVEL_UP_POINTS) * 100;
+  const currentRankFloor = RANK_CAPITALS[rank] ?? START_CAPITAL;
+  const nextRankTarget = RANK_CAPITALS[Math.min(rank + 1, MAX_RANK_IDX)] ?? RANK_CAPITALS[MAX_RANK_IDX];
+  const progressPct = rank >= MAX_RANK_IDX
+    ? 100
+    : Math.max(0, Math.min(100, ((capital - currentRankFloor) / (nextRankTarget - currentRankFloor)) * 100));
+  const drawdownPct = peakCapital > 0 ? ((capital - peakCapital) / peakCapital) * 100 : 0;
   const isCorrect = submitted && selected === problem.answer;
 
   const xTicks: number[] = [];
@@ -744,14 +813,12 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
               <div style={{ fontSize: 13, fontWeight: 700, lineHeight: 1.2, fontFamily: KOREAN_FONT, color: COLORS.textBright, letterSpacing: '0.05em', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{r.name}</div>
               <div style={{ fontSize: 10, color: COLORS.textDim, fontFamily: TITLE_FONT, letterSpacing: '0.1em' }}>{r.lv}단계</div>
             </div>
-            <div style={{ display: 'flex', gap: 2, flexShrink: 0 }}>
-              {[0, 1, 2].map(i => (
-                <span key={i} style={{ fontSize: 16, color: i < hp ? COLORS.red : '#c4b6a0', transition: 'all 0.3s' }}>♥</span>
-              ))}
-            </div>
-            <div style={{ textAlign: 'right', flexShrink: 0, minWidth: 50 }}>
+            <div style={{ textAlign: 'right', flexShrink: 0, minWidth: 88 }}>
               <div style={{ fontSize: 16, fontWeight: 700, color: COLORS.textBright, fontFamily: TITLE_FONT, lineHeight: 1 }}>
-                {points}<span style={{ fontSize: 10, color: COLORS.textDim, marginLeft: 2 }}>점</span>
+                {formatCapital(capital)}
+              </div>
+              <div style={{ fontSize: 9, color: drawdownPct < -10 ? COLORS.red : COLORS.textDim, fontFamily: TITLE_FONT, letterSpacing: '0.05em' }}>
+                MDD {drawdownPct.toFixed(1)}%
               </div>
               {combo >= 3 && (
                 <div style={{ fontSize: 10, fontFamily: TITLE_FONT, color: COLORS.red, fontWeight: 700, animation: 'blink 0.5s infinite' }}>🔥 {combo}연속</div>
@@ -785,12 +852,17 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
           {problem.isTutorial && (
             <span style={{ padding: '3px 8px', background: COLORS.gold, color: '#fff', letterSpacing: '0.12em', fontWeight: 700, fontSize: 10, fontFamily: TITLE_FONT }}>✦ 연습</span>
           )}
+          <div style={{ marginLeft: 'auto' }}>
+            <button onClick={() => setShowRSI(!showRSI)} style={toggleBtn(showRSI, COLORS.red)}>
+              {showRSI ? '✓ RSI' : '+ RSI 보기'}
+            </button>
+          </div>
         </div>
 
         {/* 차트 */}
         <GlowBox id="tut-chart" color={COLORS.border} bg={COLORS.bgChart} style={{ padding: '6px 6px 2px', marginBottom: 6 }}>
           <div id="tut-legend" style={{ display: 'flex', gap: 10, marginBottom: 4, paddingLeft: 4, fontSize: 9, fontFamily: TITLE_FONT, fontWeight: 700, letterSpacing: '0.02em', flexWrap: 'wrap' }}>
-            <LegendItem color={COLORS.blueBright} label="종가" />
+            <LegendItem color={COLORS.blueBright} label={`종가(${priceUnit})`} />
             <LegendItem color={COLORS.yellow} label="MA5" dashed />
             <LegendItem color={COLORS.purple} label="MA20" dashed />
             <LegendItem color={COLORS.orange} label="MA60" dashed />
@@ -801,7 +873,7 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
             {showActualFuture && <LegendItem color={COLORS.goldBright} label="실제결과" />}
           </div>
           <ResponsiveContainer width="100%" height={140}>
-            <ComposedChart data={visibleDataWithReveal} margin={{ top: 5, right: 8, left: 0, bottom: 0 }}>
+            <ComposedChart data={visibleDataWithReveal} margin={{ top: 5, right: 22, left: 0, bottom: 0 }}>
               <defs>
                 <linearGradient id="pg" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="0%" stopColor={COLORS.blueBright} stopOpacity={0.4}/>
@@ -816,12 +888,14 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
               <XAxis dataKey="day" ticks={xTicks} tick={{ fontSize: 10, fill: COLORS.textDim, fontFamily: 'monospace' }}
                 tickFormatter={(d) => { const item = fullData[d]; return item ? item.date : ''; }}
                 axisLine={{ stroke: COLORS.borderDark }} tickLine={{ stroke: COLORS.borderDark }}/>
-              <YAxis domain={[minPrice, maxPrice]} tick={{ fontSize: 10, fill: COLORS.textDim, fontFamily: 'monospace' }}
-                tickLine={false} width={42} tickFormatter={(v) => v.toFixed(0)} axisLine={{ stroke: COLORS.borderDark }}/>
+              <YAxis domain={[priceScale.min, priceScale.max]} ticks={priceScale.ticks} allowDecimals={false}
+                tick={{ fontSize: 8, fill: COLORS.textDim, fontFamily: 'monospace' }}
+                tickLine={false} width={50} tickFormatter={(v) => formatPrice(Number(v), priceUnit)} axisLine={{ stroke: COLORS.borderDark }}/>
               <Tooltip
                 contentStyle={{ background: COLORS.bgDeep, border: `2px solid ${COLORS.gold}`, fontSize: 11, borderRadius: 2, fontFamily: 'monospace', color: COLORS.text }}
                 labelFormatter={(d) => { const item = fullData[d as number]; return item ? `📅 ${item.date}` : ''; }}
                 labelStyle={{ color: COLORS.goldBright, fontSize: 11, fontWeight: 700 }}
+                formatter={(v, n) => [typeof v === 'number' ? formatPrice(v, priceUnit) : v, n]}
               />
               {/* 미래 구간 배경 틴트 */}
               {showFutureZone && <ReferenceArea x1={problem.revealDay - 1} x2={fullData.length - 1} fill={COLORS.gold} fillOpacity={0.07} stroke="none"/>}
@@ -850,11 +924,11 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
           <div id="tut-volume">
             <div style={{ fontSize: 9, fontFamily: TITLE_FONT, color: COLORS.blueBright, letterSpacing: '0.1em', paddingLeft: 4, marginTop: 3, marginBottom: 1, fontWeight: 700 }}>거래량</div>
             <ResponsiveContainer width="100%" height={50}>
-              <ComposedChart data={visibleDataWithReveal} margin={{ top: 0, right: 8, left: 0, bottom: 0 }}>
+                <ComposedChart data={visibleDataWithReveal} margin={{ top: 0, right: 22, left: 0, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="2 4" stroke={COLORS.textMute} vertical={false} opacity={0.2}/>
                 <XAxis dataKey="day" tick={false} axisLine={{ stroke: COLORS.borderDark }}/>
-                <YAxis tick={{ fontSize: 9, fill: COLORS.textDim, fontFamily: 'monospace' }} tickLine={false} width={42}
-                  tickFormatter={(v) => v >= 1000000 ? `${(v / 1000000).toFixed(1)}M` : `${(v / 1000).toFixed(0)}K`}
+                <YAxis tick={{ fontSize: 8, fill: COLORS.textDim, fontFamily: 'monospace' }} tickLine={false} width={50}
+                  tickFormatter={(v) => formatVolume(Number(v))}
                   axisLine={{ stroke: COLORS.borderDark }}/>
                 <Tooltip contentStyle={{ background: COLORS.bgDeep, border: `2px solid ${COLORS.blue}`, fontSize: 11, fontFamily: 'monospace', color: COLORS.text }}
                   formatter={(v) => [Number(v).toLocaleString(), '거래량']}
@@ -871,7 +945,8 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
             </ResponsiveContainer>
           </div>
 
-          <>
+          {showRSI && (
+            <>
               <div style={{ fontSize: 9, fontFamily: TITLE_FONT, color: COLORS.red, letterSpacing: '0.1em', paddingLeft: 4, marginTop: 3, marginBottom: 1, fontWeight: 700 }}>RSI(14) · 70↑과매수 / 30↓과매도</div>
               <ResponsiveContainer width="100%" height={50}>
                 <ComposedChart data={visibleDataWithReveal} margin={{ top: 0, right: 8, left: 0, bottom: 0 }}>
@@ -888,6 +963,7 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
                 </ComposedChart>
               </ResponsiveContainer>
             </>
+          )}
         </GlowBox>
 
         {/* 매크로 */}
@@ -898,24 +974,24 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
           const toneLabel = overallTone === 'positive' ? '우호적' : overallTone === 'negative' ? '부정적' : '혼재';
           const toneColor = overallTone === 'positive' ? COLORS.green : overallTone === 'negative' ? COLORS.red : COLORS.textDim;
           return (
-            <div id="tut-macro" style={{ marginBottom: 6 }}>
-              {/* 매크로 헤더 */}
-              <div style={{ background: COLORS.bgPanel, border: `2px solid ${COLORS.border}`, boxShadow: `2px 2px 0 0 ${COLORS.border}`, padding: '5px 10px', display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
-                <span style={{ fontSize: 11, color: COLORS.textDim, letterSpacing: '0.15em', fontWeight: 700 }}>매크로</span>
-                <span style={{ display: 'flex', gap: 3 }}>
-                  {problem.macroHints.map((h, i) => {
-                    const c = h.tone === 'positive' ? COLORS.green : h.tone === 'negative' ? COLORS.red : COLORS.textDim;
-                    return <span key={i} style={{ width: 8, height: 8, background: c, display: 'inline-block', border: `1px solid ${COLORS.border}` }}/>;
-                  })}
-                </span>
-                <span style={{ fontSize: 12, color: toneColor, fontWeight: 700, letterSpacing: '0.1em' }}>{toneLabel}</span>
+            <div id="tut-macro" style={{ marginBottom: 8, background: COLORS.bgPanel, border: `2px solid ${COLORS.border}`, boxShadow: `2px 2px 0 0 ${COLORS.borderDark}`, padding: 8 }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, padding: '0 2px 7px', marginBottom: 7, borderBottom: `1px dashed ${COLORS.border}` }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <span style={{ fontSize: 11, color: COLORS.textDim, letterSpacing: '0.15em', fontWeight: 700, fontFamily: TITLE_FONT }}>매크로 환경</span>
+                  <span style={{ display: 'flex', gap: 3 }}>
+                    {problem.macroHints.map((h, i) => {
+                      const c = h.tone === 'positive' ? COLORS.green : h.tone === 'negative' ? COLORS.red : COLORS.textDim;
+                      return <span key={i} style={{ width: 8, height: 8, background: c, display: 'inline-block', border: `1px solid ${COLORS.border}` }}/>;
+                    })}
+                  </span>
+                </div>
+                <span style={{ fontSize: 12, color: toneColor, fontWeight: 700, letterSpacing: '0.1em', fontFamily: KOREAN_FONT }}>{toneLabel}</span>
               </div>
-              {/* 매크로 카드 — 항상 표시 */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 6 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 6 }}>
                 {problem.macroHints.map((h, i) => {
                   const c = h.tone === 'positive' ? COLORS.green : h.tone === 'negative' ? COLORS.red : COLORS.textDim;
                   return (
-                    <div key={i} style={{ background: COLORS.bgPanel, border: `1px solid ${c}`, borderLeft: `4px solid ${c}`, padding: '6px 9px' }}>
+                    <div key={i} style={{ background: COLORS.bgPanelLight, border: `1px solid ${c}`, borderLeft: `4px solid ${c}`, padding: '6px 9px', minHeight: 58 }}>
                       <div style={{ fontSize: 10, color: COLORS.textDim, fontFamily: TITLE_FONT }}><GlossaryText text={h.label} onTerm={setActiveTerm} /></div>
                       <div style={{ fontSize: 13, fontWeight: 700, color: c, fontFamily: KOREAN_FONT }}>{h.value}</div>
                       <div style={{ fontSize: 11, color: COLORS.text, lineHeight: 1.35, fontFamily: KOREAN_FONT }}><GlossaryText text={h.trend} onTerm={setActiveTerm} /></div>
@@ -927,48 +1003,52 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
           );
         })()}
 
-        {/* 질문 */}
-        <div style={{ padding: '6px 10px', marginBottom: 6, borderLeft: `3px solid ${COLORS.red}`, background: COLORS.bgPanel }}>
-          <div style={{ fontSize: 13, lineHeight: 1.45, color: COLORS.textBright, fontFamily: KOREAN_FONT }}>
-            <span style={{ color: COLORS.red, fontWeight: 700, marginRight: 6, fontFamily: TITLE_FONT, fontSize: 12 }}>문.</span>
-            {anonymizeQ(problem.question, problem.reveal.title)}
+        {/* 질문 + 보기 */}
+        <div id="tut-choices" style={{ marginBottom: 8, background: COLORS.bgPanel, border: `2px solid ${COLORS.border}`, boxShadow: `2px 2px 0 0 ${COLORS.borderDark}`, padding: 8 }}>
+          <div style={{ padding: '2px 2px 8px', marginBottom: 8, borderBottom: `1px dashed ${COLORS.border}` }}>
+            <div style={{ fontSize: 10, color: COLORS.textDim, letterSpacing: '0.15em', fontFamily: TITLE_FONT, fontWeight: 700, marginBottom: 4 }}>문제</div>
+            <div style={{ fontSize: 13.5, lineHeight: 1.5, color: COLORS.textBright, fontFamily: KOREAN_FONT, fontWeight: 600 }}>
+              {anonymizeQ(problem.question, problem.reveal.title)}
+            </div>
           </div>
-        </div>
 
-        {/* 보기 — 2열 그리드 */}
-        <div id="tut-choices" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 4, marginBottom: 8 }}>
-          {problem.choices.map((c, i) => {
-            const isSel = selected === i;
-            const isAns = submitted && i === problem.answer;
-            const isWrong = submitted && isSel && i !== problem.answer;
-            const pColor = CHOICE_PREVIEW_COLORS[i] ?? COLORS.red;
-            let bg: string = COLORS.bgPanel, bd: string = COLORS.border, col: string = COLORS.text;
-            if (isAns) { bg = '#dcf5e0'; bd = COLORS.green; col = '#14532d'; }
-            else if (isWrong) { bg = '#fde2e1'; bd = COLORS.red; col = '#7f1d1d'; }
-            else if (isSel && !submitted) { bg = `${pColor}18`; bd = pColor; col = COLORS.textBright; }
-            else if (isSel && submitted) { bg = '#fff7d6'; bd = COLORS.red; col = COLORS.textBright; }
-            return (
-              <button key={i} onClick={() => !submitted && setSelected(i)} disabled={submitted}
-                style={{ display: 'flex', gap: 8, padding: '7px 10px', background: bg, border: `2px solid ${bd}`, boxShadow: isSel || isAns || isWrong ? `2px 2px 0 0 ${bd}` : `2px 2px 0 0 ${COLORS.border}`, borderRadius: 2, color: col, cursor: submitted ? 'default' : 'pointer', textAlign: 'left', fontSize: 12.5, lineHeight: 1.4, fontFamily: KOREAN_FONT, transition: 'all 0.1s' }}>
-                <span style={{ fontFamily: TITLE_FONT, color: isAns ? COLORS.green : isSel && !submitted ? pColor : COLORS.red, fontWeight: 700, flexShrink: 0, fontSize: 12.5 }}>{['①', '②', '③', '④', '⑤'][i]}</span>
-                <span><GlossaryText text={c} onTerm={setActiveTerm} /></span>
-              </button>
-            );
-          })}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 5 }}>
+            {problem.choices.map((c, i) => {
+              const isSel = selected === i;
+              const isAns = submitted && i === problem.answer;
+              const isWrong = submitted && isSel && i !== problem.answer;
+              const pColor = CHOICE_PREVIEW_COLORS[i] ?? COLORS.red;
+              let bg: string = COLORS.bgPanelLight, bd: string = COLORS.border, col: string = COLORS.text;
+              if (isAns) { bg = '#dcf5e0'; bd = COLORS.green; col = '#14532d'; }
+              else if (isWrong) { bg = '#fde2e1'; bd = COLORS.red; col = '#7f1d1d'; }
+              else if (isSel && !submitted) { bg = `${pColor}18`; bd = pColor; col = COLORS.textBright; }
+              else if (isSel && submitted) { bg = '#fff7d6'; bd = COLORS.red; col = COLORS.textBright; }
+              return (
+                <button key={i} onClick={() => !submitted && setSelected(prev => prev === i ? null : i)} disabled={submitted}
+                  style={{ display: 'flex', gap: 8, padding: '8px 9px', minHeight: 46, background: bg, border: `2px solid ${bd}`, boxShadow: isSel || isAns || isWrong ? `2px 2px 0 0 ${bd}` : `2px 2px 0 0 ${COLORS.border}`, borderRadius: 2, color: col, cursor: submitted ? 'default' : 'pointer', textAlign: 'left', fontSize: 12.5, lineHeight: 1.35, fontFamily: KOREAN_FONT, transition: 'all 0.1s', alignItems: 'flex-start' }}>
+                  <span style={{ fontFamily: TITLE_FONT, color: isAns ? COLORS.green : isSel && !submitted ? pColor : COLORS.red, fontWeight: 700, flexShrink: 0, fontSize: 12.5 }}>{['①', '②', '③', '④', '⑤'][i]}</span>
+                  <span><GlossaryText text={c} onTerm={setActiveTerm} /></span>
+                </button>
+              );
+            })}
+          </div>
         </div>
 
         {/* 해설 + 종목 공개 통합 박스 */}
         {submitted && (
           <GlowBox color={isCorrect ? COLORS.greenBright : COLORS.redBright} bg={COLORS.bgPanel} style={{ padding: '14px 16px', marginBottom: 10 }}>
-            {/* 헤더: 정답/오답 + 점수 */}
+            {/* 헤더: 정답/오답 + 계좌 변화 */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
               <div style={{ fontSize: 12, fontFamily: TITLE_FONT, letterSpacing: '0.15em', color: isCorrect ? COLORS.greenBright : COLORS.redBright, fontWeight: 700 }}>
                 {isCorrect ? '✓ 정답!' : '✗ 오답'} · 답: {['1', '2', '3', '4'][problem.answer]}
               </div>
-              {lastGain !== 0 && (
-                <div style={{ fontSize: 11, fontFamily: TITLE_FONT, color: lastGain > 0 ? COLORS.greenBright : COLORS.redBright, fontWeight: 700 }}>
-                  {lastGain > 0 ? `+${lastGain}pts` : '-1 ♥'}
-                  {combo >= 3 && lastGain > 0 && <span style={{ color: COLORS.pink, marginLeft: 4 }}>🔥×{combo}</span>}
+              {lastReturnPct !== 0 && (
+                <div style={{ fontSize: 11, fontFamily: TITLE_FONT, color: lastReturnPct > 0 ? COLORS.greenBright : COLORS.redBright, fontWeight: 700 }}>
+                  {lastReturnPct > 0 ? '+' : ''}{(lastReturnPct * 100).toFixed(1)}%
+                  <span style={{ marginLeft: 5 }}>
+                    {lastCapitalDelta > 0 ? '+' : ''}{Math.round(lastCapitalDelta).toLocaleString()}만
+                  </span>
+                  {combo >= 3 && lastReturnPct > 0 && <span style={{ color: COLORS.pink, marginLeft: 4 }}>🔥×{combo}</span>}
                 </div>
               )}
             </div>
@@ -982,10 +1062,7 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
             {problem.reveal && (
               <div style={{ marginBottom: 10, padding: '8px 10px', background: COLORS.bgDeep, borderLeft: `3px solid ${COLORS.gold}` }}>
                 <div style={{ fontSize: 14, fontWeight: 700, color: COLORS.textBright, fontFamily: KOREAN_FONT }}>{problem.reveal.title}</div>
-                <div style={{ fontSize: 10, color: COLORS.textDim, fontFamily: TITLE_FONT, letterSpacing: '0.05em', marginBottom: 5 }}>{problem.reveal.market} · {problem.reveal.period}</div>
-                <div style={{ fontSize: 13, lineHeight: 1.65, color: COLORS.text, fontFamily: KOREAN_FONT }}>
-                  <GlossaryText text={problem.reveal.result} onTerm={setActiveTerm} />
-                </div>
+                <div style={{ fontSize: 10, color: COLORS.textDim, fontFamily: TITLE_FONT, letterSpacing: '0.05em' }}>{problem.reveal.market} · {problem.reveal.period}</div>
               </div>
             )}
 

@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@capacitor/cli": "^8.3.4",
+    "@capacitor/core": "^8.3.4",
     "howler": "^2.2.4",
     "lightweight-charts": "^5.2.0",
     "papaparse": "^5.5.3",

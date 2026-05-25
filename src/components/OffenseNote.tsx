@@ -8,6 +8,7 @@ import { COLORS } from '../constants/colors';
 import { PROBLEM_POOL } from '../data/problems';
 import { loadChartData } from '../utils/dataLoader';
 import { generateChart } from '../utils/chartGenerator';
+import { formatPrice, formatVolume, getNicePriceScale, getPriceUnit } from '../utils/chartFormat';
 import { GlossaryText, GlossaryModal } from './GlossaryText';
 import {
   GlowBox, GlowBtn, LegendItem, Screen, FontLoader,
@@ -238,6 +239,8 @@ export default function OffenseNote({ onClose }: Props) {
   const visibleData = revealed ? fullData : fullData.slice(0, currentProblem.revealDay);
   const minPrice = fullData.length ? Math.min(...fullData.map(d => d.종가)) * 0.97 : 0;
   const maxPrice = fullData.length ? Math.max(...fullData.map(d => d.종가)) * 1.03 : 100;
+  const priceUnit = getPriceUnit(currentProblem);
+  const priceScale = getNicePriceScale(minPrice, maxPrice, 4);
   const isCorrect = submitted && selected === currentProblem.answer;
   const progress = `${reviewIdx + 1} / ${reviewQueue.length}`;
 
@@ -296,14 +299,14 @@ export default function OffenseNote({ onClose }: Props) {
         {/* 차트 */}
         <GlowBox color={COLORS.border} bg={COLORS.bgChart} style={{ padding: '6px 6px 2px', marginBottom: 6 }}>
           <div style={{ display: 'flex', gap: 10, marginBottom: 4, paddingLeft: 4, fontSize: 9, fontFamily: TITLE_FONT, fontWeight: 700, flexWrap: 'wrap' }}>
-            <LegendItem color={COLORS.blueBright} label="종가" />
+            <LegendItem color={COLORS.blueBright} label={`종가(${priceUnit})`} />
             <LegendItem color={COLORS.yellow} label="MA5" dashed />
             <LegendItem color={COLORS.purple} label="MA20" dashed />
             <LegendItem color={COLORS.orange} label="MA60" dashed />
             {revealed && <LegendItem color={COLORS.gold} label="문제시점" vertical />}
           </div>
           <ResponsiveContainer width="100%" height={140}>
-            <ComposedChart data={visibleData} margin={{ top: 5, right: 8, left: 0, bottom: 0 }}>
+            <ComposedChart data={visibleData} margin={{ top: 5, right: 22, left: 0, bottom: 0 }}>
               <defs>
                 <linearGradient id="pg2" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="0%" stopColor={COLORS.blueBright} stopOpacity={0.4}/>
@@ -314,12 +317,14 @@ export default function OffenseNote({ onClose }: Props) {
               <XAxis dataKey="day" ticks={xTicks} tick={{ fontSize: 10, fill: COLORS.textDim, fontFamily: 'monospace' }}
                 tickFormatter={(d) => { const item = fullData[d]; return item ? item.date : ''; }}
                 axisLine={{ stroke: COLORS.borderDark }} tickLine={{ stroke: COLORS.borderDark }}/>
-              <YAxis domain={[minPrice, maxPrice]} tick={{ fontSize: 10, fill: COLORS.textDim, fontFamily: 'monospace' }}
-                tickLine={false} width={42} tickFormatter={(v) => v.toFixed(0)} axisLine={{ stroke: COLORS.borderDark }}/>
+              <YAxis domain={[priceScale.min, priceScale.max]} ticks={priceScale.ticks} allowDecimals={false}
+                tick={{ fontSize: 8, fill: COLORS.textDim, fontFamily: 'monospace' }}
+                tickLine={false} width={50} tickFormatter={(v) => formatPrice(Number(v), priceUnit)} axisLine={{ stroke: COLORS.borderDark }}/>
               <Tooltip
                 contentStyle={{ background: COLORS.bgDeep, border: `2px solid ${COLORS.gold}`, fontSize: 11, fontFamily: 'monospace' }}
                 labelFormatter={(d) => { const item = fullData[d as number]; return item ? `📅 ${item.date}` : ''; }}
                 labelStyle={{ color: COLORS.goldBright, fontWeight: 700 }}
+                formatter={(v, n) => [typeof v === 'number' ? formatPrice(v, priceUnit) : v, n]}
               />
               {revealed && <ReferenceLine x={currentProblem.revealDay} stroke={COLORS.gold} strokeWidth={2} strokeDasharray="4 4"
                 label={{ value: '◆ 문제시점', fill: COLORS.goldBright, fontSize: 11, position: 'top', fontFamily: 'monospace', fontWeight: 700 }}/>}
@@ -332,10 +337,10 @@ export default function OffenseNote({ onClose }: Props) {
 
           <div style={{ fontSize: 9, fontFamily: TITLE_FONT, color: COLORS.blueBright, paddingLeft: 4, marginTop: 3, marginBottom: 1, fontWeight: 700 }}>거래량</div>
           <ResponsiveContainer width="100%" height={45}>
-            <ComposedChart data={visibleData} margin={{ top: 0, right: 8, left: 0, bottom: 0 }}>
+            <ComposedChart data={visibleData} margin={{ top: 0, right: 22, left: 0, bottom: 0 }}>
               <XAxis dataKey="day" tick={false} axisLine={{ stroke: COLORS.borderDark }}/>
-              <YAxis tick={{ fontSize: 9, fill: COLORS.textDim, fontFamily: 'monospace' }} tickLine={false} width={42}
-                tickFormatter={(v) => v >= 1000000 ? `${(v / 1000000).toFixed(1)}M` : `${(v / 1000).toFixed(0)}K`}
+              <YAxis tick={{ fontSize: 8, fill: COLORS.textDim, fontFamily: 'monospace' }} tickLine={false} width={50}
+                tickFormatter={(v) => formatVolume(Number(v))}
                 axisLine={{ stroke: COLORS.borderDark }}/>
               <Tooltip contentStyle={{ background: COLORS.bgDeep, border: `2px solid ${COLORS.blue}`, fontSize: 11, fontFamily: 'monospace' }}
                 formatter={(v) => [Number(v).toLocaleString(), '거래량']}

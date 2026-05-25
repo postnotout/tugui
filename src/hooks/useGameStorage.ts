@@ -9,10 +9,13 @@ export interface SolvedRecord {
 }
 
 export interface SavedSession {
-  hp: number;
-  points: number;
+  hp?: number;
+  points?: number;
+  capital?: number;
+  peakCapital?: number;
   rank: number;
   combo: number;
+  lossStreak?: number;
   runCount: number;
   problemQueueIds: number[];
   problemIdx: number;

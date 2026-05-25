@@ -10,5 +10,7 @@ export const RANKS: Rank[] = [
   { lv: 7, emoji: '👴', name: '워렌 뷔페',     desc: '시간이 친구' },
 ];
 
-export const LEVEL_UP_POINTS = 100;
+export const START_CAPITAL = 1000; // 만원
+export const GAMEOVER_CAPITAL = 500; // 만원
+export const RANK_CAPITALS = [1000, 1200, 1500, 2000, 3000, 5000, 10000];
 export const MAX_RANK_IDX = RANKS.length - 1;

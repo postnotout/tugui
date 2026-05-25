@@ -354,7 +354,36 @@ const LESSON_MAP = {
   },
 };
 
-function makeLesson(ans, pattern) {
+function macroTone(hints) {
+  const pos = hints.filter(h => h.tone === 'positive').length;
+  const neg = hints.filter(h => h.tone === 'negative').length;
+  if (pos > neg) return 'positive';
+  if (neg > pos) return 'negative';
+  return 'mixed';
+}
+
+function makeLesson(ans, pattern, hints) {
+  const tone = macroTone(hints);
+
+  if ((ans === 0 || ans === 1) && tone === 'negative') {
+    if (pattern === 'uptrend' || pattern === 'breakout') {
+      return '매크로가 불리해도 가격과 거래량이 버티면 수급이 악재를 이기는 구간이다.';
+    }
+    return '나쁜 뉴스 속 반등은 수급 확인이 핵심이다. 가격이 먼저 돌아서는 경우가 있다.';
+  }
+
+  if (ans === 3 && tone === 'positive') {
+    return '호재가 있어도 가격이 무너지면 시장은 이미 다른 위험을 보고 있다는 뜻이다.';
+  }
+
+  if ((ans === 0 || ans === 1) && tone === 'positive') {
+    return '차트와 매크로가 같은 방향이면 추세가 이어질 확률이 높아진다.';
+  }
+
+  if ((ans === 2 || ans === 3) && tone === 'negative') {
+    return '약한 차트와 부정적 매크로가 겹치면 반등보다 리스크 관리가 먼저다.';
+  }
+
   return (LESSON_MAP[ans] && LESSON_MAP[ans][pattern]) || '차트 패턴과 매크로를 동시에 확인하는 것이 핵심이다.';
 }
 
@@ -366,7 +395,15 @@ function makeExplanation(ans, pctStr, months, pattern) {
   return `${verb} ${months}개월 뒤 ${lbl} (${pctStr}).`;
 }
 
-function makeOdds(ans, pattern) {
+function makeOdds(ans, pattern, hints) {
+  const tone = macroTone(hints);
+  if ((ans === 0 || ans === 1) && tone === 'negative') {
+    return '매크로는 불리했지만 가격이 버텼다. 이런 충돌 구간은 수급 확인이 핵심이다.';
+  }
+  if (ans === 3 && tone === 'positive') {
+    return '겉보기 호재보다 가격 붕괴가 더 강한 신호였다. 호재가 항상 상승을 보장하지 않는다.';
+  }
+
   const odds = {
     uptrend: [
       '강세 추세가 계속될 확률은 55~65%. 매크로가 동행할수록 확률이 오른다.',
@@ -467,6 +504,8 @@ for (const [ticker, meta] of Object.entries(TICKER_META)) {
     const pctStr  = (pct >= 0 ? '+' : '') + (pct * 100).toFixed(0) + '%';
     const endDate = rows[si + CHART_DAYS - 1].date;
 
+    const macroHints = getMacroHints(startDate);
+
     generated.push({
       id:          nextId++,
       market:      meta.market,
@@ -477,18 +516,18 @@ for (const [ticker, meta] of Object.entries(TICKER_META)) {
       difficulty:  toDifficulty(pct, pattern),
       startDate,
       question:    pickQ(pattern, meta.name, months),
-      macroHints:  getMacroHints(startDate),
+      macroHints,
       choices:     getChoices(pattern),
       answer,
-      odds:        makeOdds(answer, pattern),
+      odds:        makeOdds(answer, pattern, macroHints),
       explanation: makeExplanation(answer, pctStr, months, pattern),
       reveal: {
         title:  `${meta.name} (${ticker})`,
         market: `${meta.market} · ${meta.sector}`,
         period: `${toKoMonth(startDate)} ~ ${toKoMonth(endDate)}`,
         result: `${months}개월 ${answerLabel(answer)} (${pctStr}).`,
-        macro:  getMacroHints(startDate).map(h => `${h.label} ${h.value}`).join(', ') + '.',
-        lesson: makeLesson(answer, pattern),
+        macro:  macroHints.map(h => `${h.label} ${h.value}`).join(', ') + '.',
+        lesson: makeLesson(answer, pattern, macroHints),
       },
     });
 
@@ -504,39 +543,39 @@ function getChoices(pattern) {
   switch (pattern) {
     case 'breakout':
       return [
-        '돌파 성공 → 강한 추세 지속 (+30%+)',
-        '돌파 후 점진적 상승 (+10~30%)',
-        '가짜 돌파 → 박스권 재진입 (±10%)',
-        '돌파 실패 → 되돌림 하락 (-10%+)',
+        '돌파에 성공하여 강한 추세가 지속된다',
+        '돌파 이후 점진적으로 상승한다',
+        '가짜 돌파 후 박스권으로 재진입한다',
+        '돌파에 실패하고 되돌림 하락이 나타난다',
       ];
     case 'reversal':
       return [
-        '강한 반등 → 추세 전환 (+30%+)',
-        '저점 확인 → 점진적 회복 (+10~30%)',
-        '단기 반등 후 재하락 (±10%)',
-        '반등 실패 → 추가 급락 (-10%+)',
+        '강하게 반등하여 추세가 전환된다',
+        '저점을 확인하고 점진적으로 회복한다',
+        '단기 반등 후 재하락한다',
+        '반등에 실패하고 추가 급락한다',
       ];
     case 'uptrend':
       return [
-        '추세 가속 → 신고가 경신 (+30%+)',
-        '추세 유지 → 완만한 우상향 (+10~30%)',
-        '상승 피로 → 숨 고르기 (±10%)',
-        '추세 꺾임 → 조정 국면 (-10%+)',
+        '추세가 가속화되어 신고가를 경신한다',
+        '추세를 유지하며 완만하게 우상향한다',
+        '상승 피로로 횡보하며 숨 고르기를 한다',
+        '추세가 꺾이고 조정 국면에 진입한다',
       ];
     case 'downtrend':
       return [
-        '급격한 반전 → 강한 상승 (+30%+)',
-        '하락 멈춤 → 반등 회복 (+10~30%)',
-        '하락 감속 → 바닥 다지기 (±10%)',
-        '하락 가속 → 추가 급락 (-10%+)',
+        '급격히 반전되어 강하게 상승한다',
+        '하락이 멈추고 반등하여 회복한다',
+        '하락이 감속되어 바닥을 다진다',
+        '하락이 가속화되어 추가 급락한다',
       ];
     case 'sideways':
     default:
       return [
-        '박스 상향 돌파 → 급등 (+30%+)',
-        '상단 돌파 → 추세 형성 (+10~30%)',
-        '박스권 지속 (±10%)',
-        '하단 이탈 → 하락 가속 (-10%+)',
+        '박스권 상단을 돌파하여 급등한다',
+        '상단 돌파 후 새로운 추세가 형성된다',
+        '박스권이 지속된다',
+        '하단을 이탈하여 하락이 가속된다',
       ];
   }
 }
