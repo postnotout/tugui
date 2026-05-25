@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import {
   Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
-  ReferenceLine, Area, ComposedChart, Bar, Cell,
+  ReferenceLine, ReferenceArea, Area, ComposedChart, Bar, Cell,
 } from 'recharts';
 
 import { COLORS } from '../constants/colors';
@@ -70,7 +70,14 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
   }, [problem, phase, runCount]);
 
   const fullData = chartData;
-  const visibleData = revealed ? fullData : fullData.slice(0, problem.revealDay);
+  // 답 선택 즉시 미래 구간 표시 (제출 전에도)
+  const showFuture = selected !== null || revealed;
+  const visibleData = showFuture ? fullData : fullData.slice(0, problem.revealDay);
+  // 미래 구간 오버레이용 데이터키 (revealDay 이후만 금색으로 표시)
+  const visibleDataWithReveal = visibleData.map(d => ({
+    ...d,
+    종가_미래: d.day >= problem.revealDay - 1 ? d.종가 : undefined,
+  }));
   const minPrice = fullData.length ? Math.min(...fullData.map(d => d.종가)) * 0.97 : 0;
   const maxPrice = fullData.length ? Math.max(...fullData.map(d => d.종가)) * 1.03 : 100;
 
@@ -726,14 +733,19 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
             <LegendItem color={COLORS.yellow} label="MA5" dashed />
             <LegendItem color={COLORS.purple} label="MA20" dashed />
             <LegendItem color={COLORS.orange} label="MA60" dashed />
-            {revealed && <LegendItem color={COLORS.gold} label="문제시점" vertical />}
+            {showFuture && <LegendItem color={COLORS.gold} label="문제시점" vertical />}
+            {showFuture && <LegendItem color={COLORS.goldBright} label="실제결과" />}
           </div>
           <ResponsiveContainer width="100%" height={140}>
-            <ComposedChart data={visibleData} margin={{ top: 5, right: 8, left: 0, bottom: 0 }}>
+            <ComposedChart data={visibleDataWithReveal} margin={{ top: 5, right: 8, left: 0, bottom: 0 }}>
               <defs>
                 <linearGradient id="pg" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="0%" stopColor={COLORS.blueBright} stopOpacity={0.4}/>
                   <stop offset="100%" stopColor={COLORS.blueBright} stopOpacity={0.05}/>
+                </linearGradient>
+                <linearGradient id="pg_reveal" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor={COLORS.gold} stopOpacity={0.25}/>
+                  <stop offset="100%" stopColor={COLORS.gold} stopOpacity={0.03}/>
                 </linearGradient>
               </defs>
               <CartesianGrid strokeDasharray="2 4" stroke={COLORS.textMute} vertical={false} opacity={0.3}/>
@@ -747,9 +759,15 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
                 labelFormatter={(d) => { const item = fullData[d as number]; return item ? `📅 ${item.date}` : ''; }}
                 labelStyle={{ color: COLORS.goldBright, fontSize: 11, fontWeight: 700 }}
               />
-              {revealed && <ReferenceLine x={problem.revealDay} stroke={COLORS.gold} strokeWidth={2} strokeDasharray="4 4"
+              {/* 미래 구간 배경 틴트 */}
+              {showFuture && <ReferenceArea x1={problem.revealDay - 1} x2={fullData.length - 1} fill={COLORS.gold} fillOpacity={0.08} stroke="none"/>}
+              {/* 문제시점 수직선 */}
+              {showFuture && <ReferenceLine x={problem.revealDay} stroke={COLORS.gold} strokeWidth={2} strokeDasharray="4 4"
                 label={{ value: '◆ 문제시점', fill: COLORS.goldBright, fontSize: 11, position: 'top', fontFamily: 'monospace', fontWeight: 700 }}/>}
+              {/* 과거 구간 파란 Area */}
               <Area type="monotone" dataKey="종가" stroke={COLORS.blueBright} strokeWidth={2} fill="url(#pg)" isAnimationActive={false}/>
+              {/* 미래 구간 금색 Line 오버레이 */}
+              {showFuture && <Line type="monotone" dataKey="종가_미래" stroke={COLORS.goldBright} strokeWidth={2.5} dot={false} isAnimationActive={false} connectNulls={false}/>}
               <Line type="monotone" dataKey="MA5" stroke={COLORS.yellow} strokeWidth={1.2} strokeDasharray="3 3" dot={false} isAnimationActive={false}/>
               <Line type="monotone" dataKey="MA20" stroke={COLORS.purple} strokeWidth={1.5} strokeDasharray="3 3" dot={false} isAnimationActive={false}/>
               <Line type="monotone" dataKey="MA60" stroke={COLORS.orange} strokeWidth={1.5} strokeDasharray="3 3" dot={false} isAnimationActive={false}/>
@@ -759,7 +777,7 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
           <div id="tut-volume">
             <div style={{ fontSize: 9, fontFamily: TITLE_FONT, color: COLORS.blueBright, letterSpacing: '0.1em', paddingLeft: 4, marginTop: 3, marginBottom: 1, fontWeight: 700 }}>거래량</div>
             <ResponsiveContainer width="100%" height={50}>
-              <ComposedChart data={visibleData} margin={{ top: 0, right: 8, left: 0, bottom: 0 }}>
+              <ComposedChart data={visibleDataWithReveal} margin={{ top: 0, right: 8, left: 0, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="2 4" stroke={COLORS.textMute} vertical={false} opacity={0.2}/>
                 <XAxis dataKey="day" tick={false} axisLine={{ stroke: COLORS.borderDark }}/>
                 <YAxis tick={{ fontSize: 9, fill: COLORS.textDim, fontFamily: 'monospace' }} tickLine={false} width={42}
@@ -768,10 +786,11 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
                 <Tooltip contentStyle={{ background: COLORS.bgDeep, border: `2px solid ${COLORS.blue}`, fontSize: 11, fontFamily: 'monospace', color: COLORS.text }}
                   formatter={(v) => [Number(v).toLocaleString(), '거래량']}
                   labelFormatter={(d) => { const item = fullData[d as number]; return item ? item.date : ''; }}/>
-                {revealed && <ReferenceLine x={problem.revealDay} stroke={COLORS.gold} strokeDasharray="4 4"/>}
+                {showFuture && <ReferenceArea x1={problem.revealDay - 1} x2={fullData.length - 1} fill={COLORS.gold} fillOpacity={0.08} stroke="none"/>}
+                {showFuture && <ReferenceLine x={problem.revealDay} stroke={COLORS.gold} strokeDasharray="4 4"/>}
                 <Bar dataKey="거래량">
-                  {visibleData.map((d, i) => {
-                    const prev = i > 0 ? visibleData[i - 1].종가 : d.종가;
+                  {visibleDataWithReveal.map((d, i) => {
+                    const prev = i > 0 ? visibleDataWithReveal[i - 1].종가 : d.종가;
                     return <Cell key={i} fill={d.종가 >= prev ? COLORS.green : COLORS.red} fillOpacity={0.7}/>;
                   })}
                 </Bar>
@@ -783,7 +802,7 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
             <>
               <div style={{ fontSize: 9, fontFamily: TITLE_FONT, color: COLORS.red, letterSpacing: '0.1em', paddingLeft: 4, marginTop: 3, marginBottom: 1, fontWeight: 700 }}>RSI(14) · 70↑과매수 / 30↓과매도</div>
               <ResponsiveContainer width="100%" height={50}>
-                <ComposedChart data={visibleData} margin={{ top: 0, right: 8, left: 0, bottom: 0 }}>
+                <ComposedChart data={visibleDataWithReveal} margin={{ top: 0, right: 8, left: 0, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="2 4" stroke={COLORS.textMute} vertical={false} opacity={0.2}/>
                   <XAxis dataKey="day" tick={false} axisLine={{ stroke: COLORS.borderDark }}/>
                   <YAxis domain={[0, 100]} ticks={[30, 50, 70]} tick={{ fontSize: 9, fill: COLORS.textDim, fontFamily: 'monospace' }} tickLine={false} width={42} axisLine={{ stroke: COLORS.borderDark }}/>
@@ -791,7 +810,8 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
                     labelFormatter={(d) => { const item = fullData[d as number]; return item ? item.date : ''; }}/>
                   <ReferenceLine y={70} stroke={COLORS.red} strokeDasharray="2 3" opacity={0.6}/>
                   <ReferenceLine y={30} stroke={COLORS.green} strokeDasharray="2 3" opacity={0.6}/>
-                  {revealed && <ReferenceLine x={problem.revealDay} stroke={COLORS.gold} strokeDasharray="4 4"/>}
+                  {showFuture && <ReferenceArea x1={problem.revealDay - 1} x2={fullData.length - 1} fill={COLORS.gold} fillOpacity={0.08} stroke="none"/>}
+                  {showFuture && <ReferenceLine x={problem.revealDay} stroke={COLORS.gold} strokeDasharray="4 4"/>}
                   <Line type="monotone" dataKey="RSI" stroke={COLORS.pink} strokeWidth={1.5} dot={false} isAnimationActive={false}/>
                 </ComposedChart>
               </ResponsiveContainer>
