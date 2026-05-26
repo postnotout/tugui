@@ -59,10 +59,10 @@ function loadProblems(file) {
 }
 
 function toAnswer(pct) {
-  if (pct >= 0.15) return 0;
-  if (pct >= 0.05) return 1;
-  if (pct > -0.05) return 2;
-  return 3;
+  if (pct >= 0.05)  return 0; // 상승
+  if (pct > -0.05)  return 1; // 횡보
+  if (pct > -0.15)  return 2; // 하락
+  return 3;                   // 급락
 }
 
 // ── A. 과거완료형 동사 감지 ───────────────────────────────────────────────────
@@ -86,16 +86,32 @@ function detectPastTense(question) {
 const Q_UP_SIGNALS   = ['돌파', '급등', '폭등', '강하게 상승', '크게 상승', '신고가', '강세를 보이'];
 const Q_DOWN_SIGNALS = ['급락', '폭락', '붕괴', '강하게 하락', '급격히 하락'];
 
-function detectDirectionContradiction(question, answer) {
-  const hasUp   = Q_UP_SIGNALS.some(s => question.includes(s));
-  const hasDown = Q_DOWN_SIGNALS.some(s => question.includes(s));
-  const isDownAnswer = answer === 2 || answer === 3; // 횡보·하락
-  const isUpAnswer   = answer === 0 || answer === 1; // 급등·상승
+// 과거/현재 맥락 하락어: 교육 질문의 배경 설명으로 쓰이는 패턴 (반등·역발상 질문)
+const HISTORICAL_DOWN = [
+  '폭락 이후', '폭락 후', '폭락한 이후', '폭락한 직후', '폭락하며',
+  '급락 이후', '급락 후', '급락한 이후', '급락한 직후', '급락하며',
+  '붕괴 이후', '붕괴 후',
+];
+// 돌파 실패/시도 패턴: "돌파"가 상승 신호가 아니라 실패·진행 중을 가리키는 맥락
+const FALSE_BREAKOUT  = ['돌파하지 못하고', '돌파처럼 보이나', '돌파 시도', '돌파를 시도'];
 
-  if (hasUp && !hasDown && isDownAnswer)
-    return `질문 상승 암시(${Q_UP_SIGNALS.find(s => question.includes(s))}) ↔ 정답 ${['급등','상승','횡보','하락'][answer]}`;
+function detectDirectionContradiction(question, answer) {
+  const isHistoricalDown = HISTORICAL_DOWN.some(p => question.includes(p));
+  const isFalseBreakout  = FALSE_BREAKOUT.some(p => question.includes(p));
+
+  // 과거 맥락/실패 돌파인 경우 해당 키워드를 신호로 취급하지 않음
+  const hasUp   = !isFalseBreakout  && Q_UP_SIGNALS.some(s => question.includes(s));
+  const hasDown = !isHistoricalDown && Q_DOWN_SIGNALS.some(s => question.includes(s));
+
+  // 횡보(1)는 중립 — 상승 암시 질문이어도 "모멘텀 정체"로 읽힐 수 있어 체크 제외
+  // 하락(2)/급락(3) 답인데 상승 신호만 있으면 모순
+  const isStrongDownAnswer = answer === 2 || answer === 3;
+  const isUpAnswer         = answer === 0;
+
+  if (hasUp && !hasDown && isStrongDownAnswer)
+    return `질문 상승 암시(${Q_UP_SIGNALS.find(s => question.includes(s))}) ↔ 정답 ${['상승','횡보','하락','급락'][answer]}`;
   if (hasDown && !hasUp && isUpAnswer)
-    return `질문 하락 암시(${Q_DOWN_SIGNALS.find(s => question.includes(s))}) ↔ 정답 ${['급등','상승','횡보','하락'][answer]}`;
+    return `질문 하락 암시(${Q_DOWN_SIGNALS.find(s => question.includes(s))}) ↔ 정답 ${['상승','횡보','하락','급락'][answer]}`;
   return null;
 }
 
@@ -253,7 +269,7 @@ async function main() {
 
     if (reasons.length) {
       issues.push({ id: p.id, source, p, reasons, actualPct });
-      const label = ['급등','상승','횡보','하락'][p.answer];
+      const label = ['상승','횡보','하락','급락'][p.answer];
       const pctStr = (actualPct >= 0 ? '+' : '') + (actualPct * 100).toFixed(1) + '%';
       console.log(`[ID ${String(p.id).padStart(3)} ${source}] ${p.ticker} / answer=${label}(${pctStr})`);
       for (const r of reasons) console.log(`  └ ${r}`);

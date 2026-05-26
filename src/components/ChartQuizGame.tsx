@@ -21,8 +21,8 @@ import {
   toggleBtn, TITLE_FONT, KOREAN_FONT, GLOBAL_STYLES,
 } from './GameUI';
 
-// 선택지 미리보기 색상 (0=급등 녹색, 1=상승 연녹, 2=횡보 노랑, 3=하락 빨강, 4=급락 보라)
-const CHOICE_PREVIEW_COLORS = ['#4caf50', '#8bc34a', '#ffc107', '#ef5350', '#9c27b0'];
+// 선택지 미리보기 색상 (0=상승 녹색, 1=횡보 노랑, 2=하락 주황, 3=급락 빨강)
+const CHOICE_PREVIEW_COLORS = ['#4caf50', '#ffc107', '#ff7043', '#ef5350'];
 
 // 이동평균선 색상 — 각 기간이 명확히 구분되도록
 const MA_COLORS = {
@@ -47,25 +47,22 @@ function anonymizeQ(question: string, revealTitle: string): string {
 
 /**
  * 선택지 미리보기용 합성 궤적 생성 — 명확한 방향성과 곡선 형태 차별화
- * choiceIdx 0 = 최상(급등), N-1 = 최하(급락)
+ * 0=상승(+45%), 1=횡보(0%), 2=하락(-30%), 3=급락(-65%)
  *
  * 곡선 형태:
- *   0 (강한 상승) → 가속형: 완만하게 시작 후 후반에 급격히 치솟음
- *   1 (완만 상승) → S자: 부드럽게 우상향
- *   2 (횡보)     → 진동: 방향성 없이 오르내림
- *   3 (하락)     → 폭포형: 초반에 빠르게 떨어지고 후반 완만
+ *   0 (상승) → S자: 부드럽게 우상향
+ *   1 (횡보) → 진동: 방향성 없이 오르내림
+ *   2 (하락) → 완만 하락: 초반 가속 후 완화
+ *   3 (급락) → 폭포형: 초반에 빠르게 떨어지고 후반 가속
  */
 function generatePreviewPath(
   startPrice: number,
   choiceIdx: number,
   numPoints: number,
-  numChoices = 4,
   yAxisRange = 0, // y축 전체 범위 — 스파이크 차트에서 진폭 보정에 사용
 ): number[] {
-  const targets4 = [0.68,  0.28,  0.00, -0.45];
-  const targets5 = [0.75,  0.35,  0.00, -0.30, -0.58];
-  const tgts = numChoices >= 5 ? targets5 : targets4;
-  const targetPct = tgts[choiceIdx] ?? 0;
+  const targets4 = [0.45,  0.00, -0.30, -0.65];
+  const targetPct = targets4[choiceIdx] ?? 0;
 
   // ── 횡보: 사인 진동 (방향성 없음) ─────────────────────────────────────
   if (Math.abs(targetPct) < 0.02) {
@@ -94,12 +91,10 @@ function generatePreviewPath(
     const t = i / Math.max(numPoints - 1, 1);
 
     let progress: number;
-    if (targetPct >= 0.5) {
-      progress = Math.pow(t, 1.5);           // 가속형 (급등)
-    } else if (targetPct > 0) {
-      progress = t * t * (3 - 2 * t);        // S자 (완만 상승)
-    } else if (targetPct > -0.25) {
-      progress = 1 - Math.pow(1 - t, 1.8);   // 완만 하락
+    if (targetPct > 0) {
+      progress = t * t * (3 - 2 * t);        // S자 (상승)
+    } else if (targetPct > -0.50) {
+      progress = 1 - Math.pow(1 - t, 1.8);   // 완만 하락 (하락)
     } else {
       progress = 1 - Math.pow(1 - t, 3.5);   // 폭포형 (급락)
     }
@@ -198,7 +193,7 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
 
   // 미리보기 궤적 (선택지 인덱스 기반 합성 곡선)
   const previewPath: number[] | null = (showPreview && selected !== null && revealPrice > 0)
-    ? generatePreviewPath(revealPrice, selected, fullData.length - problem.revealDay + 1, problem.choices.length, yAxisRange)
+    ? generatePreviewPath(revealPrice, selected, fullData.length - problem.revealDay + 1, yAxisRange)
     : null;
 
   const visibleDataWithReveal = visibleData.map(d => {
@@ -819,7 +814,7 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
             <LegendItem color={MA_COLORS.MA120} label="MA120" dashed />
             {showFutureZone && <LegendItem color={COLORS.gold} label="문제시점" vertical />}
             {showPreview && selected !== null && (
-              <LegendItem color={CHOICE_PREVIEW_COLORS[selected] ?? COLORS.textDim} label={`예측 ${['①','②','③','④','⑤'][selected]}`} dashed />
+              <LegendItem color={CHOICE_PREVIEW_COLORS[selected] ?? COLORS.textDim} label={`예측 ${['①','②','③','④'][selected]}`} dashed />
             )}
             {showActualFuture && <LegendItem color={COLORS.goldBright} label="실제결과" />}
           </div>

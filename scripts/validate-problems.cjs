@@ -58,30 +58,30 @@ function loadProblems(file) {
   }
 }
 
-// ---------- 정답 계산 ----------
+// ---------- 정답 계산 (0=상승, 1=횡보, 2=하락, 3=급락) ----------
 function toAnswer(pct) {
-  if (pct >= 0.15) return 0;
-  if (pct >= 0.05) return 1;
-  if (pct > -0.05) return 2;
-  return 3;
+  if (pct >= 0.05)  return 0; // 상승
+  if (pct > -0.05)  return 1; // 횡보
+  if (pct > -0.15)  return 2; // 하락
+  return 3;                   // 급락
 }
 
-const ANSWER_LABEL = ['급등', '상승', '횡보', '하락'];
+const ANSWER_LABEL = ['상승', '횡보', '하락', '급락'];
 
 // ---------- choices 텍스트 방향성 키워드 ----------
-const UP_KW   = ['급등', '폭등', '상승', '오른다', '강하게', '회복', '반등', '추세 가속', '신고가', '전환된다'];
-const DOWN_KW = ['하락', '급락', '폭락', '하락한다', '빠진다', '이탈', '추가 급락', '가속화'];
-const FLAT_KW = ['횡보', '유지', '박스', '지속된다', '눌림', '숨 고르기', '완만', '점진적'];
+const UP_KW    = ['상승', '급등', '폭등', '오른다', '강하게', '회복', '반등', '추세 가속', '신고가', '전환된다'];
+const DOWN_KW  = ['하락', '급락', '폭락', '하락한다', '빠진다', '이탈', '가속된다'];
+const STEEP_KW = ['급락', '폭락', '급격히', '가속된다', '패닉'];
+const FLAT_KW  = ['횡보', '유지', '박스', '지속된다', '눌림', '숨 고르기', '완만', '점진적'];
 
 function choiceMatchesPct(choiceText, pct) {
   if (pct >= 0.05) {
-    // 상승 결과 → choices[answer]에 상승 키워드 있어야 함
     return UP_KW.some(k => choiceText.includes(k));
+  } else if (pct <= -0.15) {
+    return STEEP_KW.some(k => choiceText.includes(k)) || DOWN_KW.some(k => choiceText.includes(k));
   } else if (pct <= -0.05) {
-    // 하락 결과 → choices[answer]에 하락 키워드 있어야 함
     return DOWN_KW.some(k => choiceText.includes(k));
   } else {
-    // 횡보 결과 → choices[answer]에 횡보 키워드 있어야 함
     return FLAT_KW.some(k => choiceText.includes(k));
   }
 }
