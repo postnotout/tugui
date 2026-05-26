@@ -997,12 +997,6 @@ const baseMin = pastZoneData.length ? Math.min(...pastZoneData.map(d => d.종가
             )}
 
             {/* ★ 레슨 */}
-            {problem.reveal?.lesson && (
-              <div style={{ borderTop: `2px dashed ${COLORS.goldDark}`, paddingTop: 10, fontSize: 13, lineHeight: 1.65, color: COLORS.goldBright, fontFamily: KOREAN_FONT, fontWeight: 600 }}>
-                <span style={{ fontFamily: TITLE_FONT, fontSize: 12, marginRight: 4 }}>★</span>
-                <GlossaryText text={problem.reveal.lesson} onTerm={setActiveTerm} />
-              </div>
-            )}
           </GlowBox>
         )}
 

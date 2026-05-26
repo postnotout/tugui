@@ -255,11 +255,13 @@ function getMacroHints(dateStr) {
 //   현재가(revealDay-1) vs 20일 전/40일 전 종가를 직접 비교한다.
 function detectPattern(closes, revealDay) {
   const cur = closes[revealDay - 1];
+  const p10 = closes[Math.max(0, revealDay - 10)];
   const p20 = closes[Math.max(0, revealDay - 20)];
   const p40 = closes[Math.max(0, revealDay - 40)];
   const p60 = closes[Math.max(0, revealDay - 60)];
   if (!cur || !p20 || !p40) return 'sideways';
 
+  const chg10 = p10 ? (cur - p10) / p10 : 0;
   const chg20 = (cur - p20) / p20;
   const chg40 = (cur - p40) / p40;
   const chg60 = p60 ? (cur - p60) / p60 : chg40;
@@ -274,12 +276,13 @@ function detectPattern(closes, revealDay) {
   if (chg20 > 0.04 && chg40 > 0.12 && chg40 > chg20 * 1.2) return 'uptrend';
   // 추세적 하락: 단기·중기 모두 음(-)
   if (chg20 < -0.04 && chg40 < -0.12) return 'downtrend';
-  // 최근 급등: 하락 추세 중이면 reversal(반등), 아니면 breakout
-  if (chg20 > 0.08) return chg40 < -0.05 ? 'reversal' : 'breakout';
+  // 최근 급등: 되돌림 중이면 reversal, 아니면 breakout
+  // chg10 < -0.04 = 최근 10일 하락 중 → 고점 돌파 후 되돌림 구간 → reversal
+  if (chg20 > 0.08) return (chg40 < -0.05 || chg10 < -0.04) ? 'reversal' : 'breakout';
   // 최근 급락
   if (chg20 < -0.08) return 'reversal';
-  // 중기 방향성만 존재
-  if (chg40 > 0.10) return 'breakout';
+  // 중기 방향성만 존재: 최근 10일 되돌림 중이면 reversal
+  if (chg40 > 0.10) return chg10 < -0.04 ? 'reversal' : 'breakout';
   if (chg40 < -0.10) return 'reversal';
   return 'sideways';
 }
@@ -313,18 +316,18 @@ const TEMPLATES = {
     (_n, m) => `하락 추세가 수개월째 지속되며 저점을 갱신하고 있다. ${m}개월 후 주가의 방향으로 옳은 것은?`,
   ],
   breakout: [
-    (_n, m) => `오랫동안 막혀 있던 저항선을 상향 돌파하였다. ${m}개월 후 결과로 알맞은 것은?`,
-    (_n, m) => `박스권 상단을 거래량을 동반하여 돌파하였다. ${m}개월 후 주가의 흐름으로 옳은 것은?`,
-    (_n, m) => `52주 신고가를 경신하며 돌파에 성공하였다. ${m}개월 후 결과로 가장 적절한 것은?`,
-    (_n, m) => `고점 저항을 돌파하는 강한 양봉이 출현하였다. ${m}개월 후 주가의 변화로 옳은 것은?`,
-    (_n, m) => `중요 저항선을 상향 돌파하였다. ${m}개월 후 추세의 전개로 알맞은 것은?`,
-    (_n, m) => `수개월 횡보 끝에 거래량 급증과 함께 저항을 돌파하였다. ${m}개월 후 결과로 옳은 것은?`,
-    (_n, m) => `전 고점을 강하게 상향 돌파하며 새로운 추세가 시작되었다. ${m}개월 후 주가의 흐름으로 옳은 것은?`,
-    (_n, m) => `눌림목에서 지지를 확인한 뒤 강하게 돌파가 나타났다. ${m}개월 후 결과로 알맞은 것은?`,
-    (_n, m) => `음봉 구간에서도 지지를 지킨 후 거래량을 동반해 상향 돌파하였다. ${m}개월 후 주가의 변화로 옳은 것은?`,
-    (_n, m) => `장기 저항대를 단번에 돌파하는 장대 양봉이 나타났다. ${m}개월 후 추세의 전개로 적절한 것은?`,
-    (_n, m) => `주요 이동평균선을 모두 상향 돌파하며 정배열로 전환하였다. ${m}개월 후 결과로 옳은 것은?`,
-    (_n, m) => `박스권 돌파 후 되돌림 없이 신고가를 이어가고 있다. ${m}개월 후 주가의 전개로 알맞은 것은?`,
+    (_n, m) => `최근 단기 급등 후 전 고점 부근에서 거래되고 있다. ${m}개월 후 주가의 흐름으로 옳은 것은?`,
+    (_n, m) => `이평선 정배열 상태에서 고점 저항 구간에 진입하고 있다. ${m}개월 후 결과로 알맞은 것은?`,
+    (_n, m) => `박스권 상단 근처에서 상승 모멘텀이 유지되고 있다. ${m}개월 후 결과로 적절한 것은?`,
+    (_n, m) => `중요 저항 구간을 앞두고 거래량이 증가하고 있다. ${m}개월 후 주가의 변화로 옳은 것은?`,
+    (_n, m) => `단기 강세 속에서 전 고점 부근까지 회복한 상태다. ${m}개월 후 추세의 전개로 옳은 것은?`,
+    (_n, m) => `이평선들이 정배열을 이루며 고점 저항대에 근접하고 있다. ${m}개월 후 결과로 옳은 것은?`,
+    (_n, m) => `수개월 만에 고점 수준으로 회복하며 저항대를 테스트하고 있다. ${m}개월 후 주가의 변화로 옳은 것은?`,
+    (_n, m) => `MA5·MA20이 정배열을 유지하며 52주 고점 인근에서 거래 중이다. ${m}개월 후 결과로 알맞은 것은?`,
+    (_n, m) => `단기 급등 이후 전 고점 구간에서 눌림 없이 강세가 유지되고 있다. ${m}개월 후 주가의 전개로 옳은 것은?`,
+    (_n, m) => `장기 저항 구간 근처에서 매수 우위가 이어지고 있다. ${m}개월 후 추세의 전개로 적절한 것은?`,
+    (_n, m) => `이동평균선들이 수렴 후 상방으로 벌어지며 상승 에너지가 높아지고 있다. ${m}개월 후 결과로 옳은 것은?`,
+    (_n, m) => `고점 저항 구간에서 매수세가 매도세를 압도하는 흐름이 보인다. ${m}개월 후 주가의 흐름으로 적절한 것은?`,
   ],
   reversal: [
     (_n, m) => `최근 하락세가 둔화되며 저점에서 반등 신호가 나타나고 있다. ${m}개월 후 주가의 변화로 옳은 것은?`,
@@ -615,7 +618,10 @@ for (const [ticker, meta] of Object.entries(TICKER_META)) {
 
   let tickerCount = 0;
 
+  const WARMUP_ROWS = 120; // dataLoader.ts와 맞춤 — 이 미만이면 합성 패딩 발생
+
   for (let si = 0; si < usable; si += step) {
+    if (si < WARMUP_ROWS) continue; // MA 계산에 충분한 실제 워밍업 데이터 없음
     const startDate = rows[si].date;
     if (overlaps(startDate, existing)) continue;
 

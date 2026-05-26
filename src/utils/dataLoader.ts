@@ -114,10 +114,10 @@ export async function loadChartData(
       date:   r.date.slice(5).replace('-', '/'), // MM/DD
       종가:   parseFloat(r.close),
       거래량: parseInt(r.volume, 10) || 0,
-      MA5:    sma(closes, ci, 5),
-      MA20:   sma(closes, ci, 20),
-      MA60:   sma(closes, ci, 60),
-      MA120:  sma(closes, ci, 120),
+      MA5:    (ci - 4   >= syntheticPad) ? sma(closes, ci, 5)   : null,
+      MA20:   (ci - 19  >= syntheticPad) ? sma(closes, ci, 20)  : null,
+      MA60:   (ci - 59  >= syntheticPad) ? sma(closes, ci, 60)  : null,
+      MA120:  (ci - 119 >= syntheticPad) ? sma(closes, ci, 120) : null,
       RSI:    rsi14(closes, ci),
     };
   });
