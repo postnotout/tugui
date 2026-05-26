@@ -347,7 +347,7 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
           <div style={{ position: 'absolute', top: 10, left: 0, right: 0, borderTop: `2px solid ${COLORS.red}` }}/>
           <div style={{ position: 'absolute', top: 14, left: 0, right: 0, borderTop: `1px solid ${COLORS.blue}` }}/>
 
-          <div style={{ position: 'absolute', top: 20, right: 10, fontSize: 9, color: COLORS.textMute, fontFamily: TITLE_FONT, letterSpacing: '0.1em' }}>#4</div>
+          <div style={{ position: 'absolute', top: 20, right: 10, fontSize: 9, color: COLORS.textMute, fontFamily: TITLE_FONT, letterSpacing: '0.1em' }}>#5</div>
 
           <div style={{ textAlign: 'center', marginBottom: 7, marginTop: 24, fontSize: 9, color: COLORS.textDim, letterSpacing: '0.28em' }}>
             ANALYZING · BUYING · PRAYING
