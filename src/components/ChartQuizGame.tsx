@@ -122,7 +122,6 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
 
   const [selected, setSelected] = useState<number | null>(null);
   const [submitted, setSubmitted] = useState(false);
-  const [, setRevealed] = useState(false);
   const [showRSI, setShowRSI] = useState(false);
   const [activeTerm, setActiveTerm] = useState<string | null>(null);
   const [chartData, setChartData] = useState<ChartDataPoint[]>([]);
@@ -212,7 +211,7 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
     setStageProblems(problems);
     setStageIdx(0);
     setStageCorrect(0);
-    setSelected(null); setSubmitted(false); setRevealed(false);
+    setSelected(null); setSubmitted(false); 
     setPhase('playing');
     saveStorage({
       savedSession: {
@@ -233,7 +232,7 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
     setStageProblems(problems);
     setStageIdx(s.stageIdx);
     setStageCorrect(s.stageCorrect);
-    setSelected(null); setSubmitted(false); setRevealed(false);
+    setSelected(null); setSubmitted(false); 
     setPhase('playing');
   };
 
@@ -241,7 +240,7 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
     if (selected === null) return;
     const correct = selected === problem.answer;
     setSubmitted(true);
-    setRevealed(true);
+    
 
     if (problem.isTutorial) return;
 
@@ -267,7 +266,7 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
       localStorage.setItem('tutorialCompleted', 'true');
       setTutorialStep(null);
       setPhase('intro');
-      setSelected(null); setSubmitted(false); setRevealed(false);
+      setSelected(null); setSubmitted(false); 
       return;
     }
 
@@ -286,7 +285,7 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
       }
     } else {
       setStageIdx(nextIdx);
-      setSelected(null); setSubmitted(false); setRevealed(false);
+      setSelected(null); setSubmitted(false); 
       persistSession({ stageIdx: nextIdx, stageCorrect });
     }
   };
@@ -302,7 +301,7 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
     setPhase('playing');
     setStageProblems([TUTORIAL_PROBLEM]);
     setStageIdx(0);
-    setSelected(null); setSubmitted(false); setRevealed(false);
+    setSelected(null); setSubmitted(false); 
   };
 
   const advanceTutorialStep = () => {
@@ -318,7 +317,7 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
     localStorage.setItem('tutorialCompleted', 'true');
     setTutorialStep(null);
     setPhase('intro');
-    setSelected(null); setSubmitted(false); setRevealed(false);
+    setSelected(null); setSubmitted(false); 
   };
 
   const handleReset = () => {

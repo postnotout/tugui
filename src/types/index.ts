@@ -60,4 +60,4 @@ export interface Rank {
   desc: string;
 }
 
-export type GamePhase = 'intro' | 'playing' | 'levelup' | 'gameover' | 'ending';
+export type GamePhase = 'intro' | 'playing' | 'stageComplete' | 'graduated';

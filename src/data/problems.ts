@@ -16,13 +16,6 @@ export function shuffle<T>(arr: T[]): T[] {
   return a;
 }
 
-export function difficultyShuffle(arr: Problem[]): Problem[] {
-  const easy   = shuffle(arr.filter(p => p.difficulty === 'easy'));
-  const medium = shuffle(arr.filter(p => p.difficulty === 'medium'));
-  const hard   = shuffle(arr.filter(p => p.difficulty === 'hard'));
-  return [...easy, ...medium, ...hard];
-}
-
 // 단계별 난이도 구성 (Easy/Medium/Hard 비율)
 const STAGE_DIFFICULTY_MIX = [
   { easy: 14, medium: 6,  hard: 0  }, // Stage 0 — 입문
