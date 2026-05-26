@@ -23,10 +23,10 @@ export const TUTORIAL_PROBLEM: Problem = {
     { label: '원/달러', value: '1,220원', trend: 'COVID 공포 정점 후 안정', tone: 'neutral' },
   ],
   choices: [
-    '추가 상승 (회복 추세 지속)',
-    '추세 반전 (2차 폭락)',
-    '횡보 지속',
-    '단기 급락 후 재회복',
+    '돌파에 성공하여 강한 상승 추세가 지속된다',
+    '가짜 돌파 후 박스권으로 재진입한다',
+    '돌파에 실패하고 되돌림 하락이 나타난다',
+    '돌파 실패 후 매도세가 몰리며 급락한다',
   ],
   answer: 0,
   explanation:
