@@ -202,6 +202,10 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
       { label: '실업률', value: '14.7%', trend: '대공황 이후 최고', tone: 'negative' },
       { label: '연준', value: '제로금리+무제한 QE', trend: '사상 최대 유동성 공급', tone: 'positive' },
     ],
+    valuationHints: [
+      { label: 'Shiller CAPE', value: '~24배', context: 'COVID 저점, 장기 평균 수준', tone: 'fair' },
+      { label: '선행 PER', value: '~17배', context: '폭락 후 평균 이하 진입', tone: 'cheap' },
+    ],
     choices: [
       '급등한다',
       '상승한다',
@@ -215,10 +219,6 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
       result: '1개월 후 상승 (+10%).',
       macro: '연준 제로금리+무제한 QE, 정부 5조달러 부양, 백신 개발 가속.',
       lesson: '주가는 실물이 아닌 유동성·기대를 반영한다.',
-      valuationHints: [
-        { label: 'Shiller CAPE', value: '~24배', context: 'COVID 저점, 장기 평균 수준', tone: 'fair' },
-        { label: '선행 PER', value: '~17배', context: '폭락 후 평균 이하 진입', tone: 'cheap' },
-      ],
     },
   },
 
@@ -308,6 +308,10 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
       { label: '리만', value: '4,000억달러 부채', trend: '개별→시스템 리스크로 전염', tone: 'negative' },
       { label: '신용 시장', value: 'TED 스프레드 역대급', trend: '단기자금 경색', tone: 'negative' },
     ],
+    valuationHints: [
+      { label: 'Shiller CAPE', value: '~20배', context: '고점 대비 저평가처럼 보이나 이익 붕괴 미반영', tone: 'neutral' },
+      { label: '금융주 PBR', value: '~0.5배', context: '파산 리스크 반영, 지속 하락 중', tone: 'neutral' },
+    ],
     choices: [
       '급등한다',
       '상승한다',
@@ -321,10 +325,6 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
       result: '1개월 후 하락 (-20%).',
       macro: '리만 파산·AIG 구제금융, 연준 제로금리+QE, TARP 7,000억달러.',
       lesson: '시스템 위기 깊이는 항상 과소평가된다.',
-      valuationHints: [
-        { label: 'Shiller CAPE', value: '~20배', context: '고점 대비 저평가처럼 보이나 이익 붕괴 미반영', tone: 'neutral' },
-        { label: '금융주 PBR', value: '~0.5배', context: '파산 리스크 반영, 지속 하락 중', tone: 'neutral' },
-      ],
     },
   },
 
@@ -336,6 +336,10 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
     macroHints: [
       { label: '태국 위기', value: '아시아 전염 중', trend: '외환 불안 확산', tone: 'negative' },
       { label: '대기업 부채', value: '400%+', trend: '한보·기아·삼미 부도', tone: 'negative' },
+    ],
+    valuationHints: [
+      { label: '기업 부채비율', value: '400%+', context: '대기업 평균, 이자 감당 불가 임박', tone: 'expensive' },
+      { label: '외환보유고', value: '39억달러', context: '단기외채 대비 5% 수준, 사실상 고갈', tone: 'expensive' },
     ],
     choices: [
       '급등한다',
@@ -350,10 +354,6 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
       result: '1개월 후 하락 (-19%).',
       macro: 'IMF 구제금융 570억달러, 기준금리 25%로 초긴축, 금융기관 강제 정리.',
       lesson: '"This time is different" = 가장 비싼 문장.',
-      valuationHints: [
-        { label: '기업 부채비율', value: '400%+', context: '대기업 평균, 이자 감당 불가 임박', tone: 'expensive' },
-        { label: '외환보유고', value: '39억달러', context: '단기외채 대비 5% 수준, 사실상 고갈', tone: 'expensive' },
-      ],
     },
   },
 
@@ -365,6 +365,10 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
     macroHints: [
       { label: '마진 잔액', value: '2조 위안', trend: '사상 최대 레버리지', tone: 'negative' },
       { label: 'PER', value: '80~100배', trend: '역사적 고점 밸류', tone: 'negative' },
+    ],
+    valuationHints: [
+      { label: 'SSE PER', value: '80~100배', context: '선진국 대비 3~4배 할증', tone: 'expensive' },
+      { label: '융자 잔고', value: '2조 위안', context: '시총 대비 레버리지 사상 최대', tone: 'expensive' },
     ],
     choices: [
       '급등한다',
@@ -379,10 +383,6 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
       result: '1개월 후 하락 (-17%).',
       macro: '정부 28조원 주식 매입·공매도 금지 등 총력 방어에도 붕괴.',
       lesson: '레버리지로 오른 버블은 가장 빠르게 터진다.',
-      valuationHints: [
-        { label: 'SSE PER', value: '80~100배', context: '선진국 대비 3~4배 할증', tone: 'expensive' },
-        { label: '융자 잔고', value: '2조 위안', context: '시총 대비 레버리지 사상 최대', tone: 'expensive' },
-      ],
     },
   },
 
@@ -394,6 +394,10 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
     macroHints: [
       { label: '닷컴 IPO', value: '상장 첫날 +100~200%', trend: '적자도 수백억 밸류', tone: 'positive' },
       { label: '연준 금리', value: '5.50%', trend: '과열 억제 인상 중', tone: 'negative' },
+    ],
+    valuationHints: [
+      { label: '나스닥 PER', value: '~200배', context: '적자 기업도 수백억 시가총액', tone: 'expensive' },
+      { label: 'P/S', value: '측정 불가', context: '매출 없이 기업가치 책정', tone: 'expensive' },
     ],
     choices: [
       '급등한다',
@@ -408,10 +412,6 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
       result: '1개월 후 급등 (+16%).',
       macro: '닷컴 IPO 러시, Y2K IT 인프라 투자 붐, 2000년 3월 금리 인상+현금 소진.',
       lesson: '버블은 "너무 올랐다"를 훨씬 더 올라간 후 끝난다.',
-      valuationHints: [
-        { label: '나스닥 PER', value: '~200배', context: '적자 기업도 수백억 시가총액', tone: 'expensive' },
-        { label: 'P/S', value: '측정 불가', context: '매출 없이 기업가치 책정', tone: 'expensive' },
-      ],
     },
   },
 
@@ -423,6 +423,11 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
     macroHints: [
       { label: '일본 금리', value: '3.75%→인상 예고', trend: '버블 억제 긴축', tone: 'negative' },
       { label: '닛케이 PBR', value: '5배+', trend: '국제 비교 역대 최고', tone: 'negative' },
+    ],
+    valuationHints: [
+      { label: '닛케이 PER', value: '~60배', context: '국제 시장 평균의 4배', tone: 'expensive' },
+      { label: '닛케이 PBR', value: '5배+', context: '역대 최고, 이미 macroHints에 언급', tone: 'expensive' },
+      { label: '부동산 시총', value: 'GDP의 4배', context: '도쿄 23구로 미국 전체 매입 가능', tone: 'expensive' },
     ],
     choices: [
       '급등한다',
@@ -437,11 +442,6 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
       result: '1개월 후 횡보 (-4%).',
       macro: '일본은행 금리 인상 사이클(2.5%→6%), 토지 담보 대출 규제.',
       lesson: '버블 붕괴 후 회복에는 수십 년이 걸릴 수 있다.',
-      valuationHints: [
-        { label: '닛케이 PER', value: '~60배', context: '국제 시장 평균의 4배', tone: 'expensive' },
-        { label: '닛케이 PBR', value: '5배+', context: '역대 최고, 이미 macroHints에 언급', tone: 'expensive' },
-        { label: '부동산 시총', value: 'GDP의 4배', context: '도쿄 23구로 미국 전체 매입 가능', tone: 'expensive' },
-      ],
     },
   },
 
@@ -531,6 +531,10 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
       { label: 'CPI', value: '7.0%', trend: '40년래 최고, 상승 중', tone: 'negative' },
       { label: '연준', value: '3월 첫 인상 예고', trend: '속도·폭 불확실', tone: 'negative' },
     ],
+    valuationHints: [
+      { label: 'S&P500 PER', value: '~22배', context: '역대 평균(~16배) 대비 할증', tone: 'expensive' },
+      { label: 'Shiller CAPE', value: '~38배', context: '닷컴 버블 이후 최고 수준', tone: 'expensive' },
+    ],
     choices: [
       '상승한다',
       '횡보한다',
@@ -544,10 +548,6 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
       result: '1개월 후 하락 (-7%).',
       macro: 'CPI 9.1%(6월 피크), 러시아-우크라이나 전쟁, 에너지주만 역발상 수익.',
       lesson: '금리 인상 사이클에서 고PER 성장주 = 취약.',
-      valuationHints: [
-        { label: 'S&P500 PER', value: '~22배', context: '역대 평균(~16배) 대비 할증', tone: 'expensive' },
-        { label: 'Shiller CAPE', value: '~38배', context: '닷컴 버블 이후 최고 수준', tone: 'expensive' },
-      ],
     },
   },
 
@@ -710,6 +710,11 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
       { label: 'PER', value: '12배', trend: '빅테크 역대 최저', tone: 'positive' },
       { label: '구조조정', value: '21,000명 감원', trend: '"효율의 해" 비용 절감', tone: 'positive' },
     ],
+    valuationHints: [
+      { label: 'PER', value: '12배', context: '빅테크 역대 최저, -74% 폭락 반영', tone: 'cheap' },
+      { label: 'PBR', value: '~1.5배', context: '자본 대비 시총 역사적 저점', tone: 'cheap' },
+      { label: 'EV/매출', value: '~3배', context: '피크(~9배) 대비 3분의 1 수준', tone: 'cheap' },
+    ],
     choices: [
       '폭등한다',
       '급등한다',
@@ -723,11 +728,6 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
       result: '1개월 후 급등 (+19%).',
       macro: '대규모 감원으로 이익률 회복, AI 광고 시스템 성공.',
       lesson: '경영진의 자기 인식 + 실행 변화 = 반등의 핵심.',
-      valuationHints: [
-        { label: 'PER', value: '12배', context: '빅테크 역대 최저, -74% 폭락 반영', tone: 'cheap' },
-        { label: 'PBR', value: '~1.5배', context: '자본 대비 시총 역사적 저점', tone: 'cheap' },
-        { label: 'EV/매출', value: '~3배', context: '피크(~9배) 대비 3분의 1 수준', tone: 'cheap' },
-      ],
     },
   },
 
@@ -739,6 +739,10 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
     macroHints: [
       { label: '플랫폼 규제', value: '국회 입법 추진', trend: '골목상권 침해 논란', tone: 'negative' },
       { label: '금리 인상', value: '0.5%→인상 시작', trend: '고PER 멀티플 압축', tone: 'negative' },
+    ],
+    valuationHints: [
+      { label: 'PER', value: '~60배', context: '국내 플랫폼 최고치, 금리 인상에 취약', tone: 'expensive' },
+      { label: 'P/S', value: '~10배', context: '매출 대비 고평가, 규제 리스크 미반영', tone: 'expensive' },
     ],
     choices: [
       '급등한다',
@@ -753,10 +757,6 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
       result: '1개월 후 하락 (-28%).',
       macro: '기준금리 인상 사이클, 오너 직접 사과, 고금리에서 적자 계열사 구조 취약.',
       lesson: '국내 독점 플랫폼 = 정치 리스크 할증 필수.',
-      valuationHints: [
-        { label: 'PER', value: '~60배', context: '국내 플랫폼 최고치, 금리 인상에 취약', tone: 'expensive' },
-        { label: 'P/S', value: '~10배', context: '매출 대비 고평가, 규제 리스크 미반영', tone: 'expensive' },
-      ],
     },
   },
 
@@ -768,6 +768,10 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
     macroHints: [
       { label: 'ChatGPT', value: '검색 패러다임 위협', trend: '구글·빙 AI 공세', tone: 'negative' },
       { label: 'HyperCLOVA', value: '자체 LLM 개발', trend: '한국 시장 방어 가능성', tone: 'positive' },
+    ],
+    valuationHints: [
+      { label: 'PBR', value: '~2배', context: '2021년 고점(~6배) 대비 역사적 저점', tone: 'cheap' },
+      { label: 'PER', value: '~15배', context: '성장 둔화 반영, 국내 빅테크 최저', tone: 'cheap' },
     ],
     choices: [
       '급등한다',
@@ -782,10 +786,6 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
       result: '1개월 후 상승 (+14%).',
       macro: '금리 동결 전환, 자체 LLM 발표, AI 검색 베타 출시.',
       lesson: 'AI 변곡점 = 기존 강자가 1차 수혜.',
-      valuationHints: [
-        { label: 'PBR', value: '~2배', context: '2021년 고점(~6배) 대비 역사적 저점', tone: 'cheap' },
-        { label: 'PER', value: '~15배', context: '성장 둔화 반영, 국내 빅테크 최저', tone: 'cheap' },
-      ],
     },
   },
 
@@ -898,6 +898,11 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
       { label: '개인 비중', value: '90%+', trend: '코스닥 시총 1위·열풍', tone: 'negative' },
       { label: 'PER', value: '수백 배', trend: '이익 대비 주가 극단적 괴리', tone: 'negative' },
     ],
+    valuationHints: [
+      { label: 'PER', value: '300배+', context: '이익 대비 주가 극단적 괴리', tone: 'expensive' },
+      { label: 'PBR', value: '50배+', context: '자산 가치 대비 투기 프리미엄', tone: 'expensive' },
+      { label: '개인 비중', value: '90%+', context: '코스닥 시총 1위, 유동성 버블 신호', tone: 'expensive' },
+    ],
     choices: [
       '추가 폭등한다',
       '횡보한다',
@@ -911,11 +916,6 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
       result: '1개월 후 급등 (+15%).',
       macro: '2023년 7월 금융당국 과열 경고, 공매도 재개 압박.',
       lesson: '+1,000% 오른 주식이 "더 간다"는 기대 자체가 버블의 속성.',
-      valuationHints: [
-        { label: 'PER', value: '300배+', context: '이익 대비 주가 극단적 괴리', tone: 'expensive' },
-        { label: 'PBR', value: '50배+', context: '자산 가치 대비 투기 프리미엄', tone: 'expensive' },
-        { label: '개인 비중', value: '90%+', context: '코스닥 시총 1위, 유동성 버블 신호', tone: 'expensive' },
-      ],
     },
   },
 
@@ -937,7 +937,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
       '하락한다',
     ],
     answer: 2,
-    explanation: 'S&P500 편입 기대 + EV 테마 = 기관 강제 매수 예고. 1개월 뒤 급등 (+85%). 편입 전 FOMO 매수가 추가 가속시켰다.. 1개월 뒤 횡보 (+4%).',
+    explanation: 'S&P500 편입 기대 + EV 테마 = 기관 강제 매수 예고. 편입 전 FOMO 매수가 추가 가속시켰다. 1개월 뒤 횡보 (+4%).',
     reveal: {
       title: 'Tesla (TSLA)', market: 'NASDAQ · 전기차', period: '2020년 1월 ~ 2020년 8월',
       result: '1개월 후 횡보 (+4%).',
@@ -955,6 +955,10 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
       { label: '연준', value: '무제한 QE 선언', trend: '역대 최대 속도 유동성 공급', tone: 'positive' },
       { label: '정부 부양', value: '5조 달러', trend: '직접 현금 지급 포함', tone: 'positive' },
     ],
+    valuationHints: [
+      { label: 'Shiller CAPE', value: '~24배', context: 'COVID 저점, 위기 직전 38배에서 급락', tone: 'fair' },
+      { label: '선행 PER', value: '~16배', context: '역대 평균 수준, 폭락 후 저평가 진입', tone: 'cheap' },
+    ],
     choices: [
       '급등한다',
       '상승한다',
@@ -962,16 +966,12 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
       '하락한다',
     ],
     answer: 0,
-    explanation: '연준 무제한 QE + 5조 달러 부양 = 유동성 폭발. 1개월 뒤 급등 (+26%). 실업률 14.7%에도 주가는 V자를 그렸다.. 1개월 뒤 급등 (+25%).',
+    explanation: '연준 무제한 QE + 5조 달러 부양 = 유동성 폭발. 실업률 14.7%에도 주가는 V자를 그렸다. 1개월 뒤 급등 (+25%).',
     reveal: {
       title: 'S&P 500 (^GSPC)', market: 'NYSE · 미국 대형주', period: '2019년 9월 ~ 2020년 4월',
       result: '1개월 후 급등 (+25%).',
       macro: '연준 제로금리+무제한 QE, 정부 CARES Act 2.2조달러, 백신 개발 경쟁 시작.',
       lesson: '주가는 실물 경기가 아닌 유동성과 기대를 6개월 앞서 반영한다. 공포 극대화 시점이 역발상 매수 기회다.',
-      valuationHints: [
-        { label: 'Shiller CAPE', value: '~24배', context: 'COVID 저점, 위기 직전 38배에서 급락', tone: 'fair' },
-        { label: '선행 PER', value: '~16배', context: '역대 평균 수준, 폭락 후 저평가 진입', tone: 'cheap' },
-      ],
     },
   },
 
@@ -984,6 +984,10 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
       { label: 'PER', value: '12배', trend: '빅테크 역대 최저 밸류', tone: 'positive' },
       { label: '구조조정', value: '21,000명 감원', trend: '이익률 회복 기대', tone: 'positive' },
     ],
+    valuationHints: [
+      { label: 'PER', value: '12배', context: '빅테크 역대 최저, -74% 폭락 반영', tone: 'cheap' },
+      { label: 'EV/매출', value: '~3배', context: '피크(~9배) 대비 3분의 1 수준', tone: 'cheap' },
+    ],
     choices: [
       '급등한다',
       '상승한다',
@@ -991,16 +995,12 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
       '하락한다',
     ],
     answer: 0,
-    explanation: '경영 피벗 + 역대 저밸류 + AI 광고 수익화 = 역발상 기회. 1개월 뒤 급등 (+23%). 감원 발표 후 이익률이 빠르게 회복됐다.. 1개월 뒤 급등 (+26%).',
+    explanation: '경영 피벗 + 역대 저밸류 + AI 광고 수익화 = 역발상 기회. 감원 발표 후 이익률이 빠르게 회복됐다. 1개월 뒤 급등 (+26%).',
     reveal: {
       title: 'Meta Platforms (META)', market: 'NASDAQ · 소셜미디어·AI', period: '2022년 5월 ~ 2022년 12월',
       result: '1개월 후 급등 (+26%).',
       macro: '대규모 감원으로 영업이익률 29%→40% 회복, AI 광고 추천 시스템 성공, Fed 금리 인상 속도 둔화.',
       lesson: '경영진이 스스로 실패를 인정하고 구체적으로 실행하면 주가는 빠르게 반응한다. "효율의 해"는 투자자 신뢰를 되찾는 신호였다.',
-      valuationHints: [
-        { label: 'PER', value: '12배', context: '빅테크 역대 최저, -74% 폭락 반영', tone: 'cheap' },
-        { label: 'EV/매출', value: '~3배', context: '피크(~9배) 대비 3분의 1 수준', tone: 'cheap' },
-      ],
     },
   },
 
@@ -1013,6 +1013,10 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
       { label: '서비스 매출', value: '연간 +20% 성장', trend: '앱스토어·구독 매출 확대', tone: 'positive' },
       { label: 'Fed 피벗', value: '"인내심" 발언', trend: '금리 인상 중단 신호', tone: 'positive' },
     ],
+    valuationHints: [
+      { label: 'PER', value: '~12배', context: '-35% 폭락 후 10년 내 최저치', tone: 'cheap' },
+      { label: '영업이익률', value: '27%+', context: '하드웨어 마진 하락에도 서비스로 방어', tone: 'fair' },
+    ],
     choices: [
       '급등한다',
       '상승한다',
@@ -1020,16 +1024,12 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
       '하락한다',
     ],
     answer: 1,
-    explanation: '하드웨어→서비스 전환 + Fed 피벗 = 밸류 리레이팅 촉매. 1개월 뒤 급등 (+22%). 서비스 매출 비중이 처음으로 20%를 돌파했다.. 1개월 뒤 상승 (+14%).',
+    explanation: '하드웨어→서비스 전환 + Fed 피벗 = 밸류 리레이팅 촉매. 서비스 매출 비중이 처음으로 20%를 돌파했다. 1개월 뒤 상승 (+14%).',
     reveal: {
       title: 'Apple (AAPL)', market: 'NASDAQ · 빅테크', period: '2018년 7월 ~ 2019년 2월',
       result: '1개월 후 상승 (+14%).',
       macro: '2019년 서비스 스트래티지 발표, Fed 금리 인상 중단, 중국 무역협상 1단계 기대.',
       lesson: '사업 구조 전환을 시장이 믿기 시작하면 밸류에이션이 한 단계 뛰어오른다. 전환 초기가 가장 강한 진입 시점이다.',
-      valuationHints: [
-        { label: 'PER', value: '~12배', context: '-35% 폭락 후 10년 내 최저치', tone: 'cheap' },
-        { label: '영업이익률', value: '27%+', context: '하드웨어 마진 하락에도 서비스로 방어', tone: 'fair' },
-      ],
     },
   },
 
@@ -1049,7 +1049,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
       '하락한다',
     ],
     answer: 2,
-    explanation: '반감기 후 공급 감소 효과는 지연 반영된다. 1개월 뒤 상승 (+14%). 이후 12개월 동안 +500% 이상 상승이 이어졌다.. 1개월 뒤 횡보 (+4%).',
+    explanation: '반감기 후 공급 감소 효과는 지연 반영된다. 이후 12개월 동안 +500% 이상 상승이 이어졌다. 1개월 뒤 횡보 (+4%).',
     reveal: {
       title: 'Bitcoin (BTC/USD)', market: 'Crypto · 가상자산', period: '2020년 1월 ~ 2020년 6월',
       result: '1개월 후 횡보 (+4%).',
@@ -1074,7 +1074,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
       '하락한다',
     ],
     answer: 1,
-    explanation: 'AI 테마 + 인플레이션 둔화 = 강세장 재개. 1개월 뒤 급등 (+16%). 엔비디아가 지수 상승을 주도했다.. 1개월 뒤 상승 (+7%).',
+    explanation: 'AI 테마 + 인플레이션 둔화 = 강세장 재개. 엔비디아가 지수 상승을 주도했다. 1개월 뒤 상승 (+7%).',
     reveal: {
       title: 'S&P 500 (^GSPC)', market: 'NYSE · 미국 대형주', period: '2022년 7월 ~ 2023년 2월',
       result: '1개월 후 상승 (+7%).',
@@ -1099,7 +1099,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
       '하락한다',
     ],
     answer: 1,
-    explanation: 'DRAM 슈퍼사이클 + 클라우드 서버 수요 = 실적 동반 급등. 1개월 뒤 급등 (+20%). 분기 영업이익이 사상 최초 10조를 돌파했다.. 1개월 뒤 상승 (+10%).',
+    explanation: 'DRAM 슈퍼사이클 + 클라우드 서버 수요 = 실적 동반 급등. 분기 영업이익이 사상 최초 10조를 돌파했다. 1개월 뒤 상승 (+10%).',
     reveal: {
       title: '삼성전자 (005930.KS)', market: 'KOSPI · 반도체', period: '2016년 10월 ~ 2017년 5월',
       result: '1개월 후 상승 (+10%).',
@@ -1124,7 +1124,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
       '하락한다',
     ],
     answer: 0,
-    explanation: '비대면 가속 + 광고·커머스 폭발 = 실적 서프라이즈. 1개월 뒤 급등 (+32%). 광고 매출이 전년 대비 30% 급증했다.. 1개월 뒤 급등 (+24%).',
+    explanation: '비대면 가속 + 광고·커머스 폭발 = 실적 서프라이즈. 광고 매출이 전년 대비 30% 급증했다. 1개월 뒤 급등 (+24%).',
     reveal: {
       title: '네이버 (035420.KS)', market: 'KOSPI · 인터넷·플랫폼', period: '2019년 10월 ~ 2020년 5월',
       result: '1개월 후 급등 (+24%).',
@@ -1149,7 +1149,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
       '급락한다',
     ],
     answer: 1,
-    explanation: '규제 현실화 + 고PER 멀티플 압축 = 급락 시작. 1개월 뒤 하락 (-18%). 6개월 후에는 고점 대비 -60%를 기록했다.. 1개월 뒤 횡보 (-5%).',
+    explanation: '규제 현실화 + 고PER 멀티플 압축 = 급락 시작. 6개월 후에는 고점 대비 -60%를 기록했다. 1개월 뒤 횡보 (-5%).',
     reveal: {
       title: '카카오 (035720.KS)', market: 'KOSPI · 인터넷·플랫폼', period: '2020년 12월 ~ 2021년 7월',
       result: '1개월 후 횡보 (-5%).',
@@ -1174,7 +1174,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
       '하락한다',
     ],
     answer: 1,
-    explanation: '9년 전 고점 돌파 + 실질 금리 마이너스 = 금 강세장 재개. 1개월 뒤 급등 (+11%). 8월에는 사상 최고가 $2,075를 기록했다.. 1개월 뒤 상승 (+7%).',
+    explanation: '9년 전 고점 돌파 + 실질 금리 마이너스 = 금 강세장 재개. 8월에는 사상 최고가 $2,075를 기록했다. 1개월 뒤 상승 (+7%).',
     reveal: {
       title: 'SPDR Gold Shares (GLD)', market: 'NYSE · 금 ETF', period: '2019년 12월 ~ 2020년 7월',
       result: '1개월 후 상승 (+7%).',
@@ -1199,7 +1199,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
       '하락한다',
     ],
     answer: 1,
-    explanation: '가이던스 +53% 상향 = 시장 기대의 3배. 1개월 뒤 급등 (+35%). 이 발표 이후 엔비디아는 반년 만에 시가총액 1조 달러를 돌파했다.. 1개월 뒤 상승 (+6%).',
+    explanation: '가이던스 +53% 상향 = 시장 기대의 3배. 이 발표 이후 엔비디아는 반년 만에 시가총액 1조 달러를 돌파했다. 1개월 뒤 상승 (+6%).',
     reveal: {
       title: 'NVIDIA (NVDA)', market: 'NASDAQ · AI 반도체', period: '2022년 11월 ~ 2023년 6월',
       result: '1개월 후 상승 (+6%).',
@@ -1224,7 +1224,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
       '하락한다',
     ],
     answer: 2,
-    explanation: 'ETF 구조적 수요 + 반감기 공급 감소 = 이중 호재. 1개월 뒤 급등 (+22%). 첫 달 순유입 $40억으로 ETF 역대 최고 기록을 세웠다.. 1개월 뒤 횡보 (+1%).',
+    explanation: 'ETF 구조적 수요 + 반감기 공급 감소 = 이중 호재. 첫 달 순유입 $40억으로 ETF 역대 최고 기록을 세웠다. 1개월 뒤 횡보 (+1%).',
     reveal: {
       title: 'Bitcoin (BTC/USD)', market: 'Crypto · 가상자산', period: '2023년 9월 ~ 2024년 2월',
       result: '1개월 후 횡보 (+1%).',
@@ -1249,7 +1249,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
       '하락한다',
     ],
     answer: 2,
-    explanation: '분할 상장 기대 + EV 수주 = 숨겨진 가치 발견. 1개월 뒤 급등 (+25%). 이후 LG에너지솔루션 IPO는 당시 역대 최대 규모였다.. 1개월 뒤 횡보 (+4%).',
+    explanation: '분할 상장 기대 + EV 수주 = 숨겨진 가치 발견. 이후 LG에너지솔루션 IPO는 당시 역대 최대 규모였다. 1개월 뒤 횡보 (+4%).',
     reveal: {
       title: 'LG화학 (051910.KS)', market: 'KOSPI · 화학·배터리', period: '2020년 2월 ~ 2020년 9월',
       result: '1개월 후 횡보 (+4%).',
@@ -1274,7 +1274,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
       '급락한다',
     ],
     answer: 0,
-    explanation: '매수 제한 + 공매도 청산 완료 = 연료 소진. 1개월 뒤 급락 (-67%). 기업 가치와 괴리된 가격은 반드시 회귀한다.. 1개월 뒤 급등 (+184%).',
+    explanation: '공매도 잔고 140% + 로빈후드 매수 유입 = 숏 스퀴즈 임계점 도달. 1개월 뒤 급등 (+184%).',
     reveal: {
       title: 'GameStop (GME)', market: 'NYSE · 게임 소매', period: '2020년 7월 ~ 2021년 2월',
       result: '1개월 후 급등 (+184%).',
@@ -1299,7 +1299,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
       '하락한다',
     ],
     answer: 1,
-    explanation: 'AI GPU 대안 + 사이클 저점 = 이중 상승 동력. 1개월 뒤 급등 (+25%). MI300 출시 후 AMD의 데이터센터 매출이 분기 $10억을 돌파했다.. 1개월 뒤 상승 (+10%).',
+    explanation: 'AI GPU 대안 + 사이클 저점 = 이중 상승 동력. MI300 출시 후 AMD의 데이터센터 매출이 분기 $10억을 돌파했다. 1개월 뒤 상승 (+10%).',
     reveal: {
       title: 'AMD', market: 'NASDAQ · AI 반도체', period: '2022년 7월 ~ 2023년 2월',
       result: '1개월 후 상승 (+10%).',
@@ -1324,7 +1324,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
       '하락한다',
     ],
     answer: 0,
-    explanation: 'HBM 독점 공급 + AI 인프라 투자 폭증 = 구조적 수요. 1개월 뒤 급등 (+23%). SK하이닉스는 HBM 시장점유율 50%를 확보했다.. 1개월 뒤 급등 (+36%).',
+    explanation: 'HBM 독점 공급 + AI 인프라 투자 폭증 = 구조적 수요. SK하이닉스는 HBM 시장점유율 50%를 확보했다. 1개월 뒤 급등 (+36%).',
     reveal: {
       title: 'SK하이닉스 (000660.KS)', market: 'KOSPI · 반도체·HBM', period: '2022년 11월 ~ 2023년 6월',
       result: '1개월 후 급등 (+36%).',

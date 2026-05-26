@@ -504,7 +504,7 @@ function makeLesson(ans, pattern, hints) {
 const EXPLANATION_CONTEXT = {
   // (ans, pattern) → 두 번째 문장 (왜 이런 결과가 나왔는지)
   '0_breakout':  '거래량이 동반된 돌파가 진짜 추세 전환을 확인시켜 주었다.',
-  '0_uptrend':   '강한 매크로가 추세에 힘을 더하며 가속 상승이 나타났다.',
+  '0_uptrend':   '추세가 이어지며 모멘텀이 가속되는 흐름이 나타났다.',
   '0_reversal':  '바닥에서 강한 수급이 유입되며 추세가 빠르게 반전됐다.',
   '0_downtrend': '예상을 뒤집는 매수세가 유입되며 추세가 급반전했다.',
   '0_sideways':  '에너지 축적 이후 방향이 결정되자 빠르게 상승이 진행됐다.',

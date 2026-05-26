@@ -246,6 +246,11 @@ async function main() {
       if (mismatch) reasons.push(`C. 선택지: ${mismatch}`);
     }
 
+    // ── D. explanation에 "1개월 뒤" 2회 이상 포함 ─────────────────────────
+    if ((p.explanation.match(/1개월 뒤/g) ?? []).length > 1) {
+      reasons.push(`D. 중복 결과: explanation에 "1개월 뒤" ${(p.explanation.match(/1개월 뒤/g)).length}회 포함`);
+    }
+
     if (reasons.length) {
       issues.push({ id: p.id, source, p, reasons, actualPct });
       const label = ['급등','상승','횡보','하락'][p.answer];
@@ -264,9 +269,11 @@ async function main() {
   const aCount = issues.filter(i => i.reasons.some(r => r.startsWith('A.'))).length;
   const bCount = issues.filter(i => i.reasons.some(r => r.startsWith('B.'))).length;
   const cCount = issues.filter(i => i.reasons.some(r => r.startsWith('C.'))).length;
+  const dCount = issues.filter(i => i.reasons.some(r => r.startsWith('D.'))).length;
   if (aCount) console.log(`  A. 과거완료형 동사:     ${aCount}건`);
   if (bCount) console.log(`  B. 질문↔정답 방향 모순: ${bCount}건`);
   if (cCount) console.log(`  C. 선택지 문구 불일치:  ${cCount}건`);
+  if (dCount) console.log(`  D. explanation 중복 결과: ${dCount}건`);
 
   if (!APPLY_FIXES) {
     if (issues.length) console.log(`\n수정하려면: node scripts/review-problems.cjs --fix`);
