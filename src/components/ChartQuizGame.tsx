@@ -22,7 +22,7 @@ import {
 } from './GameUI';
 
 // 선택지 미리보기 색상 (0=상승 녹색, 1=횡보 노랑, 2=하락 주황, 3=급락 빨강)
-const CHOICE_PREVIEW_COLORS = ['#4caf50', '#ffc107', '#ff7043', '#ef5350'];
+const CHOICE_PREVIEW_COLORS = ['#4caf50', '#ffc107', '#ff7043', '#9c27b0'];
 
 // 이동평균선 색상 — 각 기간이 명확히 구분되도록
 const MA_COLORS = {
@@ -347,7 +347,7 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
           <div style={{ position: 'absolute', top: 10, left: 0, right: 0, borderTop: `2px solid ${COLORS.red}` }}/>
           <div style={{ position: 'absolute', top: 14, left: 0, right: 0, borderTop: `1px solid ${COLORS.blue}` }}/>
 
-          <div style={{ position: 'absolute', top: 20, right: 10, fontSize: 9, color: COLORS.textMute, fontFamily: TITLE_FONT, letterSpacing: '0.1em' }}>#4</div>
+          <div style={{ position: 'absolute', top: 20, right: 10, fontSize: 9, color: COLORS.textMute, fontFamily: TITLE_FONT, letterSpacing: '0.1em' }}>#5</div>
 
           <div style={{ textAlign: 'center', marginBottom: 7, marginTop: 24, fontSize: 9, color: COLORS.textDim, letterSpacing: '0.28em' }}>
             ANALYZING · BUYING · PRAYING

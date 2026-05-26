@@ -11,5 +11,5 @@ export const RANKS: Rank[] = [
 ];
 
 export const TOTAL_STAGES = 7;
-export const STAGE_PROBLEMS_PER_STAGE = 20;
+export const STAGE_PROBLEMS_PER_STAGE = 30;
 export const MAX_RANK_IDX = RANKS.length - 1;
