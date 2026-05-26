@@ -5,8 +5,8 @@ import {
 } from 'recharts';
 
 import { COLORS } from '../constants/colors';
-import { RANKS, RANK_CAPITALS, START_CAPITAL, GAMEOVER_CAPITAL, MAX_RANK_IDX } from '../constants/ranks';
-import { PROBLEM_POOL, difficultyShuffle } from '../data/problems';
+import { RANKS, TOTAL_STAGES, STAGE_PROBLEMS_PER_STAGE, MAX_RANK_IDX } from '../constants/ranks';
+import { PROBLEM_POOL, selectStageProblems } from '../data/problems';
 import { generateChart } from '../utils/chartGenerator';
 import { loadChartData } from '../utils/dataLoader';
 import { formatPrice, formatVolume, getNicePriceScale, getPriceUnit } from '../utils/chartFormat';
@@ -104,30 +104,6 @@ function generatePreviewPath(
   });
 }
 
-function getRankByCapital(capital: number) {
-  let idx = 0;
-  for (let i = 0; i < RANK_CAPITALS.length; i++) {
-    if (capital >= RANK_CAPITALS[i]) idx = i;
-  }
-  return Math.min(MAX_RANK_IDX, idx);
-}
-
-function formatCapital(capital: number) {
-  if (capital >= 10000) {
-    const eok = capital / 10000;
-    return `${Number.isInteger(eok) ? eok : eok.toFixed(1)}억`;
-  }
-  return `${Math.round(capital).toLocaleString()}만`;
-}
-
-function getTradeReturn(problem: Problem, correct: boolean, combo: number, lossStreak: number) {
-  if (correct) {
-    const base = problem.difficulty === 'hard' ? 0.08 : problem.difficulty === 'medium' ? 0.065 : 0.05;
-    const bonus = combo >= 2 ? Math.min(0.03, (combo - 1) * 0.01) : 0;
-    return base + bonus;
-  }
-  return lossStreak >= 2 ? -0.15 : lossStreak === 1 ? -0.1 : -0.07;
-}
 
 interface Props {
   onOpenWrongNote: () => void;
@@ -136,31 +112,23 @@ interface Props {
 export default function ChartQuizGame({ onOpenWrongNote }: Props) {
   const { data: storage, save: saveStorage, reset: resetStorage } = useGameStorage();
 
-  const [phase, setPhase] = useState<'intro' | 'playing' | 'levelup' | 'gameover' | 'ending'>('intro');
+  const [phase, setPhase] = useState<'intro' | 'playing' | 'stageComplete' | 'graduated'>('intro');
   const [tutorialStep, setTutorialStep] = useState<number | null>(null);
-  const [capital, setCapital] = useState(START_CAPITAL);
-  const [peakCapital, setPeakCapital] = useState(START_CAPITAL);
-  const [rank, setRank] = useState(0);
-  const [combo, setCombo] = useState(0);
-  const [lossStreak, setLossStreak] = useState(0);
-  const [runCount, setRunCount] = useState(1);
-  const [pendingLevelUp, setPendingLevelUp] = useState(false);
+  const [currentStage, setCurrentStage] = useState(0);           // 0–6
+  const [stageProblems, setStageProblems] = useState<Problem[]>(() => selectStageProblems(0, PROBLEM_POOL));
+  const [stageIdx, setStageIdx] = useState(0);                   // 0–19
+  const [stageCorrect, setStageCorrect] = useState(0);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
 
-  const [problemQueue, setProblemQueue] = useState<Problem[]>(() => difficultyShuffle(PROBLEM_POOL));
-  const [problemIdx, setProblemIdx] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
   const [submitted, setSubmitted] = useState(false);
   const [, setRevealed] = useState(false);
-  const [lastReturnPct, setLastReturnPct] = useState(0);
-  const [lastCapitalDelta, setLastCapitalDelta] = useState(0);
   const [showRSI, setShowRSI] = useState(false);
-  // macro is always visible — toggle removed
   const [activeTerm, setActiveTerm] = useState<string | null>(null);
   const [chartData, setChartData] = useState<ChartDataPoint[]>([]);
   const [chartLoading, setChartLoading] = useState(true);
 
-  const problem = problemQueue[problemIdx % problemQueue.length];
+  const problem = stageProblems[stageIdx] ?? stageProblems[0];
 
   useEffect(() => {
     if (phase !== 'playing') return;
@@ -170,12 +138,12 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
       .then(data => { if (!cancelled) { setChartData(data); setChartLoading(false); } })
       .catch(() => {
         if (!cancelled) {
-          setChartData(generateChart((problem.id + runCount * 100) * 137, problem.pattern, problem.startDate));
+          setChartData(generateChart(problem.id * 137, problem.pattern, problem.startDate));
           setChartLoading(false);
         }
       });
     return () => { cancelled = true; };
-  }, [problem, phase, runCount]);
+  }, [problem, phase]);
 
   const fullData = chartData;
   // 선택: 합성 미리보기 / 제출 후: 실제 금색 선
@@ -227,68 +195,45 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
   const priceUnit = getPriceUnit(problem);
   const priceScale = getNicePriceScale(minPrice, maxPrice, 4);
 
-  const resetAccount = () => {
-    setCapital(START_CAPITAL);
-    setPeakCapital(START_CAPITAL);
-    setRank(0);
-    setCombo(0);
-    setLossStreak(0);
-    setLastReturnPct(0);
-    setLastCapitalDelta(0);
-  };
-
-  const persistSession = (overrides: { problemIdx?: number; capital?: number; peakCapital?: number; rank?: number; combo?: number; lossStreak?: number } = {}) => {
+  const persistSession = (overrides: { stageIdx?: number; stageCorrect?: number } = {}) => {
     saveStorage({
       savedSession: {
-        capital: overrides.capital ?? capital,
-        peakCapital: overrides.peakCapital ?? peakCapital,
-        rank: overrides.rank ?? rank,
-        combo: overrides.combo ?? combo,
-        lossStreak: overrides.lossStreak ?? lossStreak,
-        runCount,
-        problemQueueIds: problemQueue.map(p => p.id),
-        problemIdx: overrides.problemIdx ?? problemIdx,
+        currentStage,
+        stageIdx: overrides.stageIdx ?? stageIdx,
+        stageCorrect: overrides.stageCorrect ?? stageCorrect,
+        stageProblemsIds: stageProblems.map(p => p.id),
       },
     });
   };
 
-  const startGame = () => {
-    const newRunCount = runCount + (phase !== 'intro' ? 1 : 0);
-    const queue = difficultyShuffle(PROBLEM_POOL);
-    setPhase('playing');
-    resetAccount();
-    setRunCount(newRunCount);
-    setProblemQueue(queue);
-    setProblemIdx(0);
+  const startStage = (stageIndex: number) => {
+    const problems = selectStageProblems(stageIndex, PROBLEM_POOL);
+    setCurrentStage(stageIndex);
+    setStageProblems(problems);
+    setStageIdx(0);
+    setStageCorrect(0);
     setSelected(null); setSubmitted(false); setRevealed(false);
-    setPendingLevelUp(false);
+    setPhase('playing');
     saveStorage({
-      totalRuns: storage.totalRuns + 1,
       savedSession: {
-        capital: START_CAPITAL, peakCapital: START_CAPITAL, rank: 0, combo: 0, lossStreak: 0,
-        runCount: newRunCount,
-        problemQueueIds: queue.map(p => p.id),
-        problemIdx: 0,
+        currentStage: stageIndex,
+        stageIdx: 0,
+        stageCorrect: 0,
+        stageProblemsIds: problems.map(p => p.id),
       },
     });
   };
 
   const resumeGame = () => {
     const s = storage.savedSession!;
-    const queue = s.problemQueueIds
+    const problems = s.stageProblemsIds
       .map(id => PROBLEM_POOL.find(p => p.id === id))
       .filter(Boolean) as Problem[];
-    const restoredCapital = s.capital ?? START_CAPITAL + (s.points ?? 0);
-    setCapital(restoredCapital);
-    setPeakCapital(s.peakCapital ?? Math.max(START_CAPITAL, restoredCapital));
-    setRank(s.rank);
-    setCombo(s.combo);
-    setLossStreak(s.lossStreak ?? 0);
-    setRunCount(s.runCount);
-    setProblemQueue(queue);
-    setProblemIdx(s.problemIdx);
+    setCurrentStage(s.currentStage);
+    setStageProblems(problems);
+    setStageIdx(s.stageIdx);
+    setStageCorrect(s.stageCorrect);
     setSelected(null); setSubmitted(false); setRevealed(false);
-    setPendingLevelUp(false);
     setPhase('playing');
   };
 
@@ -298,12 +243,10 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
     setSubmitted(true);
     setRevealed(true);
 
-    // ── Tutorial problem: no account/storage effects ───────────────────────
-    if (problem.isTutorial) {
-      setLastReturnPct(0);
-      setLastCapitalDelta(0);
-      return;
-    }
+    if (problem.isTutorial) return;
+
+    const newStageCorrect = stageCorrect + (correct ? 1 : 0);
+    setStageCorrect(newStageCorrect);
 
     const existing = storage.solvedProblems[problem.id];
     saveStorage({
@@ -316,90 +259,50 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
         },
       },
     });
-
-    if (correct) {
-      const newCombo = combo + 1;
-      const returnPct = getTradeReturn(problem, true, newCombo, 0);
-      const delta = capital * returnPct;
-      const newCapital = Math.round(capital + delta);
-      const newPeakCapital = Math.max(peakCapital, newCapital);
-      setLastReturnPct(returnPct);
-      setLastCapitalDelta(delta);
-      setCombo(newCombo);
-      setLossStreak(0);
-      setCapital(newCapital);
-      setPeakCapital(newPeakCapital);
-
-      const newRank = getRankByCapital(newCapital);
-      if (newRank > rank) {
-        setRank(newRank);
-        if (newRank > storage.bestRank) saveStorage({ bestRank: newRank });
-        setPendingLevelUp(true);
-      }
-      if (newCapital > storage.bestPoints) saveStorage({ bestPoints: newCapital });
-    } else {
-      const newLossStreak = lossStreak + 1;
-      const returnPct = getTradeReturn(problem, false, combo, newLossStreak);
-      const delta = capital * returnPct;
-      const newCapital = Math.max(0, Math.round(capital + delta));
-      setCapital(newCapital);
-      setCombo(0);
-      setLossStreak(newLossStreak);
-      setLastReturnPct(returnPct);
-      setLastCapitalDelta(delta);
-      if (newCapital <= GAMEOVER_CAPITAL) {
-        saveStorage({ savedSession: null });
-        setTimeout(() => setPhase('gameover'), 1500);
-      }
-    }
   };
 
   const handleNext = () => {
-    // ── Tutorial complete: save flag → go to intro ─────────────────────────
+    // ── Tutorial complete → go to intro ───────────────────────────────────
     if (problem.isTutorial) {
       localStorage.setItem('tutorialCompleted', 'true');
       setTutorialStep(null);
       setPhase('intro');
-      resetAccount();
-      setProblemQueue(difficultyShuffle(PROBLEM_POOL));
-      setProblemIdx(0);
       setSelected(null); setSubmitted(false); setRevealed(false);
       return;
     }
 
-    if (pendingLevelUp) {
-      if (rank >= MAX_RANK_IDX) {
-        saveStorage({ clearCount: storage.clearCount + 1, savedSession: null });
-        setPhase('ending');
+    const nextIdx = stageIdx + 1;
+    if (nextIdx >= STAGE_PROBLEMS_PER_STAGE) {
+      // 단계 완료
+      const completedStage = currentStage;
+      if (completedStage + 1 >= TOTAL_STAGES) {
+        saveStorage({ clearCount: storage.clearCount + 1, savedSession: null,
+          bestStageCompleted: Math.max(storage.bestStageCompleted, TOTAL_STAGES) });
+        setPhase('graduated');
       } else {
-        persistSession({ problemIdx: problemIdx + 1 });
-        setPhase('levelup');
+        saveStorage({ savedSession: null,
+          bestStageCompleted: Math.max(storage.bestStageCompleted, completedStage + 1) });
+        setPhase('stageComplete');
       }
-      return;
+    } else {
+      setStageIdx(nextIdx);
+      setSelected(null); setSubmitted(false); setRevealed(false);
+      persistSession({ stageIdx: nextIdx, stageCorrect });
     }
-    persistSession({ problemIdx: problemIdx + 1 });
-    setProblemIdx(problemIdx + 1);
-    setSelected(null); setSubmitted(false); setRevealed(false); setLastReturnPct(0); setLastCapitalDelta(0);
   };
 
-  const continueAfterLevelup = () => {
-    setPendingLevelUp(false);
-    setPhase('playing');
-    setProblemIdx(problemIdx + 1);
-    setSelected(null); setSubmitted(false); setRevealed(false); setLastReturnPct(0); setLastCapitalDelta(0);
+  const continueAfterStage = () => {
+    startStage(currentStage + 1);
   };
-
-  const retry = () => { startGame(); };
 
   // ─── Tutorial controls ────────────────────────────────────────────────────
   const startTutorialGame = () => {
     localStorage.removeItem('tutorialCompleted');
     setTutorialStep(0);
     setPhase('playing');
-    setProblemQueue([TUTORIAL_PROBLEM]);
-    setProblemIdx(0);
+    setStageProblems([TUTORIAL_PROBLEM]);
+    setStageIdx(0);
     setSelected(null); setSubmitted(false); setRevealed(false);
-    resetAccount(); setPendingLevelUp(false);
   };
 
   const advanceTutorialStep = () => {
@@ -407,7 +310,6 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
     if (tutorialStep < 4) {
       setTutorialStep(tutorialStep + 1);
     } else {
-      // Last step done — dismiss overlay so user can interact
       setTutorialStep(null);
     }
   };
@@ -416,9 +318,6 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
     localStorage.setItem('tutorialCompleted', 'true');
     setTutorialStep(null);
     setPhase('intro');
-    resetAccount();
-    setProblemQueue(difficultyShuffle(PROBLEM_POOL));
-    setProblemIdx(0);
     setSelected(null); setSubmitted(false); setRevealed(false);
   };
 
@@ -426,9 +325,9 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
     resetStorage();
     setShowResetConfirm(false);
     setPhase('intro');
-    resetAccount(); setRunCount(1);
-    setProblemQueue(difficultyShuffle(PROBLEM_POOL));
-    setProblemIdx(0);
+    setCurrentStage(0);
+    setStageProblems(selectStageProblems(0, PROBLEM_POOL));
+    setStageIdx(0); setStageCorrect(0);
   };
 
   // ─── Intro ─────────────────────────────────────────────────────────────────
@@ -508,35 +407,31 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
 
           <div style={{ fontSize: 11, color: COLORS.text, lineHeight: 1.7, marginBottom: 10, padding: '0 2px' }}>
             <div style={{ fontSize: 10, color: COLORS.red, fontWeight: 700, marginBottom: 3, letterSpacing: '0.15em' }}>● 학습 규칙</div>
-            <div>① 시드 1,000만원으로 시작 · 500만원 이하면 퇴장</div>
-            <div>② 정답은 수익 · 오답은 손실 · 연속 손실은 더 아픔</div>
-            <div>③ 계좌가 커질수록 진화 (1억원 도달 = 수료)</div>
+            <div>① 7단계 각 20문제 · 총 140문제</div>
+            <div>② 정답 확인 후 다음 문제로 (패널티 없음)</div>
+            <div>③ 단계를 완주할수록 진화 (7단계 = 수료)</div>
           </div>
 
           {/* 기록 패널 */}
-          {(s.totalRuns > 0 || s.bestRank > 0) && (
+          {(s.bestStageCompleted > 0 || s.clearCount > 0) && (
             <div style={{
               marginBottom: 10, padding: '8px 10px',
               border: `1px solid ${COLORS.borderDark}`,
               background: COLORS.bgPanelLight,
-              display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)',
+              display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)',
               gap: 6, textAlign: 'center',
             }}>
               <div>
-                <div style={{ fontSize: 15, fontWeight: 700, color: COLORS.textBright, fontFamily: TITLE_FONT }}>{s.totalRuns}</div>
-                <div style={{ fontSize: 9, color: COLORS.textMute, letterSpacing: '0.1em' }}>총 회차</div>
-              </div>
-              <div>
                 <div style={{ fontSize: 15, fontWeight: 700, color: COLORS.gold, fontFamily: TITLE_FONT }}>
-                  {RANKS[s.bestRank].emoji} {s.bestRank + 1}단
+                  {RANKS[Math.min(s.bestStageCompleted, MAX_RANK_IDX)].emoji} {s.bestStageCompleted}단계
                 </div>
-                <div style={{ fontSize: 9, color: COLORS.textMute, letterSpacing: '0.1em' }}>최고 단계</div>
+                <div style={{ fontSize: 9, color: COLORS.textMute, letterSpacing: '0.1em' }}>최고 달성 단계</div>
               </div>
               <div>
                 <div style={{ fontSize: 15, fontWeight: 700, color: s.clearCount > 0 ? COLORS.red : COLORS.textDim, fontFamily: TITLE_FONT }}>
-                  {s.clearCount > 0 ? `★ ${s.clearCount}회` : '0회'}
+                  {s.clearCount > 0 ? `★ ${s.clearCount}회` : '―'}
                 </div>
-                <div style={{ fontSize: 9, color: COLORS.textMute, letterSpacing: '0.1em' }}>엔딩 도달</div>
+                <div style={{ fontSize: 9, color: COLORS.textMute, letterSpacing: '0.1em' }}>수료 횟수</div>
               </div>
             </div>
           )}
@@ -558,7 +453,7 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
                 onMouseUp={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = `3px 3px 0 0 ${COLORS.border}`; }}
                 onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = `3px 3px 0 0 ${COLORS.border}`; }}
               >
-                ▷ 이어하기 ({formatCapital(storage.savedSession!.capital ?? START_CAPITAL + (storage.savedSession!.points ?? 0))})
+                ▷ 이어하기 ({storage.savedSession!.currentStage + 1}단계 · {storage.savedSession!.stageIdx + 1}/{STAGE_PROBLEMS_PER_STAGE}번 문제)
               </button>
             )}
             <button
@@ -566,7 +461,7 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
                 if (!hasSave && !localStorage.getItem('tutorialCompleted')) {
                   startTutorialGame();
                 } else {
-                  startGame();
+                  startStage(0);
                 }
               }}
               style={{
@@ -582,7 +477,7 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
               onMouseUp={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = `3px 3px 0 0 ${COLORS.border}`; }}
               onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = `3px 3px 0 0 ${COLORS.border}`; }}
             >
-              {hasSave ? '새 게임 시작' : '학 습 시 작'}
+              {hasSave ? '1단계부터 다시 시작' : '학 습 시 작'}
             </button>
 
             <div style={{ display: 'flex', gap: 6 }}>
@@ -639,22 +534,30 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
   }
 
   // ─── Level Up ──────────────────────────────────────────────────────────────
-  if (phase === 'levelup') {
-    const r = RANKS[rank];
+  // ─── Stage Complete ────────────────────────────────────────────────────────
+  if (phase === 'stageComplete') {
+    const nextStage = currentStage + 1;
+    const nextR = RANKS[Math.min(nextStage, MAX_RANK_IDX)];
+    const accuracy = Math.round((stageCorrect / STAGE_PROBLEMS_PER_STAGE) * 100);
     return (
       <Screen>
         <FontLoader />
         <div style={{ textAlign: 'center', animation: 'levelup 0.6s', maxWidth: 380, width: '100%', background: COLORS.bgPanel, border: `2px solid ${COLORS.border}`, boxShadow: `4px 4px 0 0 ${COLORS.border}`, padding: '32px 24px', position: 'relative' }}>
           <div style={{ position: 'absolute', top: 10, left: 0, right: 0, borderTop: `2px solid ${COLORS.red}` }}/>
           <div style={{ position: 'absolute', top: 16, left: 0, right: 0, borderTop: `1px solid ${COLORS.blue}` }}/>
-          <div style={{ fontSize: 12, fontFamily: TITLE_FONT, letterSpacing: '0.4em', color: COLORS.red, marginBottom: 8, marginTop: 10, fontWeight: 700 }}>진 급 증</div>
-          <div style={{ fontSize: 11, color: COLORS.textDim, letterSpacing: '0.25em', marginBottom: 20 }}>다음 단계 진입</div>
-          <div style={{ fontSize: 100, marginBottom: 12, lineHeight: 1, animation: 'bounce 0.5s' }}>{r.emoji}</div>
-          <div style={{ fontSize: 26, fontWeight: 800, marginBottom: 6, fontFamily: TITLE_FONT, color: COLORS.textBright, letterSpacing: '0.15em' }}>{r.name}</div>
-          <div style={{ fontSize: 13, color: COLORS.textDim, marginBottom: 12, fontFamily: TITLE_FONT, fontStyle: 'italic' }}>『{r.desc}』</div>
-          <div style={{ display: 'inline-block', padding: '6px 18px', border: `2px solid ${COLORS.border}`, marginBottom: 24, fontSize: 13, fontFamily: TITLE_FONT, fontWeight: 700, letterSpacing: '0.2em', color: COLORS.textBright }}>{r.lv} / 7 단계</div>
+          <div style={{ fontSize: 12, fontFamily: TITLE_FONT, letterSpacing: '0.4em', color: COLORS.red, marginBottom: 8, marginTop: 10, fontWeight: 700 }}>단 계 완 료</div>
+          <div style={{ fontSize: 11, color: COLORS.textDim, letterSpacing: '0.25em', marginBottom: 20 }}>{currentStage + 1}단계 완주</div>
+          <div style={{ fontSize: 100, marginBottom: 12, lineHeight: 1, animation: 'bounce 0.5s' }}>{nextR.emoji}</div>
+          <div style={{ fontSize: 26, fontWeight: 800, marginBottom: 4, fontFamily: TITLE_FONT, color: COLORS.textBright, letterSpacing: '0.15em' }}>{nextR.name}</div>
+          <div style={{ fontSize: 13, color: COLORS.textDim, marginBottom: 14, fontFamily: TITLE_FONT, fontStyle: 'italic' }}>『{nextR.desc}』</div>
+          <div style={{ display: 'inline-block', padding: '5px 14px', border: `1px solid ${COLORS.border}`, marginBottom: 8, fontSize: 12, fontFamily: TITLE_FONT, color: COLORS.textDim, letterSpacing: '0.1em' }}>
+            정답률 {stageCorrect} / {STAGE_PROBLEMS_PER_STAGE} ({accuracy}%)
+          </div>
+          <div style={{ display: 'inline-block', padding: '5px 14px', border: `2px solid ${COLORS.border}`, marginBottom: 24, marginLeft: 6, fontSize: 12, fontFamily: TITLE_FONT, fontWeight: 700, letterSpacing: '0.2em', color: COLORS.textBright }}>
+            다음: {nextStage + 1} / {TOTAL_STAGES} 단계
+          </div>
           <div style={{ maxWidth: 280, margin: '0 auto' }}>
-            <GlowBtn onClick={continueAfterLevelup}>다음 학습 ▶</GlowBtn>
+            <GlowBtn onClick={continueAfterStage}>{nextStage + 1}단계 시작 ▶</GlowBtn>
           </div>
         </div>
         <style>{GLOBAL_STYLES}</style>
@@ -662,33 +565,8 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
     );
   }
 
-  // ─── Game Over ─────────────────────────────────────────────────────────────
-  if (phase === 'gameover') {
-    const r = RANKS[rank];
-    return (
-      <Screen>
-        <FontLoader />
-        <div style={{ textAlign: 'center', maxWidth: 380, width: '100%', background: COLORS.bgPanel, border: `2px solid ${COLORS.border}`, boxShadow: `4px 4px 0 0 ${COLORS.border}`, padding: '32px 24px', position: 'relative' }}>
-          <div style={{ position: 'absolute', top: 10, left: 0, right: 0, borderTop: `3px solid ${COLORS.red}` }}/>
-          <div style={{ position: 'absolute', top: 17, left: 0, right: 0, borderTop: `1px solid ${COLORS.red}` }}/>
-          <div style={{ fontSize: 13, fontFamily: TITLE_FONT, letterSpacing: '0.4em', color: COLORS.red, marginBottom: 8, marginTop: 14, fontWeight: 700 }}>학 습 중 단</div>
-          <div style={{ fontSize: 11, color: COLORS.textDim, letterSpacing: '0.25em', marginBottom: 20 }}>시드머니가 위험선 아래로 내려갔습니다</div>
-          <div style={{ fontSize: 64, marginBottom: 14, filter: 'grayscale(0.4)' }}>💀</div>
-          <div style={{ fontSize: 11, color: COLORS.textDim, marginBottom: 6, fontFamily: TITLE_FONT, letterSpacing: '0.15em' }}>최종 도달 단계</div>
-          <div style={{ fontSize: 52, marginBottom: 4 }}>{r.emoji}</div>
-          <div style={{ fontSize: 20, fontWeight: 700, marginBottom: 6, fontFamily: TITLE_FONT, color: COLORS.textBright, letterSpacing: '0.1em' }}>{r.name}</div>
-          <div style={{ display: 'inline-block', padding: '5px 14px', marginBottom: 22, border: `1px solid ${COLORS.border}`, fontSize: 11, fontFamily: TITLE_FONT, color: COLORS.textDim, letterSpacing: '0.15em' }}>{formatCapital(capital)} · {r.lv}단계</div>
-          <div style={{ maxWidth: 280, margin: '0 auto' }}>
-            <GlowBtn onClick={retry}>다시 학습하기 ▶</GlowBtn>
-          </div>
-        </div>
-        <style>{GLOBAL_STYLES}</style>
-      </Screen>
-    );
-  }
-
-  // ─── Ending ────────────────────────────────────────────────────────────────
-  if (phase === 'ending') {
+  // ─── Graduated ─────────────────────────────────────────────────────────────
+  if (phase === 'graduated') {
     const r = RANKS[MAX_RANK_IDX];
     return (
       <Screen>
@@ -705,10 +583,10 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
             『시장은 인내가 없는 사람으로부터<br/>인내가 있는 사람에게로<br/>재화가 흘러가는 곳이다』
           </div>
           <div style={{ fontSize: 11, fontFamily: TITLE_FONT, color: COLORS.textDim, letterSpacing: '0.2em', marginBottom: 22 }}>
-            최종 {formatCapital(capital)} · 누적 {storage.clearCount}회 수료
+            누적 {storage.clearCount}회 수료
           </div>
           <div style={{ maxWidth: 320, margin: '0 auto' }}>
-            <GlowBtn onClick={retry}>다시 학습 ▶</GlowBtn>
+            <GlowBtn onClick={() => { startStage(0); }}>처음부터 다시 ▶</GlowBtn>
           </div>
           <div style={{ marginTop: 22, fontSize: 10, color: COLORS.textMute, fontFamily: TITLE_FONT, letterSpacing: '0.2em' }}>시장학습사 인증</div>
         </div>
@@ -718,13 +596,8 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
   }
 
   // ─── Playing ───────────────────────────────────────────────────────────────
-  const r = RANKS[rank];
-  const currentRankFloor = RANK_CAPITALS[rank] ?? START_CAPITAL;
-  const nextRankTarget = RANK_CAPITALS[Math.min(rank + 1, MAX_RANK_IDX)] ?? RANK_CAPITALS[MAX_RANK_IDX];
-  const progressPct = rank >= MAX_RANK_IDX
-    ? 100
-    : Math.max(0, Math.min(100, ((capital - currentRankFloor) / (nextRankTarget - currentRankFloor)) * 100));
-  const drawdownPct = peakCapital > 0 ? ((capital - peakCapital) / peakCapital) * 100 : 0;
+  const r = RANKS[Math.min(currentStage, MAX_RANK_IDX)];
+  const progressPct = Math.round((stageIdx / STAGE_PROBLEMS_PER_STAGE) * 100);
   const isCorrect = submitted && selected === problem.answer;
 
   const xTicks: number[] = [];
@@ -758,22 +631,19 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
       {/* HUD */}
       <div style={{ maxWidth: 720, margin: '0 auto 6px' }}>
         <GlowBox color={COLORS.border} bg={COLORS.bgPanel} style={{ padding: '6px 10px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
-            <span style={{ fontSize: 22, lineHeight: 1, flexShrink: 0 }}>{r.emoji}</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+            <span style={{ fontSize: 20, lineHeight: 1, flexShrink: 0 }}>{r.emoji}</span>
             <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ fontSize: 13, fontWeight: 700, lineHeight: 1.2, fontFamily: KOREAN_FONT, color: COLORS.textBright, letterSpacing: '0.05em', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{r.name}</div>
-              <div style={{ fontSize: 10, color: COLORS.textDim, fontFamily: TITLE_FONT, letterSpacing: '0.1em' }}>{r.lv}단계</div>
+              <div style={{ fontSize: 12, fontWeight: 700, lineHeight: 1.2, fontFamily: KOREAN_FONT, color: COLORS.textBright, letterSpacing: '0.05em', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{r.name}</div>
+              <div style={{ fontSize: 10, color: COLORS.textDim, fontFamily: TITLE_FONT, letterSpacing: '0.1em' }}>{currentStage + 1}단계 / {TOTAL_STAGES}</div>
             </div>
-            <div style={{ textAlign: 'right', flexShrink: 0, minWidth: 88 }}>
-              <div style={{ fontSize: 16, fontWeight: 700, color: COLORS.textBright, fontFamily: TITLE_FONT, lineHeight: 1 }}>
-                {formatCapital(capital)}
+            <div style={{ textAlign: 'right', flexShrink: 0 }}>
+              <div style={{ fontSize: 13, fontWeight: 700, color: COLORS.textBright, fontFamily: TITLE_FONT, lineHeight: 1 }}>
+                {stageIdx + 1} / {STAGE_PROBLEMS_PER_STAGE}
               </div>
-              <div style={{ fontSize: 9, color: drawdownPct < -10 ? COLORS.red : COLORS.textDim, fontFamily: TITLE_FONT, letterSpacing: '0.05em' }}>
-                MDD {drawdownPct.toFixed(1)}%
+              <div style={{ fontSize: 9, color: COLORS.textDim, fontFamily: TITLE_FONT, letterSpacing: '0.05em' }}>
+                정답 {stageCorrect}
               </div>
-              {combo >= 3 && (
-                <div style={{ fontSize: 10, fontFamily: TITLE_FONT, color: COLORS.red, fontWeight: 700, animation: 'blink 0.5s infinite' }}>🔥 {combo}연속</div>
-              )}
             </div>
             <button
               onClick={() => { setPhase('intro'); }}
@@ -997,20 +867,14 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
         {/* 해설 + 종목 공개 통합 박스 */}
         {submitted && (
           <GlowBox color={isCorrect ? COLORS.greenBright : COLORS.redBright} bg={COLORS.bgPanel} style={{ padding: '14px 16px', marginBottom: 10 }}>
-            {/* 헤더: 정답/오답 + 계좌 변화 */}
+            {/* 헤더: 정답/오답 */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
               <div style={{ fontSize: 12, fontFamily: TITLE_FONT, letterSpacing: '0.15em', color: isCorrect ? COLORS.greenBright : COLORS.redBright, fontWeight: 700 }}>
                 {isCorrect ? '✓ 정답!' : '✗ 오답'} · 답: {['1', '2', '3', '4'][problem.answer]}
               </div>
-              {lastReturnPct !== 0 && (
-                <div style={{ fontSize: 11, fontFamily: TITLE_FONT, color: lastReturnPct > 0 ? COLORS.greenBright : COLORS.redBright, fontWeight: 700 }}>
-                  {lastReturnPct > 0 ? '+' : ''}{(lastReturnPct * 100).toFixed(1)}%
-                  <span style={{ marginLeft: 5 }}>
-                    {lastCapitalDelta > 0 ? '+' : ''}{Math.round(lastCapitalDelta).toLocaleString()}만
-                  </span>
-                  {combo >= 3 && lastReturnPct > 0 && <span style={{ color: COLORS.pink, marginLeft: 4 }}>🔥×{combo}</span>}
-                </div>
-              )}
+              <div style={{ fontSize: 10, fontFamily: TITLE_FONT, color: COLORS.textDim }}>
+                {stageIdx + 1} / {STAGE_PROBLEMS_PER_STAGE}
+              </div>
             </div>
 
             {/* 설명 */}
@@ -1030,8 +894,8 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
         )}
 
         {submitted ? (
-          <GlowBtn onClick={handleNext} color={pendingLevelUp ? COLORS.goldBright : COLORS.greenBright}>
-            {problem.isTutorial ? '학습 시작하기 ▶' : pendingLevelUp ? '★ 다음 (LEVEL UP!) ▶' : '다음 문제 ▶'}
+          <GlowBtn onClick={handleNext} color={stageIdx + 1 >= STAGE_PROBLEMS_PER_STAGE ? COLORS.goldBright : COLORS.greenBright}>
+            {problem.isTutorial ? '학습 시작하기 ▶' : stageIdx + 1 >= STAGE_PROBLEMS_PER_STAGE ? '★ 단계 완료 ▶' : '다음 문제 ▶'}
           </GlowBtn>
         ) : (
           <GlowBtn onClick={handleSubmit} disabled={selected === null} color={COLORS.goldBright}>

@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 
-const KEY = 'tuggi_v1';
+const KEY = 'tuggi_v2';
 
 export interface SolvedRecord {
   correct: boolean;   // 가장 최근 시도 결과
@@ -9,23 +9,15 @@ export interface SolvedRecord {
 }
 
 export interface SavedSession {
-  hp?: number;
-  points?: number;
-  capital?: number;
-  peakCapital?: number;
-  rank: number;
-  combo: number;
-  lossStreak?: number;
-  runCount: number;
-  problemQueueIds: number[];
-  problemIdx: number;
+  currentStage: number;       // 0–6
+  stageIdx: number;           // 현재 단계 내 문제 인덱스 (0–19)
+  stageCorrect: number;       // 현재 단계 정답 수
+  stageProblemsIds: number[]; // 현재 단계 문제 ID 배열 (순서 포함)
 }
 
 export interface GameStorageData {
-  bestRank: number;
-  bestPoints: number;
-  totalRuns: number;
-  clearCount: number;
+  bestStageCompleted: number; // 최고 완료 단계 (0 = 미완료)
+  clearCount: number;         // 7단계 전체 수료 횟수
   lastPlayed: string;
   solvedProblems: Record<number, SolvedRecord>;
   settings: { rsiDefault: boolean };
@@ -33,9 +25,7 @@ export interface GameStorageData {
 }
 
 const DEFAULT: GameStorageData = {
-  bestRank: 0,
-  bestPoints: 0,
-  totalRuns: 0,
+  bestStageCompleted: 0,
   clearCount: 0,
   lastPlayed: '',
   solvedProblems: {},
@@ -51,7 +41,6 @@ function load(): GameStorageData {
     return {
       ...DEFAULT,
       ...parsed,
-      // deep-merge settings so new fields get their defaults
       settings: { ...DEFAULT.settings, ...(parsed.settings ?? {}) },
     };
   } catch {
