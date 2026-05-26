@@ -949,6 +949,25 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
           );
         })()}
 
+        {/* 밸류에이션 */}
+        {problem.valuationHints && problem.valuationHints.length > 0 && (
+          <div style={{ marginBottom: 8, background: COLORS.bgPanel, border: `2px solid ${COLORS.border}`, boxShadow: `2px 2px 0 0 ${COLORS.borderDark}`, padding: 8 }}>
+            <div style={{ fontSize: 11, color: COLORS.textDim, letterSpacing: '0.15em', fontWeight: 700, fontFamily: TITLE_FONT, marginBottom: 7, paddingBottom: 7, borderBottom: `1px dashed ${COLORS.border}` }}>밸류에이션</div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: 6 }}>
+              {problem.valuationHints.map((v, i) => {
+                const c = v.tone === 'cheap' ? COLORS.blue : v.tone === 'expensive' ? COLORS.red : v.tone === 'fair' ? COLORS.green : COLORS.textDim;
+                return (
+                  <div key={i} style={{ background: COLORS.bgPanelLight, border: `1px solid ${c}`, borderLeft: `4px solid ${c}`, padding: '6px 9px' }}>
+                    <div style={{ fontSize: 10, color: COLORS.textDim, fontFamily: TITLE_FONT }}>{v.label}</div>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: c, fontFamily: KOREAN_FONT }}>{v.value}</div>
+                    <div style={{ fontSize: 11, color: COLORS.text, lineHeight: 1.35, fontFamily: KOREAN_FONT }}>{v.context}</div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
         {/* 질문 + 보기 */}
         <div id="tut-choices" style={{ marginBottom: 8, background: COLORS.bgPanel, border: `2px solid ${COLORS.border}`, boxShadow: `2px 2px 0 0 ${COLORS.borderDark}`, padding: 8 }}>
           <div style={{ padding: '2px 2px 8px', marginBottom: 8, borderBottom: `1px dashed ${COLORS.border}` }}>
@@ -1012,24 +1031,6 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
               </div>
             )}
 
-            {/* 밸류에이션 분석 */}
-            {problem.reveal?.valuationHints && problem.reveal.valuationHints.length > 0 && (
-              <div style={{ marginBottom: 10, background: COLORS.bgPanel, border: `2px solid ${COLORS.border}`, boxShadow: `2px 2px 0 0 ${COLORS.borderDark}`, padding: 8 }}>
-                <div style={{ fontSize: 11, color: COLORS.textDim, letterSpacing: '0.15em', fontWeight: 700, fontFamily: TITLE_FONT, marginBottom: 7, paddingBottom: 7, borderBottom: `1px dashed ${COLORS.border}` }}>밸류에이션 분석</div>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: 6 }}>
-                  {problem.reveal.valuationHints.map((v, i) => {
-                    const c = v.tone === 'cheap' ? COLORS.blue : v.tone === 'expensive' ? COLORS.red : v.tone === 'fair' ? COLORS.green : COLORS.textDim;
-                    return (
-                      <div key={i} style={{ background: COLORS.bgPanelLight, border: `1px solid ${c}`, borderLeft: `4px solid ${c}`, padding: '6px 9px' }}>
-                        <div style={{ fontSize: 10, color: COLORS.textDim, fontFamily: TITLE_FONT }}>{v.label}</div>
-                        <div style={{ fontSize: 13, fontWeight: 700, color: c, fontFamily: KOREAN_FONT }}>{v.value}</div>
-                        <div style={{ fontSize: 11, color: COLORS.text, lineHeight: 1.35, fontFamily: KOREAN_FONT }}>{v.context}</div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
           </GlowBox>
         )}
 

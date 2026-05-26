@@ -32,7 +32,6 @@ export interface RevealInfo {
   macro: string;
   counterCase?: string;
   lesson: string;
-  valuationHints?: ValuationHint[];
 }
 
 export interface Problem {
@@ -47,6 +46,7 @@ export interface Problem {
   startDate: string;
   question: string;
   macroHints: MacroHint[];
+  valuationHints?: ValuationHint[];
   choices: string[];
   answer: number;
   explanation: string;
