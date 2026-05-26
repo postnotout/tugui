@@ -5,7 +5,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
     id: 1, market: 'KOSPI', ticker: '005930.KS', pattern: 'breakout',
     revealDay: 126, chartDays: 147, difficulty: 'easy',
     startDate: '2020-04-28',
-    question: '박스권을 상향 돌파하였다. 1개월 후 주가의 변화로 가장 적절한 것은?',
+    question: '저점에서 빠르게 회복하며 박스권 상단에 근접하고 있다. 1개월 후 주가의 변화로 가장 적절한 것은?',
     macroHints: [
       { label: '기준금리', value: '0.50%', trend: '초저금리·QE 진행', tone: 'positive' },
       { label: '반도체', value: '수요 급증', trend: '비대면 사이클 상승', tone: 'positive' },
@@ -249,7 +249,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
     id: 11, market: 'CRYPTO', ticker: 'BTC-USD', pattern: 'breakout',
     revealDay: 126, chartDays: 147, difficulty: 'hard',
     startDate: '2023-08-11',
-    question: '장기 박스권을 강하게 돌파하였다. ETF 심사 중이며 반감기가 예정되어 있다. 1개월 후 결과로 옳은 것은?',
+    question: '장기 박스권 상단 부근에서 강한 모멘텀이 이어지고 있다. ETF 심사 중이며 반감기가 예정되어 있다. 1개월 후 결과로 옳은 것은?',
     macroHints: [
       { label: 'SEC ETF', value: '블랙록 등 신청', trend: '승인 여부 미확정', tone: 'neutral' },
       { label: '반감기', value: '2024년 4월 예정', trend: '공급 축소 이벤트', tone: 'positive' },
@@ -878,7 +878,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
     id: 36, market: 'NASDAQ', ticker: 'TSLA', pattern: 'breakout',
     revealDay: 126, chartDays: 147, difficulty: 'easy',
     startDate: '2020-01-09',
-    question: '장기 박스권을 강하게 상향 돌파하였다. EV 보조금 정책이 확정되고 S&P500 편입이 거론되고 있다. 1개월 후 결과로 옳은 것은?',
+    question: '장기 박스권 상단에 도달하며 강한 상승 모멘텀이 이어지고 있다. EV 보조금 정책이 확정되고 S&P500 편입이 거론되고 있다. 1개월 후 결과로 옳은 것은?',
     macroHints: [
       { label: 'S&P500 편입', value: '가능성 부각', trend: '지수 추종 펀드 강제 매수 기대', tone: 'positive' },
       { label: 'EV 보조금', value: '미국·유럽 확대', trend: '내연기관 퇴출 정책 가속', tone: 'positive' },
@@ -1053,7 +1053,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
     id: 45, market: 'KOSPI', ticker: '035420.KS', pattern: 'breakout',
     revealDay: 126, chartDays: 147, difficulty: 'easy',
     startDate: '2019-10-02',
-    question: '코로나 봉쇄로 인한 비대면 수요 폭발로 강하게 돌파하였다. 1개월 후 결과로 옳은 것은?',
+    question: '비대면 수요 급증 기대 속에서 고점 저항 구간에 재진입하고 있다. 1개월 후 결과로 옳은 것은?',
     macroHints: [
       { label: '비대면', value: '수요 폭발', trend: '쇼핑·광고·교육 모두 온라인 전환', tone: 'positive' },
       { label: '동학개미', value: '신규 계좌 폭증', trend: '국내 플랫폼 트래픽 급증', tone: 'positive' },
@@ -1103,7 +1103,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
     id: 47, market: 'NYSE', ticker: 'GLD', pattern: 'breakout',
     revealDay: 126, chartDays: 147, difficulty: 'easy',
     startDate: '2019-12-05',
-    question: '9년 만에 전 고점을 돌파하였다. 코로나 부양책으로 실질 금리가 마이너스로 전환되었다. 1개월 후 결과로 옳은 것은?',
+    question: '9년 만에 전 고점 수준까지 상승하며 중요 저항 구간을 테스트하고 있다. 코로나 부양책으로 실질 금리가 마이너스 수준이다. 1개월 후 결과로 옳은 것은?',
     macroHints: [
       { label: '실질 금리', value: '-1%대', trend: 'QE + 인플레이션 기대 = 마이너스 전환', tone: 'positive' },
       { label: '달러 약세', value: 'DXY 하락 중', trend: '무제한 QE로 달러 가치 훼손', tone: 'positive' },
@@ -1128,7 +1128,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
     id: 48, market: 'NASDAQ', ticker: 'NVDA', pattern: 'breakout',
     revealDay: 126, chartDays: 147, difficulty: 'easy',
     startDate: '2022-11-25',
-    question: '전 고점을 강하게 돌파하였다. AI 데이터센터 GPU 수요가 예상을 3배 상회하는 실적 가이던스가 발표되었다. 1개월 후 결과로 옳은 것은?',
+    question: '전 고점 부근에서 강한 상승 모멘텀이 이어지고 있다. AI 데이터센터 GPU 수요가 예상을 3배 상회하는 실적 가이던스가 발표되었다. 1개월 후 결과로 옳은 것은?',
     macroHints: [
       { label: 'ChatGPT 수요', value: 'GPU 주문 폭발', trend: '데이터센터 GPU 대기 6~9개월', tone: 'positive' },
       { label: '가이던스', value: '+53% 상향', trend: '역대 가장 강력한 실적 예고', tone: 'positive' },
@@ -1153,7 +1153,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
     id: 50, market: 'CRYPTO', ticker: 'BTC-USD', pattern: 'breakout',
     revealDay: 126, chartDays: 147, difficulty: 'medium',
     startDate: '2023-09-09',
-    question: '현물 ETF가 역대 최초로 승인된 직후이다. 장기 박스권을 강하게 돌파하였다. 1개월 후 결과로 옳은 것은?',
+    question: '현물 ETF 승인 기대 속에서 장기 박스권 상단 부근에서 강한 모멘텀이 유지되고 있다. 1개월 후 결과로 옳은 것은?',
     macroHints: [
       { label: '현물 ETF', value: '1월 10일 승인', trend: '블랙록·피델리티 등 11개 동시 상장', tone: 'positive' },
       { label: '반감기', value: '2024년 4월 예정', trend: '공급 절반 감소 이벤트', tone: 'positive' },
@@ -1178,7 +1178,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
     id: 51, market: 'KOSPI', ticker: '051910.KS', pattern: 'breakout',
     revealDay: 126, chartDays: 147, difficulty: 'medium',
     startDate: '2020-02-17',
-    question: '배터리 사업 분할 상장 기대감으로 박스권을 돌파하였다. EV 수요가 폭발적으로 증가하고 있다. 1개월 후 결과로 옳은 것은?',
+    question: '배터리 사업 분할 상장 기대감 속에서 박스권 상단에 근접한 상태이다. EV 수요가 폭발적으로 증가하고 있다. 1개월 후 결과로 옳은 것은?',
     macroHints: [
       { label: 'LG에너지솔루션', value: '상장 기대감', trend: '배터리 사업 분리 = 화학+배터리 재평가', tone: 'positive' },
       { label: 'EV 수요', value: 'GM·폭스바겐 수주', trend: '글로벌 배터리 공급 계약 폭증', tone: 'positive' },
@@ -1253,7 +1253,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
     id: 55, market: 'KOSPI', ticker: '000660.KS', pattern: 'breakout',
     revealDay: 126, chartDays: 147, difficulty: 'easy',
     startDate: '2022-11-10',
-    question: 'HBM(고대역폭 메모리) 공급 계약 소식으로 장기 저항선을 돌파하였다. AI 반도체 수요가 폭발적으로 증가하고 있다. 1개월 후 결과로 옳은 것은?',
+    question: 'HBM(고대역폭 메모리) 공급 계약 소식 속에서 장기 저항선 부근에서 강한 모멘텀이 이어지고 있다. AI 반도체 수요가 폭발적으로 증가하고 있다. 1개월 후 결과로 옳은 것은?',
     macroHints: [
       { label: 'HBM 수요', value: 'NVDA H100·H200', trend: 'AI GPU당 HBM 8개 이상 탑재', tone: 'positive' },
       { label: 'AI 인프라', value: '투자 폭증', trend: '빅테크 데이터센터 확장 경쟁', tone: 'positive' },
