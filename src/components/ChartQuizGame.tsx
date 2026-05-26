@@ -55,41 +55,57 @@ function anonymizeQ(question: string, revealTitle: string): string {
  *   2 (횡보)     → 진동: 방향성 없이 오르내림
  *   3 (하락)     → 폭포형: 초반에 빠르게 떨어지고 후반 완만
  */
-function generatePreviewPath(startPrice: number, choiceIdx: number, numPoints: number, numChoices = 4): number[] {
-  // 충분한 변별력을 위해 큰 비율 간격 사용
+function generatePreviewPath(
+  startPrice: number,
+  choiceIdx: number,
+  numPoints: number,
+  numChoices = 4,
+  yAxisRange = 0, // y축 전체 범위 — 스파이크 차트에서 진폭 보정에 사용
+): number[] {
   const targets4 = [0.68,  0.28,  0.00, -0.45];
   const targets5 = [0.75,  0.35,  0.00, -0.30, -0.58];
   const tgts = numChoices >= 5 ? targets5 : targets4;
   const targetPct = tgts[choiceIdx] ?? 0;
 
+  // ── 횡보: 사인 진동 (방향성 없음) ─────────────────────────────────────
+  if (Math.abs(targetPct) < 0.02) {
+    const waveAmp = yAxisRange > 0
+      ? Math.max(startPrice * 0.055, yAxisRange * 0.025)
+      : startPrice * 0.055;
+    return Array.from({ length: numPoints }, (_, i) => {
+      const t = i / Math.max(numPoints - 1, 1);
+      return startPrice
+        + waveAmp * Math.sin(t * Math.PI * 4.5)
+        + waveAmp * 0.36 * Math.sin(t * Math.PI * 10.3);
+    });
+  }
+
+  // 진폭: price-based vs range-based 중 절댓값이 더 큰 쪽 사용
+  // → y축 범위가 넓은 스파이크 차트에서 미리보기가 시각적으로 의미 있게 보이도록 보정
+  const priceBasedDelta = targetPct * startPrice;
+  const rangeBasedDelta = yAxisRange > 0 ? targetPct * yAxisRange * 0.45 : 0;
+  let targetDelta = Math.abs(rangeBasedDelta) > Math.abs(priceBasedDelta)
+    ? rangeBasedDelta
+    : priceBasedDelta;
+  // 하락 시 가격이 0 이하로 내려가지 않도록 제한
+  if (startPrice + targetDelta < startPrice * 0.05) targetDelta = -(startPrice * 0.90);
+
   return Array.from({ length: numPoints }, (_, i) => {
     const t = i / Math.max(numPoints - 1, 1);
 
-    // ── 횡보: 사인 진동 (방향성 없음) ─────────────────────────────────────
-    if (Math.abs(targetPct) < 0.02) {
-      const wave = 0.055 * Math.sin(t * Math.PI * 4.5)
-                 + 0.020 * Math.sin(t * Math.PI * 10.3);
-      return startPrice * (1 + wave);
-    }
-
     let progress: number;
     if (targetPct >= 0.5) {
-      // 가속형: 처음엔 완만하다가 후반에 급등 (t^1.5 = 느리게→빠르게)
-      progress = Math.pow(t, 1.5);
+      progress = Math.pow(t, 1.5);           // 가속형 (급등)
     } else if (targetPct > 0) {
-      // S자: 부드러운 우상향
-      progress = t * t * (3 - 2 * t);
+      progress = t * t * (3 - 2 * t);        // S자 (완만 상승)
     } else if (targetPct > -0.25) {
-      // 완만 하락: 초반 빠르게, 후반 안정
-      progress = 1 - Math.pow(1 - t, 1.8);
+      progress = 1 - Math.pow(1 - t, 1.8);   // 완만 하락
     } else {
-      // 폭포형: 초반 급락 후 완만 (t^(1/3.5) = 빠르게→느리게)
-      progress = 1 - Math.pow(1 - t, 3.5);
+      progress = 1 - Math.pow(1 - t, 3.5);   // 폭포형 (급락)
     }
 
-    // 사실감을 위한 미세 노이즈 (초반에만, 후반에는 감쇠)
     const noise = 0.014 * Math.sin(t * Math.PI * 6.3) * Math.exp(-t * 2);
-    return startPrice * (1 + targetPct * progress + noise);
+    return startPrice + targetDelta * progress + noise * startPrice;
   });
 }
 
@@ -173,10 +189,16 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
   const showFutureZone  = showPreview || showActualFuture;
   const visibleData = showFutureZone ? fullData : fullData.slice(0, problem.revealDay);
 
-  // 미리보기 궤적 (선택지 인덱스 기반 합성 곡선)
+  // Y축 base 도메인 (과거 구간만) — previewPath 진폭 계산에 먼저 사용
   const revealPrice = fullData[problem.revealDay - 1]?.종가 ?? 0;
+  const pastZoneData = fullData.slice(0, problem.revealDay);
+  const baseMin = pastZoneData.length ? Math.min(...pastZoneData.map(d => d.종가)) * 0.96 : 0;
+  const baseMax = pastZoneData.length ? Math.max(...pastZoneData.map(d => d.종가)) * 1.04 : 100;
+  const yAxisRange = baseMax - baseMin; // 스파이크 차트 보정용
+
+  // 미리보기 궤적 (선택지 인덱스 기반 합성 곡선)
   const previewPath: number[] | null = (showPreview && selected !== null && revealPrice > 0)
-    ? generatePreviewPath(revealPrice, selected, fullData.length - problem.revealDay + 1, problem.choices.length)
+    ? generatePreviewPath(revealPrice, selected, fullData.length - problem.revealDay + 1, problem.choices.length, yAxisRange)
     : null;
 
   const visibleDataWithReveal = visibleData.map(d => {
@@ -198,12 +220,6 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
     };
   });
 
-  // Y축 도메인: 과거 구간(revealDay 이전)만 기준으로 계산
-  // → 실제 미래 가격(정답)이 Y축을 확장해 preview 궤적이 압축되는 문제 방지
-  const pastZoneData = fullData.slice(0, problem.revealDay);
-
-const baseMin = pastZoneData.length ? Math.min(...pastZoneData.map(d => d.종가)) * 0.96 : 0;
-  const baseMax = pastZoneData.length ? Math.max(...pastZoneData.map(d => d.종가)) * 1.04 : 100;
   // 제출 후: 실제 미래 가격도 포함하여 Y축 확장
   const fullMin = fullData.length ? Math.min(...fullData.map(d => d.종가)) * 0.96 : baseMin;
   const fullMax = fullData.length ? Math.max(...fullData.map(d => d.종가)) * 1.04 : baseMax;
@@ -996,7 +1012,24 @@ const baseMin = pastZoneData.length ? Math.min(...pastZoneData.map(d => d.종가
               </div>
             )}
 
-            {/* ★ 레슨 */}
+            {/* 밸류에이션 분석 */}
+            {problem.reveal?.valuationHints && problem.reveal.valuationHints.length > 0 && (
+              <div style={{ marginBottom: 10, background: COLORS.bgPanel, border: `2px solid ${COLORS.border}`, boxShadow: `2px 2px 0 0 ${COLORS.borderDark}`, padding: 8 }}>
+                <div style={{ fontSize: 11, color: COLORS.textDim, letterSpacing: '0.15em', fontWeight: 700, fontFamily: TITLE_FONT, marginBottom: 7, paddingBottom: 7, borderBottom: `1px dashed ${COLORS.border}` }}>밸류에이션 분석</div>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: 6 }}>
+                  {problem.reveal.valuationHints.map((v, i) => {
+                    const c = v.tone === 'cheap' ? COLORS.blue : v.tone === 'expensive' ? COLORS.red : v.tone === 'fair' ? COLORS.green : COLORS.textDim;
+                    return (
+                      <div key={i} style={{ background: COLORS.bgPanelLight, border: `1px solid ${c}`, borderLeft: `4px solid ${c}`, padding: '6px 9px' }}>
+                        <div style={{ fontSize: 10, color: COLORS.textDim, fontFamily: TITLE_FONT }}>{v.label}</div>
+                        <div style={{ fontSize: 13, fontWeight: 700, color: c, fontFamily: KOREAN_FONT }}>{v.value}</div>
+                        <div style={{ fontSize: 11, color: COLORS.text, lineHeight: 1.35, fontFamily: KOREAN_FONT }}>{v.context}</div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
           </GlowBox>
         )}
 

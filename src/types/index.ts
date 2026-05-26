@@ -17,6 +17,13 @@ export interface MacroHint {
   tone: 'positive' | 'negative' | 'neutral' | 'mixed';
 }
 
+export interface ValuationHint {
+  label: string;
+  value: string;
+  context: string;
+  tone: 'cheap' | 'fair' | 'expensive' | 'neutral';
+}
+
 export interface RevealInfo {
   title: string;
   market: string;
@@ -25,6 +32,7 @@ export interface RevealInfo {
   macro: string;
   counterCase?: string;
   lesson: string;
+  valuationHints?: ValuationHint[];
 }
 
 export interface Problem {

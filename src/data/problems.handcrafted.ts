@@ -215,6 +215,10 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
       result: '1개월 후 상승 (+10%).',
       macro: '연준 제로금리+무제한 QE, 정부 5조달러 부양, 백신 개발 가속.',
       lesson: '주가는 실물이 아닌 유동성·기대를 반영한다.',
+      valuationHints: [
+        { label: 'Shiller CAPE', value: '~24배', context: 'COVID 저점, 장기 평균 수준', tone: 'fair' },
+        { label: '선행 PER', value: '~17배', context: '폭락 후 평균 이하 진입', tone: 'cheap' },
+      ],
     },
   },
 
@@ -317,6 +321,10 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
       result: '1개월 후 하락 (-20%).',
       macro: '리만 파산·AIG 구제금융, 연준 제로금리+QE, TARP 7,000억달러.',
       lesson: '시스템 위기 깊이는 항상 과소평가된다.',
+      valuationHints: [
+        { label: 'Shiller CAPE', value: '~20배', context: '고점 대비 저평가처럼 보이나 이익 붕괴 미반영', tone: 'neutral' },
+        { label: '금융주 PBR', value: '~0.5배', context: '파산 리스크 반영, 지속 하락 중', tone: 'neutral' },
+      ],
     },
   },
 
@@ -342,6 +350,10 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
       result: '1개월 후 하락 (-19%).',
       macro: 'IMF 구제금융 570억달러, 기준금리 25%로 초긴축, 금융기관 강제 정리.',
       lesson: '"This time is different" = 가장 비싼 문장.',
+      valuationHints: [
+        { label: '기업 부채비율', value: '400%+', context: '대기업 평균, 이자 감당 불가 임박', tone: 'expensive' },
+        { label: '외환보유고', value: '39억달러', context: '단기외채 대비 5% 수준, 사실상 고갈', tone: 'expensive' },
+      ],
     },
   },
 
@@ -349,7 +361,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
     id: 15, market: 'SSE', ticker: 'SSE', pattern: 'doubletop',
     revealDay: 126, chartDays: 147, difficulty: 'medium',
     startDate: '2014-12-11',
-    question: '상하이지수가 1년 만에 두 배 상승하였다. 레버리지 잔고가 사상 최대이다. 1개월 후 결과로 옳은 것은?',
+    question: '상하이지수가 1년 만에 두 배 가까이 상승해 있다. 레버리지 잔고가 사상 최대이다. 1개월 후 결과로 옳은 것은?',
     macroHints: [
       { label: '마진 잔액', value: '2조 위안', trend: '사상 최대 레버리지', tone: 'negative' },
       { label: 'PER', value: '80~100배', trend: '역사적 고점 밸류', tone: 'negative' },
@@ -367,6 +379,10 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
       result: '1개월 후 하락 (-17%).',
       macro: '정부 28조원 주식 매입·공매도 금지 등 총력 방어에도 붕괴.',
       lesson: '레버리지로 오른 버블은 가장 빠르게 터진다.',
+      valuationHints: [
+        { label: 'SSE PER', value: '80~100배', context: '선진국 대비 3~4배 할증', tone: 'expensive' },
+        { label: '융자 잔고', value: '2조 위안', context: '시총 대비 레버리지 사상 최대', tone: 'expensive' },
+      ],
     },
   },
 
@@ -392,6 +408,10 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
       result: '1개월 후 급등 (+16%).',
       macro: '닷컴 IPO 러시, Y2K IT 인프라 투자 붐, 2000년 3월 금리 인상+현금 소진.',
       lesson: '버블은 "너무 올랐다"를 훨씬 더 올라간 후 끝난다.',
+      valuationHints: [
+        { label: '나스닥 PER', value: '~200배', context: '적자 기업도 수백억 시가총액', tone: 'expensive' },
+        { label: 'P/S', value: '측정 불가', context: '매출 없이 기업가치 책정', tone: 'expensive' },
+      ],
     },
   },
 
@@ -417,6 +437,11 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
       result: '1개월 후 횡보 (-4%).',
       macro: '일본은행 금리 인상 사이클(2.5%→6%), 토지 담보 대출 규제.',
       lesson: '버블 붕괴 후 회복에는 수십 년이 걸릴 수 있다.',
+      valuationHints: [
+        { label: '닛케이 PER', value: '~60배', context: '국제 시장 평균의 4배', tone: 'expensive' },
+        { label: '닛케이 PBR', value: '5배+', context: '역대 최고, 이미 macroHints에 언급', tone: 'expensive' },
+        { label: '부동산 시총', value: 'GDP의 4배', context: '도쿄 23구로 미국 전체 매입 가능', tone: 'expensive' },
+      ],
     },
   },
 
@@ -519,6 +544,10 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
       result: '1개월 후 하락 (-7%).',
       macro: 'CPI 9.1%(6월 피크), 러시아-우크라이나 전쟁, 에너지주만 역발상 수익.',
       lesson: '금리 인상 사이클에서 고PER 성장주 = 취약.',
+      valuationHints: [
+        { label: 'S&P500 PER', value: '~22배', context: '역대 평균(~16배) 대비 할증', tone: 'expensive' },
+        { label: 'Shiller CAPE', value: '~38배', context: '닷컴 버블 이후 최고 수준', tone: 'expensive' },
+      ],
     },
   },
 
@@ -601,7 +630,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
     id: 25, market: 'CRYPTO', ticker: 'BTC-USD', pattern: 'vshape',
     revealDay: 126, chartDays: 147, difficulty: 'hard',
     startDate: '2019-12-11',
-    question: '이틀 만에 -58% 폭락하였다. 연준이 무제한 QE를 발표하였다. 1개월 후 결과로 옳은 것은?',
+    question: '이틀 만에 -58% 폭락한 직후 극단적 공포가 지배하고 있다. 연준이 무제한 QE를 발표하였다. 1개월 후 결과로 옳은 것은?',
     macroHints: [
       { label: '코로나 목요일', value: 'BTC 단일 최대 하락', trend: '공황 매도', tone: 'negative' },
       { label: '연준', value: '제로금리+무제한 QE', trend: '3월 15일 발표', tone: 'positive' },
@@ -694,6 +723,11 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
       result: '1개월 후 급등 (+19%).',
       macro: '대규모 감원으로 이익률 회복, AI 광고 시스템 성공.',
       lesson: '경영진의 자기 인식 + 실행 변화 = 반등의 핵심.',
+      valuationHints: [
+        { label: 'PER', value: '12배', context: '빅테크 역대 최저, -74% 폭락 반영', tone: 'cheap' },
+        { label: 'PBR', value: '~1.5배', context: '자본 대비 시총 역사적 저점', tone: 'cheap' },
+        { label: 'EV/매출', value: '~3배', context: '피크(~9배) 대비 3분의 1 수준', tone: 'cheap' },
+      ],
     },
   },
 
@@ -719,6 +753,10 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
       result: '1개월 후 하락 (-28%).',
       macro: '기준금리 인상 사이클, 오너 직접 사과, 고금리에서 적자 계열사 구조 취약.',
       lesson: '국내 독점 플랫폼 = 정치 리스크 할증 필수.',
+      valuationHints: [
+        { label: 'PER', value: '~60배', context: '국내 플랫폼 최고치, 금리 인상에 취약', tone: 'expensive' },
+        { label: 'P/S', value: '~10배', context: '매출 대비 고평가, 규제 리스크 미반영', tone: 'expensive' },
+      ],
     },
   },
 
@@ -744,6 +782,10 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
       result: '1개월 후 상승 (+14%).',
       macro: '금리 동결 전환, 자체 LLM 발표, AI 검색 베타 출시.',
       lesson: 'AI 변곡점 = 기존 강자가 1차 수혜.',
+      valuationHints: [
+        { label: 'PBR', value: '~2배', context: '2021년 고점(~6배) 대비 역사적 저점', tone: 'cheap' },
+        { label: 'PER', value: '~15배', context: '성장 둔화 반영, 국내 빅테크 최저', tone: 'cheap' },
+      ],
     },
   },
 
@@ -851,7 +893,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
     id: 35, market: 'KOSDAQ', ticker: '086520.KQ', pattern: 'parabolic',
     revealDay: 126, chartDays: 147, difficulty: 'hard',
     startDate: '2023-01-06',
-    question: '6개월 만에 수배 상승하였다. PER이 수백 배 수준이다. 1개월 후 결과로 옳은 것은?',
+    question: '6개월 만에 수배 올라 파라볼릭 상승세가 진행 중이다. PER이 수백 배 수준이다. 1개월 후 결과로 옳은 것은?',
     macroHints: [
       { label: '개인 비중', value: '90%+', trend: '코스닥 시총 1위·열풍', tone: 'negative' },
       { label: 'PER', value: '수백 배', trend: '이익 대비 주가 극단적 괴리', tone: 'negative' },
@@ -869,6 +911,11 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
       result: '1개월 후 급등 (+15%).',
       macro: '2023년 7월 금융당국 과열 경고, 공매도 재개 압박.',
       lesson: '+1,000% 오른 주식이 "더 간다"는 기대 자체가 버블의 속성.',
+      valuationHints: [
+        { label: 'PER', value: '300배+', context: '이익 대비 주가 극단적 괴리', tone: 'expensive' },
+        { label: 'PBR', value: '50배+', context: '자산 가치 대비 투기 프리미엄', tone: 'expensive' },
+        { label: '개인 비중', value: '90%+', context: '코스닥 시총 1위, 유동성 버블 신호', tone: 'expensive' },
+      ],
     },
   },
 
@@ -903,7 +950,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
     id: 37, market: 'NYSE', ticker: '^GSPC', pattern: 'vshape',
     revealDay: 126, chartDays: 147, difficulty: 'easy',
     startDate: '2019-09-23',
-    question: '33일 만에 -34% 폭락하였다. 역사상 가장 빠른 하락이다. 연준이 무제한 QE를 선언하고 정부가 5조 달러 부양책을 예고하였다. 1개월 후 결과로 옳은 것은?',
+    question: '33일 만에 -34% 폭락하며 역사상 가장 빠른 낙폭을 보이고 있다. 연준이 무제한 QE를 선언하고 정부가 5조 달러 부양책을 예고하였다. 1개월 후 결과로 옳은 것은?',
     macroHints: [
       { label: '연준', value: '무제한 QE 선언', trend: '역대 최대 속도 유동성 공급', tone: 'positive' },
       { label: '정부 부양', value: '5조 달러', trend: '직접 현금 지급 포함', tone: 'positive' },
@@ -921,6 +968,10 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
       result: '1개월 후 급등 (+25%).',
       macro: '연준 제로금리+무제한 QE, 정부 CARES Act 2.2조달러, 백신 개발 경쟁 시작.',
       lesson: '주가는 실물 경기가 아닌 유동성과 기대를 6개월 앞서 반영한다. 공포 극대화 시점이 역발상 매수 기회다.',
+      valuationHints: [
+        { label: 'Shiller CAPE', value: '~24배', context: 'COVID 저점, 위기 직전 38배에서 급락', tone: 'fair' },
+        { label: '선행 PER', value: '~16배', context: '역대 평균 수준, 폭락 후 저평가 진입', tone: 'cheap' },
+      ],
     },
   },
 
@@ -946,6 +997,10 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
       result: '1개월 후 급등 (+26%).',
       macro: '대규모 감원으로 영업이익률 29%→40% 회복, AI 광고 추천 시스템 성공, Fed 금리 인상 속도 둔화.',
       lesson: '경영진이 스스로 실패를 인정하고 구체적으로 실행하면 주가는 빠르게 반응한다. "효율의 해"는 투자자 신뢰를 되찾는 신호였다.',
+      valuationHints: [
+        { label: 'PER', value: '12배', context: '빅테크 역대 최저, -74% 폭락 반영', tone: 'cheap' },
+        { label: 'EV/매출', value: '~3배', context: '피크(~9배) 대비 3분의 1 수준', tone: 'cheap' },
+      ],
     },
   },
 
@@ -971,6 +1026,10 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
       result: '1개월 후 상승 (+14%).',
       macro: '2019년 서비스 스트래티지 발표, Fed 금리 인상 중단, 중국 무역협상 1단계 기대.',
       lesson: '사업 구조 전환을 시장이 믿기 시작하면 밸류에이션이 한 단계 뛰어오른다. 전환 초기가 가장 강한 진입 시점이다.',
+      valuationHints: [
+        { label: 'PER', value: '~12배', context: '-35% 폭락 후 10년 내 최저치', tone: 'cheap' },
+        { label: '영업이익률', value: '27%+', context: '하드웨어 마진 하락에도 서비스로 방어', tone: 'fair' },
+      ],
     },
   },
 
