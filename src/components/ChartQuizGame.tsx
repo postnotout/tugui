@@ -351,7 +351,7 @@ export default function ChartQuizGame({ onOpenWrongNote }: Props) {
           <div style={{ position: 'absolute', top: 20, right: 10, fontSize: 9, color: COLORS.textMute, fontFamily: TITLE_FONT, letterSpacing: '0.1em' }}>#4</div>
 
           <div style={{ textAlign: 'center', marginBottom: 7, marginTop: 24, fontSize: 9, color: COLORS.textDim, letterSpacing: '0.28em' }}>
-            STUDY · ANALYZE · MASTER
+            ANALYZING · BUYING · PRAYING
           </div>
           <div style={{ textAlign: 'center', marginBottom: 7, fontSize: 12, color: COLORS.red, fontWeight: 600, letterSpacing: '0.17em' }}>
             ～ 7 단 계 학 습 편 ～
