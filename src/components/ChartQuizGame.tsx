@@ -22,7 +22,7 @@ import {
 } from './GameUI';
 
 // 선택지 미리보기 색상 (0=상승 녹색, 1=횡보 노랑, 2=하락 주황, 3=급락 빨강)
-const CHOICE_PREVIEW_COLORS = ['#4caf50', '#ffc107', '#ff7043', '#ef5350'];
+const CHOICE_PREVIEW_COLORS = ['#4caf50', '#ffc107', '#ff7043', '#9c27b0'];
 
 // 이동평균선 색상 — 각 기간이 명확히 구분되도록
 const MA_COLORS = {
