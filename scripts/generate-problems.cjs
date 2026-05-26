@@ -17,6 +17,16 @@ const REVEAL_DAY = 126;     // 과거 6개월 (≈ 21 거래일 × 6)
 const AFTER_DAYS = 21;      // 예측 1개월 (≈ 21 거래일)
 const CHART_DAYS = REVEAL_DAY + AFTER_DAYS; // = 147
 
+// 배열에서 n개 무작위 선택
+function pickN(arr, n) {
+  const copy = [...arr];
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy.slice(0, Math.min(n, copy.length));
+}
+
 // ---------- 티커 메타 ----------
 const TICKER_META = {
   '005930.KS': { name: '삼성전자',   market: 'KOSPI',  sector: '반도체',        file: '005930.KS' },
@@ -45,6 +55,401 @@ const TICKER_META = {
   '086520.KQ': { name: '에코프로',   market: 'KOSDAQ', sector: '배터리소재',    file: '086520.KQ' },
   '068270.KS': { name: '셀트리온',   market: 'KOSPI',  sector: '바이오·CMO',    file: '068270.KS' },
 };
+
+// ── 티커별 역사적 밸류에이션 룩업 (시기별 PER/PBR + 시장 시각) ──────────────
+// 각 항목: from/to = 'YYYY-MM', hints = ValuationHint[]
+const TICKER_VALUATION = {
+  'NVDA': [
+    { from:'2017-01', to:'2018-08', hints:[
+      { label:'PER', value:'~30배', context:'데이터센터·게이밍 확장, AI 이전 프리미엄', tone:'expensive' },
+      { label:'시장 시각', value:'성장주 기대', context:'CUDA 생태계 독점 지위에 강한 기대감', tone:'fair' },
+    ]},
+    { from:'2018-09', to:'2019-12', hints:[
+      { label:'PER', value:'~20~25배', context:'암호화폐 수요 소멸 후 조정, 고점 대비 저평가', tone:'fair' },
+      { label:'시장 시각', value:'중립', context:'데이터센터 둔화 우려, 재고 조정 시작', tone:'neutral' },
+    ]},
+    { from:'2020-01', to:'2022-09', hints:[
+      { label:'PER', value:'~50~80배', context:'팬데믹 데이터센터 폭발, 높은 성장 프리미엄', tone:'expensive' },
+      { label:'시장 시각', value:'강세 우위', context:'GPU 공급 부족·클라우드 수요 지속 상승', tone:'fair' },
+    ]},
+    { from:'2022-10', to:'2023-04', hints:[
+      { label:'PER', value:'~35배', context:'금리 인상 밸류에이션 조정, AI 이전 저점 진입', tone:'fair' },
+      { label:'시장 시각', value:'중립', context:'반도체 다운사이클 우려 vs AI 수요 기대 혼재', tone:'neutral' },
+    ]},
+    { from:'2023-05', to:'2025-12', hints:[
+      { label:'PER', value:'~40~60배', context:'ChatGPT 이후 AI 칩 독점 프리미엄, 실적 서프라이즈 반복', tone:'expensive' },
+      { label:'시장 시각', value:'강세 우위', context:'데이터센터 GPU 수요 사상 최대, 공급 독점 지속', tone:'fair' },
+    ]},
+  ],
+  'TSLA': [
+    { from:'2019-01', to:'2020-06', hints:[
+      { label:'PER', value:'적자 구간', context:'모델3 생산 위기·적자 지속, P/E 산출 불가', tone:'expensive' },
+      { label:'시장 시각', value:'반반', context:'머스크 리스크 vs 전기차 선구자 기대 혼재', tone:'neutral' },
+    ]},
+    { from:'2020-07', to:'2021-12', hints:[
+      { label:'PER', value:'~300~800배', context:'흑자 전환 + 전기차 붐, 역사적 고평가 논란', tone:'expensive' },
+      { label:'시장 시각', value:'강세 우위', context:'S&P 500 편입, 기관 매수 본격화', tone:'fair' },
+    ]},
+    { from:'2022-01', to:'2022-12', hints:[
+      { label:'PER', value:'~40~60배', context:'금리 인상·머스크 트위터 인수, 멀티플 급조정', tone:'fair' },
+      { label:'시장 시각', value:'약세 우위', context:'머스크 집중도 분산 우려, 중국 경쟁 심화', tone:'neutral' },
+    ]},
+    { from:'2023-01', to:'2025-12', hints:[
+      { label:'PER', value:'~60~80배', context:'자율주행·AI 기대감 포함된 성장 프리미엄', tone:'expensive' },
+      { label:'시장 시각', value:'중립~강세', context:'FSD 기술 기대 vs 마진 압박 논쟁 지속', tone:'neutral' },
+    ]},
+  ],
+  'AAPL': [
+    { from:'2018-01', to:'2019-06', hints:[
+      { label:'PER', value:'~15~18배', context:'아이폰 성장 둔화 우려, 서비스 전환 과도기', tone:'fair' },
+      { label:'시장 시각', value:'중립', context:'하드웨어 의존에서 서비스 중심 전환 초입', tone:'neutral' },
+    ]},
+    { from:'2019-07', to:'2021-12', hints:[
+      { label:'PER', value:'~25~35배', context:'서비스 매출 급증, 팬데믹 비대면 수혜 고평가', tone:'expensive' },
+      { label:'시장 시각', value:'강세 우위', context:'버핏 포지션 유지, 시총 3조달러 가시권', tone:'fair' },
+    ]},
+    { from:'2022-01', to:'2023-06', hints:[
+      { label:'PER', value:'~22~27배', context:'금리 인상 압박, 고점 대비 조정 후 재평가', tone:'fair' },
+      { label:'시장 시각', value:'중립~강세', context:'서비스 고성장 지속, 빅테크 대비 방어적 평가', tone:'neutral' },
+    ]},
+    { from:'2023-07', to:'2025-12', hints:[
+      { label:'PER', value:'~28~32배', context:'AI 기기 전환 기대 반영, 프리미엄 구간 진입', tone:'expensive' },
+      { label:'시장 시각', value:'강세 우위', context:'애플 인텔리전스 기대, 생태계 잠금효과 강화', tone:'fair' },
+    ]},
+  ],
+  'META': [
+    { from:'2020-01', to:'2021-12', hints:[
+      { label:'PER', value:'~20~25배', context:'광고 매출 급증, 팬데믹 비대면 수혜', tone:'fair' },
+      { label:'시장 시각', value:'강세 우위', context:'디지털 광고 독점, 월간 활성 사용자 30억 돌파', tone:'fair' },
+    ]},
+    { from:'2022-01', to:'2022-12', hints:[
+      { label:'PER', value:'~10~15배', context:'-74% 폭락 후 빅테크 역대 최저 멀티플 진입', tone:'cheap' },
+      { label:'시장 시각', value:'약세 우위', context:'메타버스 투자 의구심, ATT 광고 타격 심각', tone:'neutral' },
+    ]},
+    { from:'2023-01', to:'2025-12', hints:[
+      { label:'PER', value:'~20~25배', context:'효율의 해 수익성 급개선, 정상화 구간 재진입', tone:'fair' },
+      { label:'시장 시각', value:'강세 우위', context:'AI 광고 타겟팅 고도화, Reels 수익화 성공', tone:'fair' },
+    ]},
+  ],
+  'AMD': [
+    { from:'2019-01', to:'2020-12', hints:[
+      { label:'PER', value:'~80~150배', context:'젠 아키텍처 턴어라운드 초입, 높은 성장 프리미엄', tone:'expensive' },
+      { label:'시장 시각', value:'강세 우위', context:'인텔 점유율 잠식 시작, 데이터센터 진입 성공', tone:'fair' },
+    ]},
+    { from:'2021-01', to:'2022-09', hints:[
+      { label:'PER', value:'~40~60배', context:'자일링스 인수 완료, AI·HPC 수요 급증', tone:'expensive' },
+      { label:'시장 시각', value:'강세 우위', context:'NVDA와 함께 AI 반도체 투톱 구도 형성', tone:'fair' },
+    ]},
+    { from:'2022-10', to:'2023-06', hints:[
+      { label:'PER', value:'~20~35배', context:'금리 인상·PC 수요 급락, 적정가치 재탐색', tone:'fair' },
+      { label:'시장 시각', value:'중립', context:'AI GPU 시장 NVDA 독주, AMD 추격 가능성 의문', tone:'neutral' },
+    ]},
+    { from:'2023-07', to:'2025-12', hints:[
+      { label:'PER', value:'~30~50배', context:'MI300 AI 칩 출시, NVDA 대안으로 기대감 재부각', tone:'expensive' },
+      { label:'시장 시각', value:'강세 우위', context:'AI 인프라 투자 급증, GPU 대안 수요 확대', tone:'fair' },
+    ]},
+  ],
+  'GME': [
+    { from:'2017-01', to:'2020-06', hints:[
+      { label:'PER', value:'~5~10배', context:'콘솔 게임 유통 사양 산업, 낮은 멀티플 적용', tone:'cheap' },
+      { label:'시장 시각', value:'약세 우위', context:'디지털 다운로드 전환, 오프라인 매장 위기', tone:'neutral' },
+    ]},
+    { from:'2020-07', to:'2021-02', hints:[
+      { label:'공매도 잔고', value:'~140%', context:'유동주식 대비 공매도 비율 역대 최고, 숏스퀴즈 조건', tone:'neutral' },
+      { label:'시장 시각', value:'극단적 혼재', context:'레딧 WSB 주도 개인 vs 헤지펀드 전쟁 국면', tone:'neutral' },
+    ]},
+    { from:'2021-03', to:'2025-12', hints:[
+      { label:'PER', value:'적자~적정', context:'밈주 이후 정상화 시도, 비즈니스 모델 전환 중', tone:'neutral' },
+      { label:'시장 시각', value:'투기적', context:'로어링 키티 복귀 등 이슈마다 급변동', tone:'neutral' },
+    ]},
+  ],
+  '005930.KS': [
+    { from:'2017-01', to:'2018-06', hints:[
+      { label:'PER', value:'~8~12배', context:'메모리 슈퍼사이클 이익 급증, 저평가 구간', tone:'cheap' },
+      { label:'시장 시각', value:'강세 우위', context:'DRAM 가격 급등, 반도체 글로벌 시총 1위 진입', tone:'fair' },
+    ]},
+    { from:'2018-07', to:'2019-06', hints:[
+      { label:'PER', value:'~10~15배', context:'메모리 가격 하락 사이클 진입, 이익 감소 예상', tone:'fair' },
+      { label:'시장 시각', value:'약세 우위', context:'중국 반도체 굴기 우려, 수요 둔화 시작', tone:'neutral' },
+    ]},
+    { from:'2019-07', to:'2021-12', hints:[
+      { label:'PER', value:'~15~20배', context:'이익 회복 사이클, 5G·비대면 수요 구조적 증가', tone:'fair' },
+      { label:'시장 시각', value:'중립~강세', context:'동학개미 매수 집중, 외국인 복귀 흐름', tone:'neutral' },
+    ]},
+    { from:'2022-01', to:'2025-12', hints:[
+      { label:'PER', value:'~10~15배', context:'반도체 다운사이클·AI 업사이클 교차 구간', tone:'fair' },
+      { label:'시장 시각', value:'중립', context:'HBM 수혜 기대 vs 레거시 재고 부담', tone:'neutral' },
+    ]},
+  ],
+  '000660.KS': [
+    { from:'2017-01', to:'2018-06', hints:[
+      { label:'PER', value:'~6~8배', context:'DRAM 슈퍼사이클, 사상 최대 이익에도 저평가', tone:'cheap' },
+      { label:'시장 시각', value:'강세 우위', context:'메모리 수급 초과 수요, 이익 성장 가속', tone:'fair' },
+    ]},
+    { from:'2018-07', to:'2020-06', hints:[
+      { label:'PER', value:'~15~30배', context:'이익 급감으로 PER 급등, 사이클 저점 탐색 중', tone:'expensive' },
+      { label:'시장 시각', value:'약세 우위', context:'DRAM 가격 40%+ 하락, 적자 가시성 증대', tone:'neutral' },
+    ]},
+    { from:'2020-07', to:'2025-12', hints:[
+      { label:'PER', value:'~10~20배', context:'HBM 수혜 핵심 플레이어, AI 메모리 성장 기대', tone:'fair' },
+      { label:'시장 시각', value:'중립~강세', context:'HBM 독점 공급, NVDA 핵심 파트너 지위 확보', tone:'fair' },
+    ]},
+  ],
+  '247540.KQ': [
+    { from:'2021-01', to:'2022-06', hints:[
+      { label:'PER', value:'~100배+', context:'전기차 배터리 소재 성장 프리미엄, 고평가 논란', tone:'expensive' },
+      { label:'시장 시각', value:'강세 우위', context:'테슬라·GM 공급 계약, 배터리 소재 필수 기업화', tone:'fair' },
+    ]},
+    { from:'2022-07', to:'2023-08', hints:[
+      { label:'PER', value:'~50~200배', context:'이차전지 테마 폭등, 단기 과열 우려 극단적', tone:'expensive' },
+      { label:'시장 시각', value:'투기적 강세', context:'코스닥 시총 2위 진입, 개인 집중 매수 최고조', tone:'neutral' },
+    ]},
+    { from:'2023-09', to:'2025-12', hints:[
+      { label:'PER', value:'~20~40배', context:'전기차 성장 둔화로 멀티플 급격 조정 진행', tone:'fair' },
+      { label:'시장 시각', value:'약세 우위', context:'배터리 공급과잉 우려, 중국 경쟁사 부상', tone:'neutral' },
+    ]},
+  ],
+  '035720.KS': [
+    { from:'2019-01', to:'2020-12', hints:[
+      { label:'PER', value:'~30~50배', context:'카카오톡 플랫폼 확장, 높은 성장 프리미엄', tone:'expensive' },
+      { label:'시장 시각', value:'강세 우위', context:'카카오뱅크·카카오페이 성장, 자회사 IPO 기대', tone:'fair' },
+    ]},
+    { from:'2021-01', to:'2021-12', hints:[
+      { label:'PER', value:'~100배+', context:'자회사 IPO 기대감 최고조, 역대 최고 고평가', tone:'expensive' },
+      { label:'시장 시각', value:'강세 우위', context:'카카오뱅크 상장 성공, 플랫폼 독점 낙관 극대화', tone:'fair' },
+    ]},
+    { from:'2022-01', to:'2025-12', hints:[
+      { label:'PER', value:'~30~60배', context:'규제 리스크·성장 둔화로 멀티플 급격 조정', tone:'expensive' },
+      { label:'시장 시각', value:'약세~중립', context:'플랫폼 규제 강화, SM엔터 인수 부담 논란', tone:'neutral' },
+    ]},
+  ],
+  '035420.KS': [
+    { from:'2019-01', to:'2021-06', hints:[
+      { label:'PER', value:'~40~80배', context:'광고·커머스 폭발 성장, 플랫폼 독점 프리미엄', tone:'expensive' },
+      { label:'시장 시각', value:'강세 우위', context:'네이버페이·스마트스토어 성장, 동학개미 선호', tone:'fair' },
+    ]},
+    { from:'2021-07', to:'2023-06', hints:[
+      { label:'PER', value:'~20~35배', context:'성장 둔화·금리 인상 압박으로 멀티플 조정', tone:'fair' },
+      { label:'시장 시각', value:'중립', context:'ChatGPT 충격 초기, 자체 LLM 개발 대응 주목', tone:'neutral' },
+    ]},
+    { from:'2023-07', to:'2025-12', hints:[
+      { label:'PER', value:'~20~30배', context:'하이퍼클로바 AI 전략, 적정가치 재평가 구간', tone:'fair' },
+      { label:'시장 시각', value:'중립~강세', context:'AI 포털 전환, 라인·웹툰 글로벌 확장 기대', tone:'neutral' },
+    ]},
+  ],
+  '005380.KS': [
+    { from:'2018-01', to:'2020-06', hints:[
+      { label:'PER', value:'~5~8배', context:'자동차 업종 저평가, 전기차 전환 전 디스카운트', tone:'cheap' },
+      { label:'시장 시각', value:'약세 우위', context:'내연기관 피크아웃 우려, 글로벌 완성차 저평가', tone:'neutral' },
+    ]},
+    { from:'2020-07', to:'2021-12', hints:[
+      { label:'PER', value:'~10~15배', context:'전기차 전환 선언, 전통 자동차 대비 멀티플 확대', tone:'fair' },
+      { label:'시장 시각', value:'강세 우위', context:'아이오닉 성공, 글로벌 전기차 판매 폭증', tone:'fair' },
+    ]},
+    { from:'2022-01', to:'2025-12', hints:[
+      { label:'PER', value:'~5~10배', context:'금리 인상·전기차 경쟁에도 저평가 유지', tone:'cheap' },
+      { label:'시장 시각', value:'중립', context:'전기차 성장 둔화 우려, 내연기관 브릿지 논쟁', tone:'neutral' },
+    ]},
+  ],
+  '051910.KS': [
+    { from:'2020-01', to:'2021-06', hints:[
+      { label:'PER', value:'~30~50배', context:'배터리 분사 기대감, 화학·배터리 복합 프리미엄', tone:'expensive' },
+      { label:'시장 시각', value:'강세 우위', context:'테슬라 배터리 공급, LG에너지솔루션 IPO 기대', tone:'fair' },
+    ]},
+    { from:'2021-07', to:'2025-12', hints:[
+      { label:'PER', value:'~15~25배', context:'LG에너지솔루션 분사 후 화학 본업 재평가', tone:'fair' },
+      { label:'시장 시각', value:'중립~약세', context:'석유화학 다운사이클, 배터리 경쟁 심화', tone:'neutral' },
+    ]},
+  ],
+  '011170.KS': [
+    { from:'2020-01', to:'2021-12', hints:[
+      { label:'PER', value:'~8~15배', context:'석유화학 경기 회복, 낮은 멀티플 유지', tone:'cheap' },
+      { label:'시장 시각', value:'중립', context:'원자재 가격 상승 수혜, 구조적 성장 제한적', tone:'neutral' },
+    ]},
+    { from:'2022-01', to:'2025-12', hints:[
+      { label:'PER', value:'적자~10배', context:'원가 급등·수요 둔화로 수익성 악화 심각', tone:'neutral' },
+      { label:'시장 시각', value:'약세 우위', context:'석유화학 공급과잉, 중국 저가 공세', tone:'neutral' },
+    ]},
+  ],
+  '086520.KQ': [
+    { from:'2022-01', to:'2023-08', hints:[
+      { label:'PER', value:'~200~500배', context:'이차전지 테마 광풍, 극단적 고평가 거품 논란', tone:'expensive' },
+      { label:'시장 시각', value:'투기적 강세', context:'코스닥 시총 1위 진입, 개인 집중 매수 최고조', tone:'neutral' },
+    ]},
+    { from:'2023-09', to:'2025-12', hints:[
+      { label:'PER', value:'~30~80배', context:'전기차 성장 둔화로 멀티플 급조정 진행 중', tone:'expensive' },
+      { label:'시장 시각', value:'약세 우위', context:'배터리 공급과잉 우려, 버블 해소 과정', tone:'neutral' },
+    ]},
+  ],
+  '068270.KS': [
+    { from:'2020-01', to:'2021-06', hints:[
+      { label:'PER', value:'~50~80배', context:'코로나 백신·치료제 기대감, 바이오 버블 동승', tone:'expensive' },
+      { label:'시장 시각', value:'강세 우위', context:'바이오시밀러 글로벌 매출 급성장', tone:'fair' },
+    ]},
+    { from:'2021-07', to:'2025-12', hints:[
+      { label:'PER', value:'~20~40배', context:'바이오시밀러 경쟁 심화, 합병 이슈 소화 중', tone:'fair' },
+      { label:'시장 시각', value:'중립', context:'해외 매출 확대 vs 바이오시밀러 가격 경쟁', tone:'neutral' },
+    ]},
+  ],
+  'BTC-USD': [
+    { from:'2017-01', to:'2018-01', hints:[
+      { label:'시총', value:'~3천억달러', context:'ICO 붐·개인 투기 과열, 역대 최초 2만달러 돌파', tone:'expensive' },
+      { label:'시장 시각', value:'투기 극단', context:'가족·지인까지 진입, 카페에서 비트코인 대화', tone:'neutral' },
+    ]},
+    { from:'2018-02', to:'2020-02', hints:[
+      { label:'Mayer Multiple', value:'0.5~0.8배', context:'200일 이평 대비 역사적 저평가 구간', tone:'cheap' },
+      { label:'시장 시각', value:'약세 우위', context:'ICO 사기 폭로, 규제 공포로 기관 외면 지속', tone:'neutral' },
+    ]},
+    { from:'2020-03', to:'2021-11', hints:[
+      { label:'Mayer Multiple', value:'2~4배', context:'기관 매수·테슬라 보유 선언, 역사적 고평가', tone:'expensive' },
+      { label:'시장 시각', value:'강세 우위', context:'마이크로스트래티지·테슬라 보유, 제도권 자산화', tone:'fair' },
+    ]},
+    { from:'2021-12', to:'2023-01', hints:[
+      { label:'Mayer Multiple', value:'0.4~0.8배', context:'FTX 파산·금리 인상 복합 충격, 역대 두 번째 저점', tone:'cheap' },
+      { label:'시장 시각', value:'극단적 약세', context:'FTX·루나 연쇄 사기, 신뢰 붕괴·규제 강화 가속', tone:'neutral' },
+    ]},
+    { from:'2023-02', to:'2025-12', hints:[
+      { label:'현물 ETF', value:'승인 진행', context:'블랙록·피델리티 ETF 승인, 기관 자금 본격 유입', tone:'fair' },
+      { label:'시장 시각', value:'강세 우위', context:'반감기(2024.04) + ETF 수요, 제도권 편입 가속', tone:'fair' },
+    ]},
+  ],
+  '^GSPC': [
+    { from:'1994-01', to:'1999-12', hints:[
+      { label:'S&P500 PER', value:'~20~30배', context:'닷컴 버블 팽창, 역대 평균(~16배) 크게 초과', tone:'expensive' },
+      { label:'시장 시각', value:'강세 우위', context:'인터넷 혁명 기대감, 이익 없는 기업도 수백억 시총', tone:'neutral' },
+    ]},
+    { from:'2000-01', to:'2002-12', hints:[
+      { label:'S&P500 PER', value:'~25~35배', context:'버블 붕괴에도 이익 급감으로 PER 여전히 높음', tone:'expensive' },
+      { label:'시장 시각', value:'극단적 약세', context:'나스닥 -78%, IT버블 청산 과정 진행 중', tone:'neutral' },
+    ]},
+    { from:'2003-01', to:'2007-09', hints:[
+      { label:'S&P500 PER', value:'~15~18배', context:'경기 회복기, 역대 평균 수준의 적정 밸류에이션', tone:'fair' },
+      { label:'시장 시각', value:'강세 우위', context:'저금리·신용 팽창, 주택 버블 동반 강세장', tone:'neutral' },
+    ]},
+    { from:'2007-10', to:'2009-06', hints:[
+      { label:'S&P500 PER', value:'이익 급감 왜곡', context:'리먼 위기로 이익 붕괴, PER 정상적 해석 불가', tone:'neutral' },
+      { label:'시장 시각', value:'극단적 약세', context:'VIX 80+, 패닉 셀링, 시스템 붕괴 공포', tone:'neutral' },
+    ]},
+    { from:'2009-07', to:'2019-12', hints:[
+      { label:'Shiller CAPE', value:'~20~30배', context:'역대 평균(~17배) 초과하지만 저금리로 정당화', tone:'expensive' },
+      { label:'시장 시각', value:'강세 우위', context:'Fed 지원 하의 강세장, 11년 불마켓', tone:'fair' },
+    ]},
+    { from:'2020-01', to:'2020-03', hints:[
+      { label:'S&P500 PER', value:'~20배→급락', context:'팬데믹 충격 -34%, 고점에서 급격한 밸류 압축', tone:'neutral' },
+      { label:'시장 시각', value:'극단적 공포', context:'VIX 80 이상, 역사상 가장 빠른 20% 폭락', tone:'neutral' },
+    ]},
+    { from:'2020-04', to:'2021-12', hints:[
+      { label:'Shiller CAPE', value:'~30~38배', context:'무제한 QE·제로금리, 역대 2위 고평가 수준', tone:'expensive' },
+      { label:'시장 시각', value:'강세 우위', context:'Fed 풋, 재정부양 5조달러, FOMO 매수 극대화', tone:'neutral' },
+    ]},
+    { from:'2022-01', to:'2022-12', hints:[
+      { label:'S&P500 PER', value:'~17~19배', context:'금리 인상으로 멀티플 압축, 역대 평균 수준 회귀', tone:'fair' },
+      { label:'시장 시각', value:'약세 우위', context:'40년래 최고 인플레 + 금리 쇼크, 침체 공포', tone:'neutral' },
+    ]},
+    { from:'2023-01', to:'2025-12', hints:[
+      { label:'S&P500 PER', value:'~20~22배', context:'AI 기대감·연착륙 낙관론, 평균 위 고평가', tone:'expensive' },
+      { label:'시장 시각', value:'강세 우위', context:'Magnificent 7 주도, AI 수혜 집중', tone:'fair' },
+    ]},
+  ],
+  'GSPC2007': [
+    { from:'2007-10', to:'2009-06', hints:[
+      { label:'S&P500 PER', value:'이익 붕괴 왜곡', context:'금융위기 이익 급감, PER 정상적 해석 불가', tone:'neutral' },
+      { label:'시장 시각', value:'극단적 약세', context:'리먼 파산·베어스턴스 구제, 공황 수준 패닉', tone:'neutral' },
+    ]},
+  ],
+  'KS11': [
+    { from:'1997-07', to:'1998-12', hints:[
+      { label:'코스피 PER', value:'~3~5배', context:'IMF 위기 폭락, 극단적 저평가 역사적 저점', tone:'cheap' },
+      { label:'시장 시각', value:'극단적 공포', context:'원화 -50% 절하, 30% 고금리, 기업 연쇄 부도', tone:'neutral' },
+    ]},
+    { from:'2020-01', to:'2020-03', hints:[
+      { label:'코스피 PER', value:'~7~10배', context:'팬데믹 폭락, 글로벌 저점 수준 저평가', tone:'cheap' },
+      { label:'시장 시각', value:'극단적 공포', context:'외국인 대규모 이탈, 동학개미 역매수 시작', tone:'neutral' },
+    ]},
+    { from:'2020-04', to:'2021-12', hints:[
+      { label:'코스피 PER', value:'~12~15배', context:'동학개미 매수 + QE, 역대 최고가 3316 경신', tone:'fair' },
+      { label:'시장 시각', value:'강세 우위', context:'개인투자자 48조 순매수, 반도체·전기차 집중', tone:'fair' },
+    ]},
+    { from:'2022-01', to:'2025-12', hints:[
+      { label:'코스피 PER', value:'~8~11배', context:'외국인 이탈·환율 압박, 선진국 대비 만성 저평가', tone:'cheap' },
+      { label:'시장 시각', value:'중립~약세', context:'코리아 디스카운트 지속, 밸류업 정책 기대 혼재', tone:'neutral' },
+    ]},
+  ],
+  'SSE': [
+    { from:'2014-07', to:'2015-06', hints:[
+      { label:'상하이 PER', value:'~50~80배', context:'레버리지 개인 투자 광풍, 극단적 버블 구간', tone:'expensive' },
+      { label:'시장 시각', value:'투기 극단', context:'반년 만에 +150%, 신용·레버리지 매수 절정', tone:'neutral' },
+    ]},
+    { from:'2015-07', to:'2025-12', hints:[
+      { label:'상하이 PER', value:'~10~15배', context:'버블 붕괴 후 정상화, 신흥국 대비 적정 수준', tone:'fair' },
+      { label:'시장 시각', value:'약세~중립', context:'경기 부양 기대 vs 부동산 위기·디플레 우려', tone:'neutral' },
+    ]},
+  ],
+  'IXIC': [
+    { from:'1999-01', to:'2000-03', hints:[
+      { label:'나스닥 PER', value:'~150~200배+', context:'닷컴 버블 최고조, 이익 없는 기업 수백억 시총', tone:'expensive' },
+      { label:'시장 시각', value:'투기 극단', context:'IPO 당일 +300%, 인터넷 기업이면 무조건 매수', tone:'neutral' },
+    ]},
+    { from:'2000-04', to:'2002-12', hints:[
+      { label:'나스닥 PER', value:'이익 붕괴 왜곡', context:'-78% 폭락, 이익 급감으로 PER 왜곡 극심', tone:'neutral' },
+      { label:'시장 시각', value:'극단적 약세', context:'닷컴 기업 대량 파산, IT업계 대규모 감원', tone:'neutral' },
+    ]},
+    { from:'2003-01', to:'2025-12', hints:[
+      { label:'나스닥 PER', value:'~25~50배', context:'기술주 성장 프리미엄, 평균 이상 고평가 구간', tone:'expensive' },
+      { label:'시장 시각', value:'강세 우위', context:'빅테크 독과점, AI·클라우드 성장 기대 지속', tone:'fair' },
+    ]},
+  ],
+  'N225': [
+    { from:'1989-01', to:'1989-12', hints:[
+      { label:'닛케이 PER', value:'~60~70배', context:'일본 버블 최고조, 선진국 역대 최고 과열 기록', tone:'expensive' },
+      { label:'시장 시각', value:'투기 극단', context:'부동산+주식 동반 폭등, 도쿄 땅값으로 미국 전체 살 수 있다는 얘기', tone:'neutral' },
+    ]},
+    { from:'1990-01', to:'1993-12', hints:[
+      { label:'닛케이 PER', value:'~30~50배(이익 급감)', context:'버블 붕괴 -60%, 이익 감소로 PER 여전히 높음', tone:'expensive' },
+      { label:'시장 시각', value:'극단적 약세', context:'은행 부실채권 폭증, 잃어버린 10년 시작', tone:'neutral' },
+    ]},
+    { from:'1994-01', to:'2019-12', hints:[
+      { label:'닛케이 PER', value:'~15~25배', context:'장기 저성장·디플레 구간, 적정~고평가 혼재', tone:'fair' },
+      { label:'시장 시각', value:'중립', context:'아베노믹스 부양 vs 구조적 성장 한계', tone:'neutral' },
+    ]},
+    { from:'2020-01', to:'2025-12', hints:[
+      { label:'닛케이 PER', value:'~15~20배', context:'엔저 효과·버핏 매수, 34년 만의 신고가 도전', tone:'fair' },
+      { label:'시장 시각', value:'중립~강세', context:'엔화 약세로 수출 기업 실적 개선, 기업 지배구조 개선', tone:'fair' },
+    ]},
+  ],
+  'GLD': [
+    { from:'2008-01', to:'2011-12', hints:[
+      { label:'금/S&P 비율', value:'~0.8~1.2배', context:'금융위기 안전자산 선호, 금값 사상 최고 근접', tone:'expensive' },
+      { label:'시장 시각', value:'강세 우위', context:'달러 신뢰 약화·인플레 우려로 금 수요 급증', tone:'fair' },
+    ]},
+    { from:'2012-01', to:'2019-12', hints:[
+      { label:'금/S&P 비율', value:'~0.3~0.5배', context:'강달러·위험자산 선호로 금 상대적 약세', tone:'fair' },
+      { label:'시장 시각', value:'중립~약세', context:'주식 강세장에서 안전자산 필요성 감소', tone:'neutral' },
+    ]},
+    { from:'2020-01', to:'2025-12', hints:[
+      { label:'금/S&P 비율', value:'~0.5~0.7배', context:'팬데믹·인플레 헤지 수요, 중앙은행 매수 급증', tone:'fair' },
+      { label:'시장 시각', value:'강세 우위', context:'달러 신뢰 약화·지정학 리스크, 안전자산 수요 지속', tone:'fair' },
+    ]},
+  ],
+  'SEEGENE': [
+    { from:'2020-01', to:'2020-12', hints:[
+      { label:'PER', value:'급반등(특수)', context:'코로나 진단키트 독점 수혜, 이익 수백% 폭증', tone:'fair' },
+      { label:'시장 시각', value:'강세 우위', context:'PCR 진단키트 세계 수출 1위, 전량 선주문 완판', tone:'fair' },
+    ]},
+    { from:'2021-01', to:'2025-12', hints:[
+      { label:'PER', value:'~10~30배', context:'코로나 특수 소멸, 기저효과로 이익 급감', tone:'fair' },
+      { label:'시장 시각', value:'약세 우위', context:'포스트 코로나 매출 급감, 신사업 성과 미진', tone:'neutral' },
+    ]},
+  ],
+};
+
+function getValuationHints(ticker, startDate) {
+  const ym = startDate.slice(0, 7); // 'YYYY-MM'
+  const periods = TICKER_VALUATION[ticker];
+  if (!periods || !periods.length) return [];
+  const match = periods.find(p => ym >= p.from && ym <= p.to);
+  return match ? match.hints : [];
+}
 
 // 기존 문제가 이미 다루는 구간 (ticker → [{start, end}])
 const EXISTING = {
@@ -85,168 +490,218 @@ const EXISTING = {
   '068270.KS': [{ s:'2020-02-01', e:'2020-09-30' }],
 };
 
-// ---------- 매크로 힌트 (날짜 기반) ----------
+// ---------- 매크로 힌트 (날짜 기반 — 풀에서 4개 무작위 선택) ----------
 function getMacroHints(dateStr) {
   const y = parseInt(dateStr.slice(0, 4));
   const m = parseInt(dateStr.slice(5, 7));
   const ym = y * 100 + m;
 
-  if (ym >= 198601 && ym <= 198812) return [
+  if (ym >= 198601 && ym <= 198812) return pickN([
     { label: '일본 버블', value: '최고조', trend: '부동산·주식 동반 폭등', tone: 'positive' },
     { label: '엔화', value: '엔고 지속', trend: '플라자 합의 후 강세', tone: 'mixed' },
     { label: '닛케이225', value: '연간 +40%', trend: '사상 최고가 갱신 행진', tone: 'positive' },
     { label: '토지가격', value: '전국 폭등', trend: '담보대출 과열·투기 절정', tone: 'negative' },
-  ];
-  if (ym >= 198901 && ym <= 198912) return [
+    { label: '기업 부채', value: '급증', trend: '은행 대출로 주식·부동산 매입', tone: 'negative' },
+    { label: '경제성장률', value: '4~5%', trend: '실물과 자산 괴리 확대', tone: 'mixed' },
+  ], 4);
+  if (ym >= 198901 && ym <= 198912) return pickN([
     { label: '일본 금리', value: '대폭 인상 예고', trend: 'BOJ 버블 억제 시작', tone: 'negative' },
     { label: '닛케이', value: '38,957 고점', trend: '버블 최고점 형성', tone: 'negative' },
     { label: '부동산', value: '도쿄 폭등', trend: '대출 과잉·투기 극단', tone: 'negative' },
     { label: '일본 GDP', value: '4% 성장', trend: '실물과 자산 괴리 극대', tone: 'mixed' },
-  ];
-  if (ym >= 199001 && ym <= 199312) return [
+    { label: 'BOJ 정책', value: '긴축 전환', trend: '6% 기준금리로 인상', tone: 'negative' },
+    { label: '외국인', value: '순매도 전환', trend: '고점 인식·차익실현', tone: 'negative' },
+  ], 4);
+  if (ym >= 199001 && ym <= 199312) return pickN([
     { label: '닛케이', value: '급락 중', trend: '버블 붕괴 -60%+', tone: 'negative' },
     { label: '일본 경기', value: '침체 돌입', trend: '잃어버린 10년 시작', tone: 'negative' },
     { label: '부동산', value: '30~50% 하락', trend: '담보가치 폭락·부실 급증', tone: 'negative' },
     { label: '은행권', value: '부실채권 폭증', trend: '금융기관 연쇄 부실', tone: 'negative' },
-  ];
-  if (ym >= 199401 && ym <= 199606) return [
+    { label: '기업 도산', value: '급증', trend: '레버리지 청산 압박', tone: 'negative' },
+    { label: '소비', value: '급감', trend: '자산효과 역전·긴축 심리', tone: 'negative' },
+  ], 4);
+  if (ym >= 199401 && ym <= 199606) return pickN([
     { label: '미국 경기', value: '클린턴 호황', trend: '나스닥 IT 성장세', tone: 'positive' },
     { label: '금리', value: '안정적', trend: 'Fed 점진 인상 중', tone: 'mixed' },
     { label: 'S&P500', value: '연간 +20%', trend: '기술주 주도 강세장', tone: 'positive' },
     { label: '인플레이션', value: '2~3%', trend: '저물가·안정 성장', tone: 'positive' },
-  ];
-  if (ym >= 199607 && ym <= 199706) return [
+    { label: '실업률', value: '5.4%', trend: '완전고용 근접', tone: 'positive' },
+    { label: '달러', value: '안정', trend: '글로벌 기축통화 지위 강화', tone: 'positive' },
+  ], 4);
+  if (ym >= 199607 && ym <= 199706) return pickN([
     { label: '아시아', value: '위기 전야', trend: '태국 바트화 흔들림', tone: 'negative' },
     { label: '한국 경제', value: '경상적자', trend: '외환보유고 고갈', tone: 'negative' },
     { label: '태국 바트', value: '고정환율 위기', trend: '경상적자 지속·외채 급증', tone: 'negative' },
     { label: '한국 외채', value: '1,500억달러', trend: '단기외채 비중 과다', tone: 'negative' },
-  ];
-  if (ym >= 199707 && ym <= 199812) return [
+    { label: '재벌 부채비율', value: '400%+', trend: '과다 레버리지로 이자 감당 한계', tone: 'negative' },
+    { label: '환율', value: '900원대', trend: '고평가된 원화, 경쟁력 약화', tone: 'negative' },
+  ], 4);
+  if (ym >= 199707 && ym <= 199812) return pickN([
     { label: 'IMF 외환위기', value: '구제금융', trend: '원화 -50% 이상 절하', tone: 'negative' },
     { label: 'USD/KRW', value: '2000원 돌파', trend: '기업 연쇄 부도', tone: 'negative' },
     { label: '코스피', value: '저점 280', trend: '금융위기 패닉 셀링', tone: 'negative' },
     { label: '기준금리', value: '30% 폭등', trend: 'IMF 고금리 조건 이행', tone: 'negative' },
-  ];
-  if (ym >= 199901 && ym <= 200003) return [
+    { label: '기업 부도', value: '연쇄 발생', trend: '대기업 부채비율 400% 파국', tone: 'negative' },
+    { label: '실업률', value: '7~9%', trend: '대규모 구조조정 가속', tone: 'negative' },
+  ], 4);
+  if (ym >= 199901 && ym <= 200003) return pickN([
     { label: '닷컴 붐', value: '과열 극점', trend: '나스닥 PER 100x+', tone: 'negative' },
     { label: '기술주', value: '폭발적 상승', trend: '인터넷 기업 IPO 러시', tone: 'positive' },
     { label: '나스닥', value: '5,000 돌파', trend: '3년간 +500% 상승', tone: 'positive' },
     { label: '인터넷기업', value: 'PER 수백배', trend: '매출 없어도 주가 급등', tone: 'negative' },
-  ];
-  if (ym >= 200004 && ym <= 200206) return [
+    { label: 'Fed 금리', value: '5%대', trend: '과열 억제 인상 시도', tone: 'mixed' },
+    { label: '개인투자자', value: 'IPO 청약 폭주', trend: 'FOMO 심리 극대화', tone: 'negative' },
+  ], 4);
+  if (ym >= 200004 && ym <= 200206) return pickN([
     { label: '닷컴버블', value: '붕괴', trend: '나스닥 -78% 하락', tone: 'negative' },
     { label: 'Fed', value: '금리 인하', trend: '경기 침체 대응', tone: 'positive' },
     { label: '나스닥', value: '저점 1,114', trend: '2년간 급락 지속', tone: 'negative' },
     { label: '실업률', value: '6% 상승', trend: 'IT업계 대규모 감원', tone: 'negative' },
-  ];
-  if (ym >= 200207 && ym <= 200612) return [
+    { label: '9·11 테러', value: '경기 충격', trend: '소비·투자 심리 급랭', tone: 'negative' },
+    { label: '기업 회계분식', value: '엔론·월드컴', trend: '기업 신뢰 붕괴', tone: 'negative' },
+  ], 4);
+  if (ym >= 200207 && ym <= 200612) return pickN([
     { label: '미국 경기', value: '저금리 성장', trend: '주택 붐 + 소비 확대', tone: 'positive' },
     { label: 'Fed 금리', value: '1%→5.25%', trend: '점진적 정상화', tone: 'mixed' },
     { label: '주택가격', value: '연간 10%+', trend: '서브프라임 대출 폭증', tone: 'negative' },
     { label: '원자재', value: '슈퍼사이클', trend: '중국 수요 주도 강세', tone: 'positive' },
-  ];
-  if (ym >= 200701 && ym <= 200709) return [
+    { label: '중국 경제', value: '연 10% 성장', trend: 'WTO 가입 후 수출 폭발', tone: 'positive' },
+    { label: '신용팽창', value: '역대급', trend: '파생상품·레버리지 확대', tone: 'negative' },
+  ], 4);
+  if (ym >= 200701 && ym <= 200709) return pickN([
     { label: '서브프라임', value: '균열 시작', trend: '주택시장 버블 경고', tone: 'negative' },
     { label: '시장', value: '사상 최고', trend: '위기 인식 부재', tone: 'negative' },
     { label: '주택담보대출', value: '연체율 상승', trend: '저신용 대출 부실화', tone: 'negative' },
     { label: 'CDO·MBS', value: '신용등급 의심', trend: '구조화상품 리스크 부각', tone: 'negative' },
-  ];
-  if (ym >= 200710 && ym <= 200903) return [
+    { label: '유가', value: '100달러 근접', trend: '원자재 과열 동반', tone: 'negative' },
+    { label: '달러', value: '약세 지속', trend: '경상적자·재정적자 쌍둥이', tone: 'negative' },
+  ], 4);
+  if (ym >= 200710 && ym <= 200903) return pickN([
     { label: '글로벌 금융위기', value: '리먼 파산', trend: '시스템 붕괴 공포', tone: 'negative' },
     { label: 'Fed', value: '제로금리·QE', trend: '긴급 양적완화', tone: 'mixed' },
     { label: 'S&P500', value: '저점 -56%', trend: '13개월 만에 반토막', tone: 'negative' },
     { label: 'VIX', value: '80 이상', trend: '역대 최고 공포 지수', tone: 'negative' },
-  ];
-  if (ym >= 200904 && ym <= 201206) return [
+    { label: '신용경색', value: '금융 마비', trend: '인터뱅크 대출 정지', tone: 'negative' },
+    { label: '실업률', value: '10% 급등', trend: '900만명 일자리 소멸', tone: 'negative' },
+  ], 4);
+  if (ym >= 200904 && ym <= 201206) return pickN([
     { label: 'QE 1·2차', value: '유동성 공급', trend: '위기 후 회복 국면', tone: 'positive' },
     { label: '미국 경기', value: '완만한 회복', trend: '실업률 서서히 하락', tone: 'positive' },
     { label: '금값', value: '1,900달러 고점', trend: '안전자산 선호 강세', tone: 'mixed' },
     { label: '신흥국', value: '자금 유입', trend: '달러 약세·캐리트레이드', tone: 'positive' },
-  ];
-  if (ym >= 201207 && ym <= 201412) return [
+    { label: '유로존 위기', value: '그리스 구제금융', trend: '유럽 채무위기 불안', tone: 'negative' },
+    { label: '기업 실적', value: '빠른 회복', trend: '비용 절감 + 수요 반등', tone: 'positive' },
+  ], 4);
+  if (ym >= 201207 && ym <= 201412) return pickN([
     { label: 'Fed 테이퍼링', value: 'QE 축소', trend: '신흥국 자금 이탈', tone: 'mixed' },
     { label: '미국 경기', value: '안정 성장', trend: 'S&P 강세 지속', tone: 'positive' },
     { label: '달러', value: '강세 전환', trend: '신흥국 통화 압박', tone: 'mixed' },
     { label: 'S&P500', value: '연간 +30%', trend: '버냉키 풋 기대 지속', tone: 'positive' },
-  ];
-  if (ym >= 201501 && ym <= 201509) return [
+    { label: '실업률', value: '6%대', trend: '고용 회복 지속', tone: 'positive' },
+    { label: '중국 성장', value: '7%대', trend: '신창타이 성장 둔화 시작', tone: 'mixed' },
+  ], 4);
+  if (ym >= 201501 && ym <= 201509) return pickN([
     { label: '중국 증시', value: '급락', trend: '상하이 -45% 폭락', tone: 'negative' },
     { label: '위안화', value: '평가절하', trend: '신흥국 불안 확산', tone: 'negative' },
     { label: '원자재', value: '급락 지속', trend: '중국 수요 둔화 공포', tone: 'negative' },
     { label: '코스피', value: '2000 지지', trend: '외국인 이탈 우려', tone: 'negative' },
-  ];
-  if (ym >= 201510 && ym <= 201609) return [
+    { label: '그리스', value: '디폴트 위기', trend: '유로존 이탈 가능성', tone: 'negative' },
+    { label: '유가', value: '50달러대', trend: '공급과잉·수요 둔화', tone: 'negative' },
+  ], 4);
+  if (ym >= 201510 && ym <= 201609) return pickN([
     { label: 'Fed 첫 인상', value: '0.25%', trend: '9년 만의 금리 인상', tone: 'mixed' },
     { label: '원자재', value: '약세', trend: '유가·광물 급락', tone: 'negative' },
     { label: '달러', value: '강세 지속', trend: '신흥국 자금 이탈', tone: 'negative' },
     { label: '브렉시트', value: '불확실성', trend: '영국 EU 탈퇴 투표', tone: 'negative' },
-  ];
-  if (ym >= 201610 && ym <= 201709) return [
+    { label: '중국 성장', value: '6.5%', trend: '위안화 절하 압박 지속', tone: 'negative' },
+    { label: '기업 실적', value: '성장 정체', trend: '강달러로 수출 기업 타격', tone: 'negative' },
+  ], 4);
+  if (ym >= 201610 && ym <= 201709) return pickN([
     { label: '트럼프 효과', value: '감세 기대', trend: '인프라·규제 완화 기대', tone: 'positive' },
     { label: '글로벌 경기', value: '동반 회복', trend: '저물가·성장 동시', tone: 'positive' },
     { label: '다우', value: '2만 돌파', trend: '사상 첫 2만 돌파', tone: 'positive' },
     { label: '반도체', value: '사이클 상승', trend: '메모리 수요 급증', tone: 'positive' },
-  ];
-  if (ym >= 201710 && ym <= 201801) return [
+    { label: '달러', value: '강세', trend: '트럼프 랠리 지속', tone: 'positive' },
+    { label: '실업률', value: '4.4%', trend: '완전고용 수준', tone: 'positive' },
+  ], 4);
+  if (ym >= 201710 && ym <= 201801) return pickN([
     { label: '비트코인', value: '2만달러', trend: '암호화폐 투기 열풍', tone: 'positive' },
     { label: 'CME 선물', value: '상장', trend: '기관 참여 확대', tone: 'positive' },
     { label: '알트코인', value: '폭발 상승', trend: '이더리움·리플 수백%', tone: 'positive' },
     { label: '개인투자자', value: '대거 참여', trend: 'FOMO 극단적 과열', tone: 'negative' },
-  ];
-  if (ym >= 201802 && ym <= 201812) return [
+    { label: '미국 감세', value: '법인세 인하', trend: '실적 개선 기대감', tone: 'positive' },
+    { label: '가상화폐 규제', value: '논의 시작', trend: '각국 규제 우려 증가', tone: 'negative' },
+  ], 4);
+  if (ym >= 201802 && ym <= 201812) return pickN([
     { label: 'Fed 금리', value: '연 4회 인상', trend: '긴축 가속', tone: 'negative' },
     { label: '미중 무역전쟁', value: '관세 충돌', trend: '성장 둔화 우려', tone: 'negative' },
     { label: '신흥국', value: '통화위기', trend: '터키·아르헨 급락', tone: 'negative' },
     { label: '나스닥', value: '연말 -20%', trend: '기술주 조정 가속', tone: 'negative' },
-  ];
-  if (ym >= 201901 && ym <= 201912) return [
+    { label: '유가', value: '급락 전환', trend: '과잉공급·수요 우려', tone: 'negative' },
+    { label: '달러', value: '강세 지속', trend: '신흥국 자금 이탈 가속', tone: 'negative' },
+  ], 4);
+  if (ym >= 201901 && ym <= 201912) return pickN([
     { label: 'Fed 피벗', value: '인하 전환', trend: '긴축 종료 기대', tone: 'positive' },
     { label: '미중 협상', value: '1단계 합의', trend: '무역전쟁 완화', tone: 'positive' },
     { label: 'S&P500', value: '연간 +29%', trend: '강세장 재개', tone: 'positive' },
     { label: '코스피', value: '2,000~2,200', trend: '박스권 횡보 지속', tone: 'mixed' },
-  ];
-  if (ym >= 202001 && ym <= 202003) return [
+    { label: '실업률', value: '3.5%', trend: '역대 최저 수준', tone: 'positive' },
+    { label: '기업 실적', value: '완만한 회복', trend: '무역분쟁 완화 효과', tone: 'positive' },
+  ], 4);
+  if (ym >= 202001 && ym <= 202003) return pickN([
     { label: 'COVID-19', value: '팬데믹 선언', trend: '전 세계 봉쇄 시작', tone: 'negative' },
     { label: 'Fed', value: '긴급 제로금리', trend: '무제한 QE 선언', tone: 'mixed' },
     { label: 'S&P500', value: '33일 -34%', trend: '역사상 가장 빠른 폭락', tone: 'negative' },
     { label: '원유', value: '마이너스 거래', trend: '저장 공간 부족 초유 사태', tone: 'negative' },
-  ];
-  if (ym >= 202004 && ym <= 202012) return [
+    { label: '실업청구', value: '주 600만건', trend: '대공황 이후 최대 실업', tone: 'negative' },
+    { label: 'VIX', value: '82 급등', trend: '2008 금융위기 수준 공포', tone: 'negative' },
+  ], 4);
+  if (ym >= 202004 && ym <= 202012) return pickN([
     { label: 'QE·부양책', value: '역대 최대', trend: '유동성 폭발적 공급', tone: 'positive' },
     { label: '기준금리', value: '0.25%', trend: '초저금리·동학개미', tone: 'positive' },
     { label: '코스피', value: '3,000 돌파', trend: '동학개미 순매수 48조', tone: 'positive' },
     { label: '백신', value: '개발 성공', trend: '리오프닝 기대감 급부상', tone: 'positive' },
-  ];
-  if (ym >= 202101 && ym <= 202112) return [
+    { label: '나스닥', value: '+80% 반등', trend: '비대면·기술주 폭발 성장', tone: 'positive' },
+    { label: '부양책', value: '5조달러+', trend: '재정지출 사상 최대', tone: 'positive' },
+  ], 4);
+  if (ym >= 202101 && ym <= 202112) return pickN([
     { label: '인플레이션', value: '급등 조짐', trend: '공급망 충격·유동성', tone: 'negative' },
     { label: 'QE·저금리', value: '지속', trend: '주식·코인 동반 강세', tone: 'positive' },
     { label: '비트코인', value: '6만달러 ATH', trend: '기관·ETF 자금 유입', tone: 'positive' },
     { label: '코스피', value: '3,316 신고가', trend: '외국인·기관 동반 매수', tone: 'positive' },
-  ];
-  if (ym >= 202201 && ym <= 202212) return [
+    { label: '공급망', value: '병목 심화', trend: '반도체·물류 부족 장기화', tone: 'negative' },
+    { label: '부동산', value: '급등 지속', trend: '유동성 과잉·저금리 효과', tone: 'negative' },
+  ], 4);
+  if (ym >= 202201 && ym <= 202212) return pickN([
     { label: 'Fed 금리', value: '0→4.5%', trend: '40년래 최고속 긴축', tone: 'negative' },
     { label: '인플레이션', value: '9.1%', trend: '경기침체 공포 확산', tone: 'negative' },
     { label: '코스피', value: '2,200 저점', trend: '외국인 대규모 이탈', tone: 'negative' },
     { label: '미국채', value: '역사적 하락', trend: '60/40 포트 동반 하락', tone: 'negative' },
-  ];
-  if (ym >= 202301 && ym <= 202312) return [
+    { label: '러-우 전쟁', value: '에너지 위기', trend: '유가·천연가스 급등', tone: 'negative' },
+    { label: '달러', value: '20년래 최강', trend: '신흥국·한국 원화 급락', tone: 'negative' },
+  ], 4);
+  if (ym >= 202301 && ym <= 202312) return pickN([
     { label: 'ChatGPT·AI', value: '폭발적 성장', trend: 'AI 투자 붐 시작', tone: 'positive' },
     { label: 'Fed 금리', value: '5.25% 고점', trend: '인상 종료 기대', tone: 'positive' },
     { label: '엔비디아', value: '연간 +240%', trend: 'AI 칩 독점 지위', tone: 'positive' },
     { label: '나스닥', value: '반등 +43%', trend: '기술주 급반등', tone: 'positive' },
-  ];
-  if (ym >= 202401) return [
+    { label: '은행위기', value: 'SVB 파산', trend: '중소형 은행 불안 확산', tone: 'negative' },
+    { label: '인플레', value: '3~4%대 안정', trend: '연착륙 기대 강화', tone: 'positive' },
+  ], 4);
+  if (ym >= 202401) return pickN([
     { label: 'AI 인프라', value: '투자 급증', trend: 'NVDA 주도 AI 사이클', tone: 'positive' },
     { label: 'Fed', value: '인하 시작', trend: '연착륙 기대', tone: 'positive' },
     { label: '비트코인', value: '신고가 경신', trend: '현물 ETF 승인·기관 매수', tone: 'positive' },
     { label: '코스피', value: '불안정', trend: '환율·경기 불확실', tone: 'negative' },
-  ];
-  return [
+    { label: '엔화', value: '약세 지속', trend: 'BOJ 금리 인상 논란', tone: 'mixed' },
+    { label: '관세 전쟁', value: '재확산', trend: '트럼프 무역정책 불확실', tone: 'negative' },
+  ], 4);
+  return pickN([
     { label: '시장', value: '변동성', trend: '추세 불확실', tone: 'mixed' },
     { label: '경기', value: '중립', trend: '특이 이벤트 없음', tone: 'mixed' },
     { label: '금리', value: '보통 수준', trend: '중립 스탠스', tone: 'mixed' },
     { label: '환율', value: '안정적', trend: '특이 변동 없음', tone: 'mixed' },
-  ];
+  ], 4);
 }
 
 // ---------- 패턴 감지 ----------
@@ -376,8 +831,29 @@ const TEMPLATES = {
   ],
 };
 
-function pickQ(pattern, name, months) {
+// review-problems.cjs와 동일한 방향 신호 키워드
+const Q_UP_SIGNALS   = ['돌파', '급등', '폭등', '강하게 상승', '크게 상승', '신고가', '강세를 보이'];
+const Q_DOWN_SIGNALS = ['급락', '폭락', '붕괴', '강하게 하락', '급격히 하락'];
+
+function pickQ(pattern, name, months, answer) {
   const list = TEMPLATES[pattern] || TEMPLATES.sideways;
+  const isUpAnswer   = answer === 0 || answer === 1;
+  const isDownAnswer = answer === 2 || answer === 3;
+
+  // answer가 있을 때: 방향 모순 템플릿 제외
+  if (answer !== undefined) {
+    const filtered = list.filter(fn => {
+      const q = fn(name, months);
+      const hasUp   = Q_UP_SIGNALS.some(s => q.includes(s));
+      const hasDown = Q_DOWN_SIGNALS.some(s => q.includes(s));
+      if (isDownAnswer && hasUp && !hasDown) return false;
+      if (isUpAnswer   && hasDown && !hasUp) return false;
+      return true;
+    });
+    const pool = filtered.length > 0 ? filtered : list;
+    return pool[Math.floor(Math.random() * pool.length)](name, months);
+  }
+
   return list[Math.floor(Math.random() * list.length)](name, months);
 }
 
@@ -453,24 +929,36 @@ const MACRO_LESSON = {
     '매크로가 불리해도 가격과 수급이 버티면 시장은 이미 악재를 소화한 것이다. 가격 행동이 뉴스보다 앞서간다.',
     '나쁜 뉴스 속 강한 주가 = 숨겨진 매수 주체가 있다는 뜻이다. 거래량과 수급 흐름을 뉴스보다 먼저 봐야 한다.',
     '악재 속 상승은 "이미 반영됐다"는 신호다. 시장은 6개월 앞을 본다는 원칙이 여기서도 작동했다.',
+    '부정적 매크로에도 주가가 버텼다면 그 자산에는 강력한 매수 주체가 있다. 악재가 호재가 되는 순간이 매수 기회다.',
+    '시장 참여자 대부분이 비관적일 때 오히려 바닥이 확인된다. 최악의 시나리오가 가격에 충분히 반영됐을 때 반전이 나타난다.',
+    '역발상의 본질은 비관론이 극대화됐을 때 매수하는 것이다. 매크로 뉴스가 암울할수록 가격 저항선이 더 단단해진다.',
   ],
   // 하락 결과 + 긍정 매크로
   down_pos: [
     '호재가 있어도 가격이 무너지면 시장은 다른 위험을 먼저 보고 있다는 뜻이다. 뉴스보다 가격을 믿어야 한다.',
     '좋은 뉴스에 가격이 반응하지 않으면 매수세가 소진된 것이다. "호재 무반응"은 매도 신호다.',
     '매크로가 긍정적이어도 수급이 이탈하면 주가는 버티지 못한다. 펀더멘털과 수급은 항상 함께 봐야 한다.',
+    '낙관론이 정점에 달했을 때 주가는 이미 기대치를 선반영한다. 호재 발표 후 하락은 "소문에 사고 뉴스에 판다"의 전형이다.',
+    '매크로 개선은 필요조건이지 충분조건이 아니다. 이미 고평가된 자산은 좋은 환경에서도 하락할 수 있다.',
+    '긍정적 매크로 속 약세는 더 큰 하락의 전조다. 시장이 호재를 무시하기 시작했다면 매도 압력이 이미 구조적으로 쌓인 것이다.',
   ],
   // 상승 결과 + 긍정 매크로
   up_pos: [
     '차트와 매크로가 같은 방향이면 추세가 이어질 확률이 높아진다. 두 가지 모두 확인됐을 때 포지션을 늘리는 것이 유리하다.',
     '추세 + 유동성이 동행할 때 상승 에너지가 배가된다. 이런 구간에서 일찍 차익실현하면 남은 상승을 놓친다.',
     '강세 차트에 강한 매크로가 더해지면 추세 가속이 나타난다. 조정이 와도 추세를 유지하는 경우가 많다.',
+    '모든 조건이 맞아떨어지는 구간에서 포지션을 축소하는 것은 실수다. 추세가 살아있는 동안은 시장의 편에 서야 한다.',
+    '긍정적 매크로와 차트 모멘텀의 동행은 가장 강력한 매수 신호다. 이 조합이 깨질 때까지 포지션을 유지하는 것이 수익 극대화의 핵심이다.',
+    '강세장에서 "이미 많이 올랐다"는 생각이 가장 많은 수익 기회를 앗아간다. 추세는 예상보다 훨씬 오래 지속된다.',
   ],
   // 하락/횡보 결과 + 부정 매크로
   down_neg: [
     '약한 차트와 부정적 매크로가 겹치면 반등보다 리스크 관리가 먼저다. 손절 기준을 미리 정해두지 않으면 손실이 커진다.',
     '매크로와 차트가 모두 부정적이면 반등을 기다리며 버티는 것은 위험하다. 손실 제한이 수익보다 중요한 구간이다.',
     '이중 악재 구간에서는 "언젠가 오르겠지"라는 생각이 가장 위험하다. 확실한 전환 신호가 나올 때까지 현금이 최선이다.',
+    '하락하는 칼날을 잡으려 하지 마라. 차트와 매크로가 모두 부정적일 때 저가 매수는 수익 기회가 아닌 손실 확대다.',
+    '약세장에서 가장 큰 실수는 평균단가를 낮추기 위한 추가 매수다. 잘못된 포지션은 줄여야지 늘려서는 안 된다.',
+    '이중 악재 국면에서 반등은 짧고 하락은 길다. 손절의 타이밍을 놓치면 회복에 수년이 걸릴 수 있다.',
   ],
 };
 
@@ -648,8 +1136,9 @@ for (const [ticker, meta] of Object.entries(TICKER_META)) {
       chartDays:   CHART_DAYS,
       difficulty:  toDifficulty(pct, pattern),
       startDate,
-      question:    pickQ(pattern, meta.name, months),
+      question:    pickQ(pattern, meta.name, months, answer),
       macroHints,
+      valuationHints: getValuationHints(ticker, startDate),
       choices:     getChoices(pattern),
       answer,
       explanation: makeExplanation(answer, pctStr, months, pattern),
@@ -774,6 +1263,11 @@ function serializeProblem(p) {
   ).join(',\n');
   const ch = p.choices.map(c => `      '${esc(c)}'`).join(',\n');
 
+  const vhLines = (p.valuationHints || []).map(v =>
+    `      { label: '${esc(v.label)}', value: '${esc(v.value)}', context: '${esc(v.context)}', tone: '${v.tone}' }`
+  ).join(',\n');
+  const vhBlock = vhLines ? `\n    valuationHints: [\n${vhLines},\n    ],` : '';
+
   return `  {
     id: ${p.id}, market: '${p.market}', ticker: '${esc(p.ticker)}', pattern: '${p.pattern}',
     revealDay: ${p.revealDay}, chartDays: ${p.chartDays}, difficulty: '${p.difficulty}',
@@ -781,7 +1275,7 @@ function serializeProblem(p) {
     question: '${esc(p.question)}',
     macroHints: [
 ${mh},
-    ],
+    ],${vhBlock}
     choices: [
 ${ch},
     ],
