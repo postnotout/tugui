@@ -349,7 +349,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
     id: 15, market: 'SSE', ticker: 'SSE', pattern: 'doubletop',
     revealDay: 126, chartDays: 147, difficulty: 'medium',
     startDate: '2014-12-11',
-    question: '상하이지수가 1년 만에 두 배 상승하였다. 레버리지 잔고가 사상 최대이다. 1개월 후 결과로 옳은 것은?',
+    question: '상하이지수가 1년 만에 두 배 가까이 상승해 있다. 레버리지 잔고가 사상 최대이다. 1개월 후 결과로 옳은 것은?',
     macroHints: [
       { label: '마진 잔액', value: '2조 위안', trend: '사상 최대 레버리지', tone: 'negative' },
       { label: 'PER', value: '80~100배', trend: '역사적 고점 밸류', tone: 'negative' },
@@ -601,7 +601,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
     id: 25, market: 'CRYPTO', ticker: 'BTC-USD', pattern: 'vshape',
     revealDay: 126, chartDays: 147, difficulty: 'hard',
     startDate: '2019-12-11',
-    question: '이틀 만에 -58% 폭락하였다. 연준이 무제한 QE를 발표하였다. 1개월 후 결과로 옳은 것은?',
+    question: '이틀 만에 -58% 폭락한 직후 극단적 공포가 지배하고 있다. 연준이 무제한 QE를 발표하였다. 1개월 후 결과로 옳은 것은?',
     macroHints: [
       { label: '코로나 목요일', value: 'BTC 단일 최대 하락', trend: '공황 매도', tone: 'negative' },
       { label: '연준', value: '제로금리+무제한 QE', trend: '3월 15일 발표', tone: 'positive' },
@@ -851,7 +851,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
     id: 35, market: 'KOSDAQ', ticker: '086520.KQ', pattern: 'parabolic',
     revealDay: 126, chartDays: 147, difficulty: 'hard',
     startDate: '2023-01-06',
-    question: '6개월 만에 수배 상승하였다. PER이 수백 배 수준이다. 1개월 후 결과로 옳은 것은?',
+    question: '6개월 만에 수배 올라 파라볼릭 상승세가 진행 중이다. PER이 수백 배 수준이다. 1개월 후 결과로 옳은 것은?',
     macroHints: [
       { label: '개인 비중', value: '90%+', trend: '코스닥 시총 1위·열풍', tone: 'negative' },
       { label: 'PER', value: '수백 배', trend: '이익 대비 주가 극단적 괴리', tone: 'negative' },
@@ -903,7 +903,7 @@ export const HANDCRAFTED_PROBLEMS: Problem[] = [
     id: 37, market: 'NYSE', ticker: '^GSPC', pattern: 'vshape',
     revealDay: 126, chartDays: 147, difficulty: 'easy',
     startDate: '2019-09-23',
-    question: '33일 만에 -34% 폭락하였다. 역사상 가장 빠른 하락이다. 연준이 무제한 QE를 선언하고 정부가 5조 달러 부양책을 예고하였다. 1개월 후 결과로 옳은 것은?',
+    question: '33일 만에 -34% 폭락하며 역사상 가장 빠른 낙폭을 보이고 있다. 연준이 무제한 QE를 선언하고 정부가 5조 달러 부양책을 예고하였다. 1개월 후 결과로 옳은 것은?',
     macroHints: [
       { label: '연준', value: '무제한 QE 선언', trend: '역대 최대 속도 유동성 공급', tone: 'positive' },
       { label: '정부 부양', value: '5조 달러', trend: '직접 현금 지급 포함', tone: 'positive' },
