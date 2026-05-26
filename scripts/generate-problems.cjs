@@ -618,7 +618,10 @@ for (const [ticker, meta] of Object.entries(TICKER_META)) {
 
   let tickerCount = 0;
 
+  const WARMUP_ROWS = 120; // dataLoader.ts와 맞춤 — 이 미만이면 합성 패딩 발생
+
   for (let si = 0; si < usable; si += step) {
+    if (si < WARMUP_ROWS) continue; // MA 계산에 충분한 실제 워밍업 데이터 없음
     const startDate = rows[si].date;
     if (overlaps(startDate, existing)) continue;
 
