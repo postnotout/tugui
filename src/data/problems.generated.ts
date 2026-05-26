@@ -1,7 +1,7 @@
 import type { Problem } from '../types';
 
-// 자동 생성 문제 (scripts/generate-problems.js)
-// 생성일: 2026-05-26
+// 자동 생성 문제 (scripts/generate-problems.js → scripts/enrich-generated.cjs)
+// 강화일: 2026-05-26
 // 총 164개
 export const GENERATED_PROBLEMS: Problem[] = [
   {

@@ -10,6 +10,8 @@
     "preview": "vite preview",
     "validate": "node scripts/validate-problems.cjs",
     "generate": "node scripts/generate-problems.cjs && npm run validate",
+    "enrich": "node scripts/enrich-generated.cjs",
+    "generate-full": "npm run generate && npm run enrich && npm run validate",
     "review": "node scripts/review-problems.cjs"
   },
   "dependencies": {
